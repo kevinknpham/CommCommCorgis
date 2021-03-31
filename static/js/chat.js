@@ -1,4 +1,4 @@
-let HOST = "ws://localhost:3456";
+let HOST = location.origin.replace(/^http/, 'ws');
 let ws = new WebSocket(HOST);
 ws.onopen = (event) => {
   ws.onmessage = (msg) => handleMessage(msg);
