@@ -4,8 +4,6 @@
 
 const express = require('express');
 const { Server } = require('ws');
-const sqlite3 = require('sqlite3').verbose();
-const sqlite = require('sqlite');
 
 const PORT = process.env.PORT || 3456;
 const INDEX = './static/index.html';
