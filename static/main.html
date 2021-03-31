@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CommCommCorgis</title>
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
+    <div class="contents">
+      <div id="myCanvas" class="background-formatter">
+        <img src="assets/corgi-slide.png" class="character" />
+      </div>
+      <div class="chat">
+        <div class="header">
+          <h2 class="flex3">ChatBox</h2>
+          <button class="login-button" onclick="login()">Login</button>
+        </div>
+
+        <div class="post-container">
+          <div class="post">
+            <div class="post-content">
+              <p class="bold">Miguel</p>
+              <p class="text">Just did a million push ups today, feeling great!</p>
+            </div>
+          </div>
+
+          <div class="post">
+            <div class="post-content">
+              <p class="bold">Jong</p>
+              <p class="text">Very Cool</p>
+            </div>
+          </div>
+
+          <div class="post">
+            <div class="post-content">
+              <p class="bold">Jong</p>
+              <p class="text">If you say so</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="post-input">
+          <input type="text" placeholder="Say Hi!" />
+          <button id="post-button" disabled>Post</button>
+        </div>
+      </div>
+    </div>
+    <script src="js/app.js"></script>
+    <script src="js/chat.js"></script>
+  </body>
+</html>
