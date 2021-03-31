@@ -3,18 +3,23 @@
  */
 
 const express = require('express');
+const path = require('path');
 const { Server } = require('ws');
 
 const PORT = process.env.PORT || 3456;
 const INDEX = './static/index.html';
 
-const CHARACTERS = [];
+const app = express();
 
-const server = express()
+app.use(express.static(path.join(__dirname, 'static')));
+
+const server = app
   .use((req, res) => res.sendFile(INDEX, {root:__dirname}))
   .listen(PORT, () => console.log(`Listening on ${PORT}`));
 
 const wss = new Server({ server });
+
+const CHARACTERS = [];
 
 wss.on('connection', (ws) => {
   console.log('Client connected');
