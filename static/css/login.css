@@ -2,6 +2,12 @@ body {
   background-color: pink;
 }
 
+.login-screen {
+  display: flex;
+  flex-direction: column;
+  margin-top: 250px;
+}
+
 h1 {
   display: flex;
   justify-content: center;
