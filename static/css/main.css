@@ -11,7 +11,7 @@ h2 {
 .background-formatter {
   width: 74.5vw;
   height: 90vh;
-  background-image: url('../assets/oasiss.jpg');
+  background-image: url("../assets/oasiss.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   position: relative;
