@@ -1,53 +1,9 @@
-const currentUser = {
-  id: 1234,
-  name: "Its Me",
-};
-
-const users = {
-  1: {
-    name: "Miguel",
-  },
-  2: {
-    name: "Jong",
-  },
-  3: {
-    name: "Kevin",
-  },
-  4: {
-    name: "Sashu",
-  },
-};
-
-const posts = [
-  {
-    id: "post1",
-    userId: 1,
-    comments: [
-      {
-        userId: 1,
-        content: "Hello test1",
-      },
-    ],
-  },
-  {
-    id: "post2",
-    userId: 2,
-    comments: [
-      {
-        userId: 2,
-        content: "Hello test2",
-      },
-    ],
-  },
-];
-
-let HOST = 'ws://localhost:3456';
+let HOST = "ws://localhost:3456";
 let ws = new WebSocket(HOST);
 ws.onopen = (event) => {
   ws.onmessage = (msg) => handleMessage(msg);
   setInputFunctionality();
 };
-
 
 function handleMessage(message) {
   console.log(message);
@@ -67,7 +23,7 @@ function setInputFunctionality() {
     let datum = {
       text: input.value,
       user: "Miguel",
-      action: "chat"
+      action: "chat",
     };
     // document.querySelector(".post-container").appendChild(createPost(datum));
     ws.send(JSON.stringify(datum));
@@ -86,14 +42,3 @@ function createPost(info) {
 
   return postContainer;
 }
-
-// function generatePosts() {
-//   const postsContainer = document.querySelector(".post-container");
-//   postsContainer.innerHTML = ""; // clears post container
-
-//   posts.forEach(function (post) {
-//     const postElement = createPost(post);
-//     postsContainer.appendChild(postElement);
-//   });
-// }
-//by elisa!!!!!
