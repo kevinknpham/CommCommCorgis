@@ -2,18 +2,18 @@ body {
   background-color: pink;
 }
 
+h1 {
+  display: flex;
+  justify-content: center;
+}
+
 .login-screen {
   display: flex;
   flex-direction: column;
   margin-top: 250px;
 }
 
-h1 {
-  display: flex;
-  justify-content: center;
-}
-
-input {
+.login-input {
   display: flex;
   justify-content: center;
   margin: auto auto 30px auto;
@@ -22,7 +22,7 @@ input {
   width: 400px;
 }
 
-button {
+.login-button {
   display: flex;
   justify-content: center;
   margin-left: auto;
