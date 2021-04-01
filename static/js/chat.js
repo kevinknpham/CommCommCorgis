@@ -1,3 +1,7 @@
+if (!sessionStorage.getItem("commcommcorgis_username")) {
+  window.open("index.html", "_self");
+}
+
 let HOST = location.origin.replace(/^http/, 'ws');
 let ws = new WebSocket(HOST);
 ws.onopen = (event) => {

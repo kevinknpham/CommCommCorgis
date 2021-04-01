@@ -15,6 +15,7 @@ function login() {
       ws.send(JSON.stringify({action: "create", name: username}));
     }
     ws.close();
-    window.open(`main.html?name=${username}`);
+    sessionStorage.setItem("commcommcorgis_username", username);
+    window.location.href = "main.html";
   }
 }
