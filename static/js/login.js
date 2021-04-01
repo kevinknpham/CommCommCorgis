@@ -13,8 +13,8 @@ function login() {
     let ws = new WebSocket(HOST);
     ws.onopen = () => {
       ws.send(JSON.stringify({action: "create", name: username}));
+      ws.close();
     }
-    ws.close();
     sessionStorage.setItem("commcommcorgis_username", username);
     window.location.href = "main.html";
   }
