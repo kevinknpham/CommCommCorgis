@@ -1,15 +1,20 @@
 const form = document.getElementById("form");
-form.addEventListener("submit", login());
+form.addEventListener("submit", login);
+const input = document.getElementById("login-input");
+const loginBtn = document.getElementById("login-button");
+input.addEventListener("input", function (e) {
+  loginBtn.disabled = e.target.value.length === 0;
+});
 
 function login() {
-  const input = document.getElementById("login-input");
-  const loginBtn = document.getElementById("login-button");
-  input.addEventListener("input", function (e) {
-    loginBtn.disabled = e.target.value.length === 0;
-  });
   const username = document.getElementById("login-input").value;
-  // loginBtn.addEventListener("click", function () {
-  //   const username = document.getElementById("login-input").value;
-  //   window.location.href = "main.html";
-  // });
+  if (username && username.length > 0) {
+    let HOST = location.origin.replace(/^http/, 'ws');
+    let ws = new WebSocket(HOST);
+    ws.onopen = () => {
+      ws.send(JSON.stringify({action: "create", name: username}));
+    }
+    ws.close();
+    window.open(`main.html?name=${username}`);
+  }
 }
