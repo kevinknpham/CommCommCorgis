@@ -1,10 +1,14 @@
-const form = document.getElementById("form");
-form.addEventListener("submit", login);
 const input = document.getElementById("login-input");
 const loginBtn = document.getElementById("login-button");
 input.addEventListener("input", function (e) {
   loginBtn.disabled = e.target.value.length === 0;
 });
+input.addEventListener("keyup", function (e) {
+  if (e.key === "Enter") {
+    login();
+  }
+});
+loginBtn.addEventListener("click", login);
 
 function login() {
   const username = document.getElementById("login-input").value;
@@ -16,10 +20,8 @@ function login() {
       ws.close();
     };
     sessionStorage.setItem("commcommcorgis_username", username);
-
-    document.getElementById("main-page").style.display = "block";
+    
     document.getElementById("login-page").style.display = "none";
-
-    //window.location.href = "main.html";
+    document.getElementById("main-page").style.display = "block";
   }
 }

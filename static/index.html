@@ -8,28 +8,23 @@
     <link rel="icon shortcut" href="#" />
     <link rel="stylesheet" href="./css/common.css" />
     <link rel="stylesheet" href="./css/login.css" />
-    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="./css/main.css" />
+    <script src="js/login.js" defer></script>
+    <script src="js/app.js" defer></script>
+    <script src="js/chat.js" defer></script>
   </head>
   <body>
-    <section id="login-page">
+    <div id="login-page">
       <div class="login-screen">
         <h1>Welcome to CommCommCorgis!</h1>
-        <form id="form" action="main.html" method="POST">
-          <input
-            type="text"
-            placeholder="Enter your username"
-            name="login"
-            class="login-input"
-            id="login-input"
-          />
-          <button type="submit" class="login-button" id="login-button" disabled>
-            Login
-          </button>
-        </form>
+        <div id="form" method="POST">
+          <input type="text" placeholder="Enter your username" name="login" class="login-input" id="login-input" />
+          <button type="button" class="login-button" id="login-button" disabled>Login</button>
+        </div>
       </div>
-    </section>
+    </div>
 
-    <section id="main-page">
+    <div id="main-page">
       <div class="contents">
         <div id="myCanvas" class="background-formatter">
           <img src="assets/corgi-slide.png" class="character" />
@@ -44,9 +39,7 @@
             <div class="post">
               <div class="post-content">
                 <p class="bold">Miguel</p>
-                <p class="text">
-                  Just did a million push ups today, feeling great!
-                </p>
+                <p class="text">Just did a million push ups today, feeling great!</p>
               </div>
             </div>
 
@@ -71,9 +64,6 @@
           </div>
         </div>
       </div>
-    </section>
+    </div>
   </body>
-  <script src="js/login.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/chat.js"></script>
 </html>

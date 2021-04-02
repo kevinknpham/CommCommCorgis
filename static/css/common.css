@@ -1,6 +1,6 @@
 * {
   box-sizing: border-box;
-  font-family: "Courier New", Courier, monospace;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 .character {
@@ -22,6 +22,8 @@
 }
 
 #login-page {
+  display: block;
+  background-color: pink;
 }
 
 #main-page {
