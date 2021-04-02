@@ -26,7 +26,7 @@ function setInputFunctionality() {
   postBtn.addEventListener("click", function () {
     let datum = {
       text: input.value,
-      user: "Miguel",
+      user: sessionStorage.getItem("commcommcorgis_username"),
       action: "chat",
     };
     // document.querySelector(".post-container").appendChild(createPost(datum));
