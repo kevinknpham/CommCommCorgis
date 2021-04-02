@@ -77,7 +77,4 @@ if `action` is move_char
 
 # Goals
 
-1. Create game with characters that can walk
-2. work on front end and creating assets
-3. chat
-4. TBD
+A running to do list can be found [here](https://docs.google.com/spreadsheets/d/1cJMP1YoE9plkKD9wdrVH9x0niO9LTA94-gwFw89f9Ug/edit?usp=sharing).
