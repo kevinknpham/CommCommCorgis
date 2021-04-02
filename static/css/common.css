@@ -20,3 +20,10 @@
 .text {
   margin: 4px 0px;
 }
+
+#login-page {
+}
+
+#main-page {
+  display: none;
+}
