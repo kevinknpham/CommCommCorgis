@@ -42,8 +42,8 @@ if `action` is create
 if `action` is update:
 
 * `name`: name of character to move
-
-* `position`: position to move character to
+* `x`: x position to move character to
+* `y`: y position to move character to
 
 if `action` is leave
 
@@ -59,7 +59,7 @@ if `action` is list
 
 **Server message format**
 
-The response will be JSON formatted contain an `action` field.
+The response will be a JSON formatted String containing an `action` field.
 
 if `action` is chat
 * `user`: name of message sender
@@ -69,6 +69,11 @@ if `action` is new_char
 * `name`: name of new character
 * `x`: x coordinate of new character (will start at 0)
 * `y`: y coordinate of new character (will start at 0)
+
+if `action` is move_char
+* `name`: name of character to move
+* `x`: new x coordinate
+* `y`: new y coordinate
 
 # Goals
 

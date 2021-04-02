@@ -5,6 +5,7 @@
 const express = require('express');
 const path = require('path');
 const { Server } = require('ws');
+const RoomManager = require('./rooms');
 
 const PORT = process.env.PORT || 3456;
 const INDEX = './static/index.html';
@@ -15,11 +16,16 @@ app.use(express.static(path.join(__dirname, 'static')));
 
 const server = app
   .use((req, res) => res.sendFile(INDEX, {root:__dirname}))
-  .listen(PORT, () => console.log(`Listening on ${PORT}`));
+  .listen(PORT, () => {
+    console.log(`Listening on ${PORT}`);
+    console.log(`http://localhost:${PORT}/`);
+  });
 
 const wss = new Server({ server });
 
-const CHARACTERS = [];
+const roomManager = new RoomManager([
+  "entrance"
+]);
 
 wss.on('connection', (ws) => {
   console.log('Client connected');
@@ -50,7 +56,7 @@ function handleMessage(ws, msg) {
         handleUpdateChar(ws, data);
         break;
       case 'list':                        // list characters
-        handleList(ws);
+        handleList(ws, data);
         break;
       default:
         error(ws, msg + " is not a valid action");
@@ -68,69 +74,28 @@ function handleMessage(ws, msg) {
  */
 function handleLeave(ws, data) {
   if (data.name) {
-    CHARACTERS
-      .filter(a => a.name === data.name);
+    roomManager.removeCharacter("entrance", data.name);
+
     let response = {
       'action': 'remove_char',
       'name': data.name
     };
     broadcastToAll(JSON.stringify(response));
-    
-    // db.serialize(() => {
-    //   const removeCharQuery = `
-    //   DELETE FROM Characters
-    //   WHERE name = ?;
-    //   `;
-    //   let stmt = db.prepare(removeCharQuery);
-    //   stmt.run(data.name);
-
-    //   let response = {'action': 'remove_char'};
-    //   response.name = data.name;
-    //   broadcastToAll(JSON.stringify(response));
-    // });
   } else {
     error(ws, "Character 'name' not specified.");
   }
 }
 
 /**
- * Lists characters and positions
+ * Lists characters and their positions
  * @param {WebSocket} ws - WebSocket for response
+ * @param {Object} data - data from request.  If data contains 'room', will
+ *                        only list characters in that room.
  */
-function handleList(ws) {
-  let result = CHARACTERS
-    .map(row => {
-      return {name: row.name, x: row.x, y: row.y}
-    });
+function handleList(ws, data) {
+  let result = roomManager.listCharacters(data.room);
+  
   ws.send(JSON.stringify({action: 'list', list: result}));
-
-  // db.serialize(() => {
-  //   result = []
-
-
-  //   db.each(
-  //     // query
-  //     `
-  //       SELECT *
-  //       FROM Characters;
-  //     `,
-  //     // query params
-  //     [],
-  //     // handle each row
-  //     (err, row) => {
-  //       result.push({
-  //         name: row.name,
-  //         x: row.x,
-  //         y: row.y
-  //       });
-  //       console.log(row);
-  //     },
-  //     // run on completion
-  //     () => {
-  //       ws.send(JSON.stringify({list: result}));
-  //     }
-  //   );
-  // });
 }
 
 /**
@@ -140,35 +105,13 @@ function handleList(ws) {
  */
 function handleUpdateChar(ws, data) {
   if (data.name && data.x && data.y) {
-
-    for (let i = 0; i < CHARACTERS.length; i++) {
-      if (CHARACTERS[i].name === data.name) {
-        CHARACTERS[i].x = data.x;
-        CHARACTERS[i].y = data.y;
-      }
-    }
+    roomManager.updateCharacter("entrance", data.name, data.x, data.y);
 
     let response = {'action': 'move_char'};
     response.name = data.name;
     response.x = data.x;
     response.y = data.y;
     broadcastToAll(JSON.stringify(response));
-
-    // db.serialize(() => {
-    //   const updateCharQuery = `
-    //   UPDATE Characters
-    //   SET x = ?, y = ?
-    //   WHERE name = ?;
-    //   `;
-    //   let stmt = db.prepare(updateCharQuery);
-    //   stmt.run(data.x, data.y, data.name);
-
-    //   let response = {'action': 'move_char'};
-    //   response.name = data.name;
-    //   response.x = data.x;
-    //   response.y = data.y;
-    //   broadcastToAll(JSON.stringify(response));
-    // });
   } else {
     error(ws, "Must specify 'name', 'x', and 'y'.");
   }
@@ -182,32 +125,13 @@ function handleUpdateChar(ws, data) {
 function handleCreateChar(ws, data) {
   if (data.name) {
 
-    CHARACTERS.push({
-      name: data.name,
-      x: 0,
-      y: 0
-    });
+    roomManager.addCharacter("entrance", data.name);
 
     let response = {'action': 'new_char'};
     response.name = data.name;
     response.x = 0;
     response.y = 0;
     broadcastToAll(JSON.stringify(response));
-
-    // db.serialize(() => {
-    //   const createCharQuery = `
-    //   INSERT INTO Characters
-    //   VALUES (?, 0, 0);
-    //   `;
-    //   let stmt = db.prepare(createCharQuery);
-    //   stmt.run(data.name);
-
-    //   let response = {'action': 'new_char'};
-    //   response.name = data.name;
-    //   response.x = 0;
-    //   response.y = 0;
-    //   broadcastToAll(JSON.stringify(response));
-    // });
   } else {
     error(ws, "Character 'name' not specified.");
   }
