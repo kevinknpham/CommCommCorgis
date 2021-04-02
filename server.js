@@ -3,29 +3,23 @@
  */
 
 const express = require('express');
+const path = require('path');
 const { Server } = require('ws');
-const sqlite3 = require('sqlite3').verbose();
-const sqlite = require('sqlite');
 
 const PORT = process.env.PORT || 3456;
 const INDEX = './static/index.html';
 
-const server = express()
+const app = express();
+
+app.use(express.static(path.join(__dirname, 'static')));
+
+const server = app
   .use((req, res) => res.sendFile(INDEX, {root:__dirname}))
   .listen(PORT, () => console.log(`Listening on ${PORT}`));
 
 const wss = new Server({ server });
 
-// connection to sqlite database
-const db = new sqlite3.Database(':memory:', (err) => {
-  if (err) {
-    return console.error(err.message);
-  }
-  console.log('Connected to the in-memory SQLite database');
-});
-
-// Set up table 
-createTable(db);
+const CHARACTERS = [];
 
 wss.on('connection', (ws) => {
   console.log('Client connected');
@@ -61,7 +55,7 @@ function handleMessage(ws, msg) {
       default:
         error(ws, msg + " is not a valid action");
     }
-    
+
   } else {
     error(ws, 'Please specify an action (chat, create, leave, update)');
   }
@@ -74,18 +68,26 @@ function handleMessage(ws, msg) {
  */
 function handleLeave(ws, data) {
   if (data.name) {
-    db.serialize(() => {
-      const removeCharQuery = `
-      DELETE FROM Characters
-      WHERE name = ?;
-      `;
-      let stmt = db.prepare(removeCharQuery);
-      stmt.run(data.name);
+    CHARACTERS
+      .filter(a => a.name === data.name);
+    let response = {
+      'action': 'remove_char',
+      'name': data.name
+    };
+    broadcastToAll(JSON.stringify(response));
+    
+    // db.serialize(() => {
+    //   const removeCharQuery = `
+    //   DELETE FROM Characters
+    //   WHERE name = ?;
+    //   `;
+    //   let stmt = db.prepare(removeCharQuery);
+    //   stmt.run(data.name);
 
-      let response = {'action': 'remove_char'};
-      response.name = data.name;
-      broadcastToAll(JSON.stringify(response));
-    });
+    //   let response = {'action': 'remove_char'};
+    //   response.name = data.name;
+    //   broadcastToAll(JSON.stringify(response));
+    // });
   } else {
     error(ws, "Character 'name' not specified.");
   }
@@ -96,31 +98,39 @@ function handleLeave(ws, data) {
  * @param {WebSocket} ws - WebSocket for response
  */
 function handleList(ws) {
-  db.serialize(() => {
-    result = []
-    db.each(
-      // query
-      `
-        SELECT *
-        FROM Characters;
-      `,
-      // query params
-      [],
-      // handle each row
-      (err, row) => {
-        result.push({
-          name: row.name,
-          x: row.x,
-          y: row.y
-        });
-        console.log(row);
-      },
-      // run on completion
-      () => {
-        ws.send(JSON.stringify({list: result}));
-      }
-    );
-  });
+  let result = CHARACTERS
+    .map(row => {
+      return {name: row.name, x: row.x, y: row.y}
+    });
+  ws.send(JSON.stringify({action: 'list', list: result}));
+
+  // db.serialize(() => {
+  //   result = []
+
+
+  //   db.each(
+  //     // query
+  //     `
+  //       SELECT *
+  //       FROM Characters;
+  //     `,
+  //     // query params
+  //     [],
+  //     // handle each row
+  //     (err, row) => {
+  //       result.push({
+  //         name: row.name,
+  //         x: row.x,
+  //         y: row.y
+  //       });
+  //       console.log(row);
+  //     },
+  //     // run on completion
+  //     () => {
+  //       ws.send(JSON.stringify({list: result}));
+  //     }
+  //   );
+  // });
 }
 
 /**
@@ -130,21 +140,35 @@ function handleList(ws) {
  */
 function handleUpdateChar(ws, data) {
   if (data.name && data.x && data.y) {
-    db.serialize(() => {
-      const updateCharQuery = `
-      UPDATE Characters
-      SET x = ?, y = ?
-      WHERE name = ?;
-      `;
-      let stmt = db.prepare(updateCharQuery);
-      stmt.run(data.x, data.y, data.name);
 
-      let response = {'action': 'move_char'};
-      response.name = data.name;
-      response.x = data.x;
-      response.y = data.y;
-      broadcastToAll(JSON.stringify(response));
-    });
+    for (let i = 0; i < CHARACTERS.length; i++) {
+      if (CHARACTERS[i].name === data.name) {
+        CHARACTERS[i].x = data.x;
+        CHARACTERS[i].y = data.y;
+      }
+    }
+
+    let response = {'action': 'move_char'};
+    response.name = data.name;
+    response.x = data.x;
+    response.y = data.y;
+    broadcastToAll(JSON.stringify(response));
+
+    // db.serialize(() => {
+    //   const updateCharQuery = `
+    //   UPDATE Characters
+    //   SET x = ?, y = ?
+    //   WHERE name = ?;
+    //   `;
+    //   let stmt = db.prepare(updateCharQuery);
+    //   stmt.run(data.x, data.y, data.name);
+
+    //   let response = {'action': 'move_char'};
+    //   response.name = data.name;
+    //   response.x = data.x;
+    //   response.y = data.y;
+    //   broadcastToAll(JSON.stringify(response));
+    // });
   } else {
     error(ws, "Must specify 'name', 'x', and 'y'.");
   }
@@ -157,37 +181,36 @@ function handleUpdateChar(ws, data) {
  */
 function handleCreateChar(ws, data) {
   if (data.name) {
-    db.serialize(() => {
-      const createCharQuery = `
-      INSERT INTO Characters
-      VALUES (?, 0, 0);
-      `;
-      let stmt = db.prepare(createCharQuery);
-      stmt.run(data.name);
 
-      let response = {'action': 'new_char'};
-      response.name = data.name;
-      response.x = 0;
-      response.y = 0;
-      broadcastToAll(JSON.stringify(response));
+    CHARACTERS.push({
+      name: data.name,
+      x: 0,
+      y: 0
     });
+
+    let response = {'action': 'new_char'};
+    response.name = data.name;
+    response.x = 0;
+    response.y = 0;
+    broadcastToAll(JSON.stringify(response));
+
+    // db.serialize(() => {
+    //   const createCharQuery = `
+    //   INSERT INTO Characters
+    //   VALUES (?, 0, 0);
+    //   `;
+    //   let stmt = db.prepare(createCharQuery);
+    //   stmt.run(data.name);
+
+    //   let response = {'action': 'new_char'};
+    //   response.name = data.name;
+    //   response.x = 0;
+    //   response.y = 0;
+    //   broadcastToAll(JSON.stringify(response));
+    // });
   } else {
     error(ws, "Character 'name' not specified.");
   }
-}
-
-/**
- * Creates table to hold characters
- */
-function createTable() {
-  db.serialize(() => {
-    const createTableQuery = `CREATE TABLE Characters(
-      name      varchar(15),
-      x         int,
-      y         int
-    );`
-    db.run(createTableQuery);
-  });
 }
 
 /**

@@ -2,7 +2,7 @@
   "name": "CommCommCorgis",
   "version": "1.0.0",
   "description": "## Setup To set up the server run `./venv/bin/activate` followed by `pip3 install -r requirements.txt`",
-  "main": "tempserver.js",
+  "main": "server.js",
   "engines": {
     "node": "12.9.1"
   },
@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node tempserver.js"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",

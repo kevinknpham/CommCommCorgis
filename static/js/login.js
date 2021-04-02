@@ -16,6 +16,6 @@ function login() {
       ws.close();
     }
     sessionStorage.setItem("commcommcorgis_username", username);
-    window.location.href = "main.html";
+    window.location.replace("main.html");
   }
 }

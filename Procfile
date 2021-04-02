@@ -1,1 +1,1 @@
-web: node tempserver.js
+web: node server.js
