@@ -20,7 +20,8 @@ function login() {
       ws.close();
     };
     sessionStorage.setItem("commcommcorgis_username", username);
-    
+
+    document.querySelector("body").style.backgroundColor = "white";
     document.getElementById("login-page").style.display = "none";
     document.getElementById("main-page").style.display = "block";
   }
