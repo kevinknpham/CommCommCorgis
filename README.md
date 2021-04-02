@@ -4,11 +4,10 @@
 To set up the server run the following:
 
 * `npm install`
-* `node server.js`
+* `node server.js` or `npm start`
 
 ## Client
 By: Jong and Miguel
-Will use React or not
 
 ### Displaying game
 TBD how to do - could use DOM manipulation
@@ -33,29 +32,30 @@ Requests and responses will use JSON format
 
 Any missing fields will result in a plain text error response.
 
-`action`: what the server should do.  Can be 'update', 'create', 'leave'.
+`action`: required field.  Describes what the server should do.
 
 if `action` is create
-
+_A character is created and added to the game._
 * `name`: name of character
 
 if `action` is update:
-
+_The specified character's position is updated._
 * `name`: name of character to move
 * `x`: x position to move character to
 * `y`: y position to move character to
 
 if `action` is leave
-
+_The specified character is removed from the game._
 * `name`: name of character leaving
 
 if `action` is chat
-
+_The message is broadcast to all connected users._
 * `user`: name of current player
 * `text`: body of message
 
 if `action` is list
-* no required fields, server will respond with list of player locations
+_The server will respond with a list of the characters and their positions._
+* optional field `room`: room to list characters from (if not specified, all rooms' characters are listed)
 
 **Server message format**
 
