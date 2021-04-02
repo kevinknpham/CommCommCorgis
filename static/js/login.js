@@ -26,3 +26,9 @@ function login() {
     document.getElementById("main-page").style.display = "block";
   }
 }
+
+function logout() {
+  document.querySelector("body").style.backgroundColor = "pink";
+  document.getElementById("login-page").style.display = "block";
+  document.getElementById("main-page").style.display = "none";
+}
