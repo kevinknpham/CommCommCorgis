@@ -21,6 +21,17 @@ function login() {
     };
     sessionStorage.setItem("commcommcorgis_username", username);
 
+    const canvas = document.getElementById("myCanvas");
+
+    const newCharacter = document.createElement("img");
+    newCharacter.setAttribute("src", "assets/corgi-slide.png");
+    newCharacter.classList.add("character");
+    newCharacter.setAttribute(
+      "id",
+      sessionStorage.getItem("commcommcorgis_username")
+    );
+    canvas.appendChild(newCharacter);
+
     document.querySelector("body").style.backgroundColor = "white";
     document.getElementById("login-page").style.display = "none";
     document.getElementById("main-page").style.display = "block";
