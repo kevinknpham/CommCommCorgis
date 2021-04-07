@@ -31,6 +31,7 @@ function login() {
       sessionStorage.getItem("commcommcorgis_username")
     );
     canvas.appendChild(newCharacter);
+    moveCharacter(username);
 
     document.querySelector("body").style.backgroundColor = "white";
     document.getElementById("login-page").style.display = "none";
