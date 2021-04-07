@@ -6,13 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CommCommCorgis</title>
     <link rel="icon shortcut" href="#" />
-    <link rel="stylesheet" href="./css/common.css" />
-    <link rel="stylesheet" href="./css/login.css" />
+    <link rel="stylesheet" href="./css/main.css" />
+    <script src="js/login.js" defer></script>
+    <script src="js/app.js" defer></script>
+    <script src="js/chat.js" defer></script>
   </head>
   <body>
-    <div class="login-screen">
-      <h1>Welcome to CommCommCorgis!</h1>
-      <form id="form" action="main.html" method="POST">
+    <div id="login-page">
+      <div class="login-screen">
+        <h1>Welcome to CommCommCorgis!</h1>
         <input
           type="text"
           placeholder="Enter your username"
@@ -20,11 +22,31 @@
           class="login-input"
           id="login-input"
         />
-        <button type="submit" class="login-button" id="login-button" disabled>
+        <button type="button" class="login-button" id="login-button" disabled>
           Login
         </button>
-      </form>
+      </div>
+    </div>
+
+    <div id="main-page">
+      <div class="contents">
+        <div id="myCanvas" class="background-formatter">
+          <!-- <img src="assets/corgi-slide.png" class="character" /> -->
+        </div>
+        <div class="chat">
+          <div class="header">
+            <h2 class="flex3">ChatBox</h2>
+            <button class="logout-button" onclick="logout()">Logout</button>
+          </div>
+
+          <div class="post-container"></div>
+
+          <div class="post-input">
+            <input type="text" placeholder="Say Hi!" />
+            <button id="post-button" disabled>Post</button>
+          </div>
+        </div>
+      </div>
     </div>
   </body>
-  <script src="js/login.js"></script>
 </html>

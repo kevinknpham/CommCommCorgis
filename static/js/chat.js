@@ -1,8 +1,8 @@
-if (!sessionStorage.getItem("commcommcorgis_username")) {
-  window.open("index.html", "_self");
-}
+// if (!sessionStorage.getItem("commcommcorgis_username")) {
+//   window.open("index.html", "_self");
+// }
 
-let HOST = location.origin.replace(/^http/, 'ws');
+let HOST = location.origin.replace(/^http/, "ws");
 let ws = new WebSocket(HOST);
 ws.onopen = (event) => {
   ws.onmessage = (msg) => handleMessage(msg);
@@ -26,7 +26,7 @@ function setInputFunctionality() {
   postBtn.addEventListener("click", function () {
     let datum = {
       text: input.value,
-      user: "Miguel",
+      user: sessionStorage.getItem("commcommcorgis_username"),
       action: "chat",
     };
     // document.querySelector(".post-container").appendChild(createPost(datum));
