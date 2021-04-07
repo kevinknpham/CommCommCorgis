@@ -1,23 +1,11 @@
-// if (!sessionStorage.getItem("commcommcorgis_username")) {
-//   window.open("index.html", "_self");
-// }
-
-let HOST = location.origin.replace(/^http/, "ws");
-let ws = new WebSocket(HOST);
-ws.onopen = (event) => {
-  ws.onmessage = (msg) => handleMessage(msg);
-  setInputFunctionality();
-};
-
-function handleMessage(message) {
-  console.log(message);
-  data = JSON.parse(message.data);
-  if (data.action && data.action == "chat") {
+function handleChat(data) {
+  console.log(data);
+  if (data.user && data.text) {
     document.querySelector(".post-container").appendChild(createPost(data));
   }
 }
 
-function setInputFunctionality() {
+function setChat() {
   const input = document.querySelector(".post-input input");
   const postBtn = document.getElementById("post-button");
   input.addEventListener("input", function (e) {
