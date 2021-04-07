@@ -75,6 +75,9 @@ if `action` is move_char
 * `x`: new x coordinate
 * `y`: new y coordinate
 
+if `action` is remove_char
+* `name`: name of character to remove
+
 # Goals
 
 A running to do list can be found [here](https://docs.google.com/spreadsheets/d/1cJMP1YoE9plkKD9wdrVH9x0niO9LTA94-gwFw89f9Ug/edit?usp=sharing).
