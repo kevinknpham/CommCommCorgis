@@ -2,6 +2,7 @@ function handleChat(data) {
   console.log(data);
   if (data.user && data.text) {
     document.querySelector(".post-container").appendChild(createPost(data));
+    document.querySelector(".post-container").lastChild.scrollIntoView(false);
   }
 }
 
