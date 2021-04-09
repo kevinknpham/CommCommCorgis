@@ -1,6 +1,6 @@
 * {
   box-sizing: border-box;
-  font-family: "Courier New", Courier, monospace;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 body {
@@ -75,7 +75,7 @@ h2 {
 .background-formatter {
   width: 74.5vw;
   height: 90vh;
-  background-image: url("../assets/oasiss.jpg");
+  background-image: url('../assets/oasiss.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   position: relative;
@@ -84,6 +84,7 @@ h2 {
 .chat {
   background-color: #d4dbf5;
   width: 24vw;
+  height: 90vh;
   border: 1px solid black;
   border-radius: 8px;
   display: flex;
@@ -105,7 +106,7 @@ h2 {
 .post-container {
   display: flex;
   flex-direction: column;
-  height: 670px;
+  height: 75vh;
   overflow-y: scroll;
 }
 

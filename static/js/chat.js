@@ -6,20 +6,28 @@ function handleChat(data) {
 }
 
 function setChat() {
-  const input = document.querySelector(".post-input input");
+  let input = document.querySelector(".post-input input");
   const postBtn = document.getElementById("post-button");
   input.addEventListener("input", function (e) {
     postBtn.disabled = e.target.value.length === 0;
   });
-  postBtn.addEventListener("click", function () {
-    let datum = {
-      text: input.value,
-      user: sessionStorage.getItem("commcommcorgis_username"),
-      action: "chat",
-    };
-    // document.querySelector(".post-container").appendChild(createPost(datum));
-    ws.send(JSON.stringify(datum));
+  input.addEventListener("keyup", function (e) {
+    if (e.key === "Enter") {
+      sendChat();
+    }
   });
+  postBtn.addEventListener("click", sendChat);
+}
+
+function sendChat() {
+  let input = document.querySelector(".post-input input");
+  let datum = {
+    text: input.value,
+    user: sessionStorage.getItem("commcommcorgis_username"),
+    action: "chat",
+  };
+  ws.send(JSON.stringify(datum));
+  document.querySelector(".post-input input").value = "";
 }
 
 function createPost(info) {
