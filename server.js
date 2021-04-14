@@ -111,6 +111,7 @@ function handleUpdateChar(ws, data) {
     broadcastToAll(JSON.stringify(response));
   } else {
     error(ws, "Must specify 'name', 'x', and 'y'.");
+    console.log(data);
   }
 }
 
