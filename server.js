@@ -2,20 +2,20 @@
  * Server code for Comm Comm Corgis using Express and WebSockets
  */
 
-const express = require('express');
-const path = require('path');
-const { Server } = require('ws');
-const RoomManager = require('./rooms');
+const express = require("express");
+const path = require("path");
+const { Server } = require("ws");
+const RoomManager = require("./rooms");
 
 const PORT = process.env.PORT || 3456;
-const INDEX = './static/index.html';
+const INDEX = "./static/index.html";
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, 'static')));
+app.use(express.static(path.join(__dirname, "static")));
 
 const server = app
-  .use((req, res) => res.sendFile(INDEX, {root:__dirname}))
+  .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
   .listen(PORT, () => {
     console.log(`Listening on ${PORT}`);
     console.log(`http://localhost:${PORT}/`);
@@ -23,14 +23,12 @@ const server = app
 
 const wss = new Server({ server });
 
-const roomManager = new RoomManager([
-  "entrance"
-]);
+const roomManager = new RoomManager(["entrance"]);
 
-wss.on('connection', (ws) => {
-  console.log('Client connected');
-  ws.on('close', () => console.log('Client disconnected'));
-  ws.on('message', (msg) => handleMessage(ws, msg));
+wss.on("connection", (ws) => {
+  console.log("Client connected");
+  ws.on("close", () => console.log("Client disconnected"));
+  ws.on("message", (msg) => handleMessage(ws, msg));
 });
 
 /**
@@ -43,27 +41,26 @@ function handleMessage(ws, msg) {
     const action = data.action.toLowerCase();
 
     switch (action) {
-      case 'chat':                        // chat messages
+      case "chat": // chat messages
         handleChat(ws, data);
         break;
-      case 'create':                      // create new character
+      case "create": // create new character
         handleCreateChar(ws, data);
         break;
-      case 'leave':                       // remove character from game
+      case "leave": // remove character from game
         handleLeave(ws, data);
         break;
-      case 'update':                      // update character position
+      case "update": // update character position
         handleUpdateChar(ws, data);
         break;
-      case 'list':                        // list characters
+      case "list": // list characters
         handleList(ws, data);
         break;
       default:
         error(ws, msg + " is not a valid action");
     }
-
   } else {
-    error(ws, 'Please specify an action (chat, create, leave, update)');
+    error(ws, "Please specify an action (chat, create, leave, update)");
   }
 }
 
@@ -77,8 +74,8 @@ function handleLeave(ws, data) {
     roomManager.removeCharacter("entrance", data.name);
 
     let response = {
-      'action': 'remove_char',
-      'name': data.name
+      action: "remove_char",
+      name: data.name,
     };
     broadcastToAll(JSON.stringify(response));
   } else {
@@ -94,12 +91,12 @@ function handleLeave(ws, data) {
  */
 function handleList(ws, data) {
   let result = roomManager.listCharacters(data.room);
-  
-  ws.send(JSON.stringify({action: 'list', list: result}));
+
+  ws.send(JSON.stringify({ action: "list", list: result }));
 }
 
 /**
- * 
+ *
  * @param {WebSocket} ws - WebSocket for error handling
  * @param {Object} data - must contain 'name', 'x', and 'y' fields
  */
@@ -107,7 +104,7 @@ function handleUpdateChar(ws, data) {
   if (data.name && data.x && data.y) {
     roomManager.updateCharacter("entrance", data.name, data.x, data.y);
 
-    let response = {'action': 'move_char'};
+    let response = { action: "move_char" };
     response.name = data.name;
     response.x = data.x;
     response.y = data.y;
@@ -124,10 +121,9 @@ function handleUpdateChar(ws, data) {
  */
 function handleCreateChar(ws, data) {
   if (data.name) {
-
     roomManager.addCharacter("entrance", data.name);
 
-    let response = {'action': 'new_char'};
+    let response = { action: "new_char" };
     response.name = data.name;
     response.x = 0;
     response.y = 0;
@@ -154,12 +150,12 @@ function broadcastToAll(msg) {
  */
 function handleChat(ws, data) {
   if (data.user && data.text) {
-    result = {'action': 'chat'};
+    result = { action: "chat" };
     result.user = data.user;
     result.text = data.text;
     broadcastToAll(JSON.stringify(result));
   } else {
-    error(ws, 'Chat messages must contain "user" and "text" fields.')
+    error(ws, 'Chat messages must contain "user" and "text" fields.');
   }
 }
 
@@ -170,4 +166,5 @@ function handleChat(ws, data) {
  */
 function error(ws, msg) {
   ws.send("ERROR: " + msg);
+  console.error(msg);
 }

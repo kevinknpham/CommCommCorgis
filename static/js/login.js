@@ -17,6 +17,7 @@ function login() {
   if (username && username.length > 0) {
     sessionStorage.setItem("commcommcorgis_username", username);
     createCharacter(username);
+    sentChar(username);
     moveCharacter(username);
 
     document.querySelector("body").style.backgroundColor = "white";
@@ -38,6 +39,15 @@ function handleCreateChar(data) {
   if (data.name) {
     createCharacter(data.name);
   }
+}
+
+function sentChar(username) {
+  let input = document.querySelector(".character");
+  let datum = {
+    name: username,
+    action: "create",
+  };
+  ws.send(JSON.stringify(datum));
 }
 
 function logout() {

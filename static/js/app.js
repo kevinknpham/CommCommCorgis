@@ -8,7 +8,6 @@ function moveCharacter(username) {
   var cursorX;
   var cursorY;
 
-
   document.getElementById("myCanvas").onclick = (event) => {
     cursorX = event.clientX;
     cursorY = event.clientY;
