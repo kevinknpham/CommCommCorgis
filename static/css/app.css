@@ -1,0 +1,17 @@
+.character {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120px;
+  height: 120px;
+  transition: all 1s ease;
+}
+
+.background-formatter {
+  width: 1430px;
+  height: 972px;
+  background-image: url('../assets/oasiss.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}

@@ -1,11 +1,16 @@
 .chat {
   background-color: #d4dbf5;
-  width: 24vw;
-  height: 90vh;
+  width: 480px;
+  height: 972px;
   border: 1px solid black;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
+}
+
+.header {
+  display: flex;
+  justify-content: space-around;
 }
 
 .logout-button {
@@ -41,7 +46,7 @@
   height: 5%;
   margin: 8px;
 }
-  
+
 .post-input button {
   border-radius: 20px;
   border-top-left-radius: 0;
@@ -78,4 +83,8 @@
   display: flex;
   flex-direction: row;
   overflow-y: auto;
+}
+
+.flex3 {
+  flex-grow: 3;
 }
