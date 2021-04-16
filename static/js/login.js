@@ -1,3 +1,6 @@
+let username;
+const CANVAS = document.getElementById("myCanvas");
+
 function getLogin() {
   const input = document.getElementById("login-input");
   const loginBtn = document.getElementById("login-button");
@@ -13,7 +16,8 @@ function getLogin() {
 }
 
 function login() {
-  const username = document.getElementById("login-input").value;
+  username = document.getElementById("login-input").value;
+  console.log(username);
   if (username && username.length > 0) {
     sessionStorage.setItem("commcommcorgis_username", username);
     createCharacter(username);
@@ -27,12 +31,11 @@ function login() {
 }
 
 function createCharacter(username) {
-  const canvas = document.getElementById("myCanvas");
   const newCharacter = document.createElement("img");
   newCharacter.setAttribute("src", "assets/corgi-slide.png");
   newCharacter.classList.add("character");
   newCharacter.setAttribute("id", username);
-  canvas.appendChild(newCharacter);
+  CANVAS.appendChild(newCharacter);
 }
 
 function handleCreateChar(data) {
@@ -42,7 +45,6 @@ function handleCreateChar(data) {
 }
 
 function sentChar(username) {
-  let input = document.querySelector(".character");
   let datum = {
     name: username,
     action: "create",
@@ -51,9 +53,27 @@ function sentChar(username) {
 }
 
 function logout() {
+  const canvas = document.getElementById("myCanvas");
   document.querySelector("body").style.backgroundColor = "pink";
   document.getElementById("login-page").style.display = "block";
   document.getElementById("main-page").style.display = "none";
+  removeChar(username);
+  CANVAS.removeChild(document.getElementById(username));
+  sessionStorage.removeItem("commcommcorgis_username");
+}
+
+function handleLeave(data) {
+  if (data.name) {
+    removeChar(data.name);
+  }
+}
+
+function removeChar(username) {
+  let datum = {
+    name: username,
+    action: "leave",
+  };
+  ws.send(JSON.stringify(datum));
 }
 
 getLogin();
