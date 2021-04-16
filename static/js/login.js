@@ -85,7 +85,7 @@ function handleList(data) {
 function createCharFromList(list) {
   for (let character of list) {
     if (username !== character && !document.getElementById(character.name)) {
-      handleCreateChar(username);
+      handleCreateChar(character.name);
     } else {
       handleUpdateChar(character);
     }
