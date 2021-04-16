@@ -22,6 +22,7 @@ function login() {
     sessionStorage.setItem("commcommcorgis_username", username);
     createCharacter(username);
     sendChar(username);
+    ws.send(JSON.stringify({action: "list"}));
     moveCharacter(username);
 
     document.querySelector("body").style.backgroundColor = "white";
