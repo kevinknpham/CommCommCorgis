@@ -21,7 +21,7 @@ function login() {
   if (username && username.length > 0) {
     sessionStorage.setItem("commcommcorgis_username", username);
     createCharacter(username);
-    sentChar(username);
+    sendChar(username);
     moveCharacter(username);
 
     document.querySelector("body").style.backgroundColor = "white";
