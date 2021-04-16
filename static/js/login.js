@@ -87,7 +87,7 @@ function createCharFromList(list) {
     if (username !== character && !document.getElementById(character.name)) {
       handleCreateChar(username);
     } else {
-      handleUpdateChar(username);
+      handleUpdateChar(character);
     }
   }
 }
