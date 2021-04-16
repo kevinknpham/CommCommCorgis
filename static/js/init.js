@@ -26,8 +26,13 @@ function handleMessage(msg) {
       case "move_char": // update character position
         handleUpdateChar(data);
         break;
+      case "list":
+        handleList(data);
+        break;
       default:
         console.log(action + " is not a valid action");
     }
   }
 }
+
+

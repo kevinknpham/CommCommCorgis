@@ -44,7 +44,7 @@ function handleCreateChar(data) {
   }
 }
 
-function sentChar(username) {
+function sendChar(username) {
   let datum = {
     name: username,
     action: "create",
@@ -75,5 +75,22 @@ function removeChar(username) {
   };
   ws.send(JSON.stringify(datum));
 }
+
+function handleList(data) {
+  if (data.list) {
+    createCharFromList(data.list);
+  }
+}
+
+function createCharFromList(list) {
+  for (let character of list) {
+    if (username !== character && !document.getElementById(character.name)) {
+      handleCreateChar(username);
+    } else {
+      handleUpdateChar(username);
+    }
+  }
+}
+
 
 getLogin();
