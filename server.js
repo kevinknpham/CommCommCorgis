@@ -137,11 +137,11 @@ function handleCreateChar(ws, data) {
       }));
       broadcastToAll(JSON.stringify(response));
     } else {
-      ws.send({
+      ws.send(JSON.stringify({
         action: "login",
         status: "failure",
         reason: "user_already_exists"
-      });
+      }));
     }
   } else {
     error(ws, "Character 'name' not specified.");
