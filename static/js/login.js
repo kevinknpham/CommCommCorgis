@@ -1,6 +1,10 @@
 let username;
 const CANVAS = document.getElementById("myCanvas");
 
+window.addEventListener("unload", function (e) {
+  logout();
+});
+
 // click or press enter allow user to join the game
 function login() {
   const input = document.getElementById("login-input");
@@ -26,8 +30,8 @@ function initiateUserCharacter() {
     sessionStorage.setItem("commcommcorgis_username", username);
     sendCharacterToServer(username);
     createCharacterAsset(username);
-    ws.send(JSON.stringify({action: "list"}));
     moveCharacter(username);
+    ws.send(JSON.stringify({ action: "list" }));
     switchScreen("white", "none", "block");
   }
 }
@@ -45,7 +49,7 @@ function createCharacterAsset(username) {
 function handleCreateChar(data) {
   if (data.name) {
     sendCharacterToServer(data.name);
-    createCharacterAsset(data.name);
+    ws.send(JSON.stringify({ action: "list" }));
   }
 }
 
@@ -61,7 +65,7 @@ function sendCharacterToServer(username) {
 // click allow user to exit the game and go back to login page
 // remove character asset from user's game instance
 function logout() {
-  const canvas = document.getElementById("myCanvas");
+  //const canvas = document.getElementById("myCanvas");
   switchScreen("pink", "block", "none");
   removeCharacterFromServer(username);
   CANVAS.removeChild(document.getElementById(username));
@@ -75,7 +79,7 @@ function handleLeave(data) {
   }
 }
 
-// 
+//
 function removeCharacterFromServer(username) {
   let datum = {
     name: username,
@@ -92,9 +96,15 @@ function handleList(data) {
 
 function createCharacterFromList(list) {
   for (let character of list) {
-    if (username !== character.name && !document.getElementById(character.name)) {
+    if (
+      username !== character.name &&
+      !document.getElementById(character.name)
+    ) {
+      console.log("hello1");
       handleCreateChar(character.name);
+      createCharacterAsset(character.name);
     } else {
+      console.log("hello2");
       handleUpdateChar(character);
     }
   }
