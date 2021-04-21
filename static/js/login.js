@@ -1,7 +1,8 @@
 let username;
 const CANVAS = document.getElementById("myCanvas");
 
-function getLogin() {
+// click or press enter allow user to join the game
+function login() {
   const input = document.getElementById("login-input");
   const loginBtn = document.getElementById("login-button");
   input.addEventListener("input", function (e) {
@@ -9,29 +10,30 @@ function getLogin() {
   });
   input.addEventListener("keyup", function (e) {
     if (e.key === "Enter") {
-      login();
+      initiateUserCharacter();
     }
   });
-  loginBtn.addEventListener("click", login);
+  loginBtn.addEventListener("click", initiateUserCharacter);
 }
 
-function login() {
+// Initialize user character and switch to the main game page from login page
+// and send the user data to server
+// only allow if user types something in login page
+function initiateUserCharacter() {
   username = document.getElementById("login-input").value;
   console.log(username);
   if (username && username.length > 0) {
     sessionStorage.setItem("commcommcorgis_username", username);
-    createCharacter(username);
-    sendChar(username);
+    sendCharacterToServer(username);
+    createCharacterAsset(username);
     ws.send(JSON.stringify({action: "list"}));
     moveCharacter(username);
-
-    document.querySelector("body").style.backgroundColor = "white";
-    document.getElementById("login-page").style.display = "none";
-    document.getElementById("main-page").style.display = "block";
+    switchScreen("white", "none", "block");
   }
 }
 
-function createCharacter(username) {
+// Create and append user's character to game background
+function createCharacterAsset(username) {
   const newCharacter = document.createElement("img");
   newCharacter.setAttribute("src", "assets/corgi-slide.png");
   newCharacter.classList.add("character");
@@ -39,13 +41,16 @@ function createCharacter(username) {
   CANVAS.appendChild(newCharacter);
 }
 
+// Create other user's character and adds to user's game instance
 function handleCreateChar(data) {
   if (data.name) {
-    createCharacter(data.name);
+    sendCharacterToServer(data.name);
+    createCharacterAsset(data.name);
   }
 }
 
-function sendChar(username) {
+// Create user's character and adds to game server list
+function sendCharacterToServer(username) {
   let datum = {
     name: username,
     action: "create",
@@ -53,23 +58,25 @@ function sendChar(username) {
   ws.send(JSON.stringify(datum));
 }
 
+// click allow user to exit the game and go back to login page
+// remove character asset from user's game instance
 function logout() {
   const canvas = document.getElementById("myCanvas");
-  document.querySelector("body").style.backgroundColor = "pink";
-  document.getElementById("login-page").style.display = "block";
-  document.getElementById("main-page").style.display = "none";
-  removeChar(username);
+  switchScreen("pink", "block", "none");
+  removeCharacterFromServer(username);
   CANVAS.removeChild(document.getElementById(username));
   sessionStorage.removeItem("commcommcorgis_username");
 }
 
+// Remove other user's character from user's game instance
 function handleLeave(data) {
   if (data.name) {
-    removeChar(data.name);
+    removeCharacterFromServer(data.name);
   }
 }
 
-function removeChar(username) {
+// 
+function removeCharacterFromServer(username) {
   let datum = {
     name: username,
     action: "leave",
@@ -79,11 +86,11 @@ function removeChar(username) {
 
 function handleList(data) {
   if (data.list) {
-    createCharFromList(data.list);
+    createCharacterFromList(data.list);
   }
 }
 
-function createCharFromList(list) {
+function createCharacterFromList(list) {
   for (let character of list) {
     if (username !== character.name && !document.getElementById(character.name)) {
       handleCreateChar(character.name);
@@ -93,5 +100,10 @@ function createCharFromList(list) {
   }
 }
 
+function switchScreen(color, loginPage, mainPage) {
+  document.querySelector("body").style.backgroundColor = color;
+  document.getElementById("login-page").style.display = loginPage;
+  document.getElementById("main-page").style.display = mainPage;
+}
 
-getLogin();
+login();

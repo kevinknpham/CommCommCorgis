@@ -12,9 +12,6 @@ function moveCharacter(username) {
     cursorX = event.clientX;
     cursorY = event.clientY;
 
-    // console.log(cursorX);
-    // console.log(cursorY);
-
     currentPosition.style.left = `${cursorX - charLength / 1.5}px`;
     currentPosition.style.top = `${cursorY - charLength / 1.5}px`;
 
@@ -24,12 +21,6 @@ function moveCharacter(username) {
       currentPosition.style.top
     );
   };
-
-  // - function that detects mouse pointer returns x,y value
-
-  // - function that does animation of character (div?) to that value
-
-  // - done!
 }
 
 function handleUpdateChar(data) {
