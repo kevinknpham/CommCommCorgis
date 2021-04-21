@@ -65,17 +65,18 @@ function sendCharacterToServer(username) {
 // click allow user to exit the game and go back to login page
 // remove character asset from user's game instance
 function logout() {
-  //const canvas = document.getElementById("myCanvas");
   switchScreen("pink", "block", "none");
   removeCharacterFromServer(username);
   CANVAS.removeChild(document.getElementById(username));
   sessionStorage.removeItem("commcommcorgis_username");
+  ws.send(JSON.stringify({ action: "list" }));
 }
 
 // Remove other user's character from user's game instance
 function handleLeave(data) {
   if (data.name) {
     removeCharacterFromServer(data.name);
+    ws.send(JSON.stringify({ action: "list" }));
   }
 }
 
