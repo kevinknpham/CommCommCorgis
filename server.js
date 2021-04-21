@@ -131,10 +131,10 @@ function handleCreateChar(ws, data) {
       response.name = data.name;
       response.x = 0;
       response.y = 0;
-      ws.send(JSON.stringify{
+      ws.send(JSON.stringify({
         action: "login",
         status: "success"
-      });
+      }));
       broadcastToAll(JSON.stringify(response));
     } else {
       ws.send({
