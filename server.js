@@ -39,7 +39,9 @@ function handleMessage(ws, msg) {
   data = JSON.parse(msg);
   if (data.action) {
     const action = data.action.toLowerCase();
-
+    if (data.name) {
+      data.name = data.name.replace(/[^\w]/gi,'').toLowerCase();
+    }
     switch (action) {
       case "chat": // chat messages
         handleChat(ws, data);
@@ -122,13 +124,25 @@ function handleUpdateChar(ws, data) {
  */
 function handleCreateChar(ws, data) {
   if (data.name) {
-    roomManager.addCharacter("entrance", data.name);
+    let createCharResult = roomManager.addCharacter("entrance", data.name);
 
-    let response = { action: "new_char" };
-    response.name = data.name;
-    response.x = 0;
-    response.y = 0;
-    broadcastToAll(JSON.stringify(response));
+    if (createCharResult) {
+      let response = { action: "new_char" };
+      response.name = data.name;
+      response.x = 0;
+      response.y = 0;
+      ws.send({
+        action: "login",
+        status: "success"
+      });
+      broadcastToAll(JSON.stringify(response));
+    } else {
+      ws.send({
+        action: "login",
+        status: "failure",
+        reason: "user_already_exists"
+      });
+    }
   } else {
     error(ws, "Character 'name' not specified.");
   }

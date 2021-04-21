@@ -24,7 +24,7 @@ class RoomManager {
   addCharacter(room, name, x = 0, y = 0) {
     let roomData = this.#roomOccupants.get(room);
     if (roomData) {
-      roomData.addCharacter(name, x, y);
+      return roomData.addCharacter(name, x, y);
     }
   }
 
@@ -87,7 +87,7 @@ class Room {
    * Construct empty room.
    */
   constructor() {
-    this.#characters = [];
+    this.#characters = new Map();
   }
 
   /**
@@ -97,11 +97,14 @@ class Room {
    * @param {Integer} y y position - defaults to 0
    */
   addCharacter(name, x = 0, y = 0) {
-    this.#characters.push({
-      name: data.name,
+    if (this.#characters.has(name)) {
+      return false;
+    }
+    this.#characters.set(name, {
       x: 0,
       y: 0
     });
+    return true;
   }
 
   /**
@@ -109,8 +112,7 @@ class Room {
    * @param {*} name name of character
    */
   removeCharacter(name) {
-    this.#characters = this.#characters
-      .filter(a => a.name === name);
+    this.#characters.delete(name);
   }
 
   /**
@@ -120,11 +122,11 @@ class Room {
    * @param {Integer} y new y location
    */
   updateCharacter(name, x, y) {
-    for (let i = 0; i < this.#characters.length; i++) {
-      if (this.#characters[i].name === name) {
-        this.#characters[i].x = x;
-        this.#characters[i].y = y;
-      }
+    if (this.#characters.has(name)) {
+      this.#characters.set(name, {
+        x: x,
+        y: y
+      });
     }
   }
 
@@ -132,9 +134,15 @@ class Room {
    * List names and positions of characters in room
    */
   listCharacters() {
-    return this.#characters.map(row => {
-      return {name: row.name, x: row.x, y: row.y};
-    });
+    let result = [];
+    for (let [key, value] of this.#characters) {
+      result.push({
+        name: key,
+        x: value.x,
+        y: value.y
+      })
+    }
+    return result;
   }
 }
 

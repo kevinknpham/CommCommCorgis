@@ -34,28 +34,36 @@ Any missing fields will result in a plain text error response.
 
 `action`: required field.  Describes what the server should do.
 
+
 if `action` is create
+
 _A character is created and added to the game._
 * `name`: name of character
+* server will respond with a JSON formatted String with the `action` of 'login' and a field `status` that will be 'success' or 'failure'.  If it failed a `reason` field will also be included.
 
-if `action` is update:
+if `action` is update
+
 _The specified character's position is updated._
 * `name`: name of character to move
 * `x`: x position to move character to
 * `y`: y position to move character to
 
 if `action` is leave
+
 _The specified character is removed from the game._
 * `name`: name of character leaving
 
 if `action` is chat
+
 _The message is broadcast to all connected users._
 * `user`: name of current player
 * `text`: body of message
 
 if `action` is list
+
 _The server will respond with a list of the characters and their positions._
 * optional field `room`: room to list characters from (if not specified, all rooms' characters are listed)
+* server will respond with an JSON formatted String containing an `action` with the value 'list' and a `list` with a value of an array of objects, each containing a 'name', 'x', and 'y' attribute.
 
 **Server message format**
 
