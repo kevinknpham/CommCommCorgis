@@ -181,5 +181,5 @@ function handleChat(ws, data) {
  */
 function error(ws, msg) {
   ws.send("ERROR: " + msg);
-  console.error(msg);
+  console.error("\u001b[31mERROR:\u001b[0m" + msg);
 }
