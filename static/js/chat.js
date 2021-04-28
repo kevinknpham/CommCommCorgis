@@ -1,4 +1,4 @@
-function handleChat(data) {
+function addNewestChatMessage(data) {
   console.log(data);
   if (data.user && data.text) {
     document.querySelector(".post-container").appendChild(createPost(data));

@@ -15,19 +15,19 @@ function handleMessage(msg) {
 
     switch (action) {
       case "chat": // chat messages
-        handleChat(data);
+        addNewestChatMessage(data);
         break;
       case "new_char": // create new character
-        handleCreateChar(data);
+        addCharacterName(data);
         break;
       case "remove_char": // remove character from game
-        handleLeave(data);
+        removeCharacterName(data);
         break;
       case "move_char": // update character position
-        handleUpdateChar(data);
+        updateCharacterPosition(data);
         break;
       case "list":
-        handleList(data);
+        updateCharacterList(data);
         break;
       default:
         console.log(action + " is not a valid action");

@@ -1,38 +1,42 @@
-"use strict";
+// size of corgi
+const characterLength = 120;
+const characterConstant = 1.5; // left 2 top 3
 
-// - mouse is clicked (function started by onClick)
-var charLength = 120;
 
 function moveCharacter(username) {
-  var currentPosition = document.getElementById(username);
-  var cursorX;
-  var cursorY;
+  let userCharacter = document.getElementById(username);
 
   document.getElementById("myCanvas").onclick = (event) => {
-    cursorX = event.clientX;
-    cursorY = event.clientY;
 
-    currentPosition.style.left = `${cursorX - charLength / 1.5}px`;
-    currentPosition.style.top = `${cursorY - charLength / 1.5}px`;
+    let currentLeftPosition = event.clientX - characterLength / characterConstant;
+    let currentTopPosition = event.clientY - characterLength / characterConstant
+    
+    moveCharactertoPosition(userCharacter, currentLeftPosition, currentTopPosition);
 
-    sentUpdateChar(
+    sendUpdatedCharacterPosition(
       username,
-      currentPosition.style.left,
-      currentPosition.style.top
+      currentLeftPosition,
+      currentTopPosition
     );
   };
 }
 
-function handleUpdateChar(data) {
+function moveCharactertoPosition(character, x, y) {
+  character.style.left = `${x}px`;
+  character.style.top = `${y}px`;
+}
+
+function updateCharacterPosition(data) {
   console.log(data);
   if (data.name && data.name !== username && data.x && data.y) {
-    var currentPosition = document.getElementById(data.name);
-    currentPosition.style.left = `${data.x - charLength / 1.5}px`;
-    currentPosition.style.top = `${data.y - charLength / 1.5}px`;
+    let userCharacter = document.getElementById(data.name);
+    let characterLeftPosition = data.x - characterLength / characterConstant;
+    let characterTopPosition = data.y - characterLength / characterConstant;
+    moveCharactertoPosition(userCharacter, characterLeftPosition, characterTopPosition);
   }
 }
 
-function sentUpdateChar(username, x, y) {
+function sendUpdatedCharacterPosition(username, x, y) {
   //let input = document.querySelector(".character");
   let datum = {
     name: username,

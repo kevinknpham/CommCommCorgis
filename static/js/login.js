@@ -46,14 +46,15 @@ function createCharacterAsset(username) {
 }
 
 // Create other user's character and adds to user's game instance
-function handleCreateChar(data) {
+// update that character to game server list
+function addCharacterName(data) {
   if (data.name) {
     sendCharacterToServer(data.name);
     ws.send(JSON.stringify({ action: "list" }));
   }
 }
 
-// Create user's character and adds to game server list
+// Create given user's character and adds to game server list
 function sendCharacterToServer(username) {
   let datum = {
     name: username,
@@ -73,14 +74,15 @@ function logout() {
 }
 
 // Remove other user's character from user's game instance
-function handleLeave(data) {
+// update that character to the server list
+function removeCharacterName(data) {
   if (data.name) {
     removeCharacterFromServer(data.name);
     ws.send(JSON.stringify({ action: "list" }));
   }
 }
 
-//
+// remove given user's character from the user's game instance
 function removeCharacterFromServer(username) {
   let datum = {
     name: username,
@@ -89,12 +91,16 @@ function removeCharacterFromServer(username) {
   ws.send(JSON.stringify(datum));
 }
 
-function handleList(data) {
+// update character list to the server
+function updateCharacterList(data) {
   if (data.list) {
     createCharacterFromList(data.list);
   }
 }
 
+// if the given username from user's instance does not exist in server,
+// then adds to both the server and the user's instance
+// if not, then update that character position to the server
 function createCharacterFromList(list) {
   for (let character of list) {
     if (
@@ -102,15 +108,17 @@ function createCharacterFromList(list) {
       !document.getElementById(character.name)
     ) {
       console.log("hello1");
-      handleCreateChar(character.name);
+      addCharacterName(character.name);
       createCharacterAsset(character.name);
     } else {
       console.log("hello2");
-      handleUpdateChar(character);
+      updateCharacterPosition(character);
     }
   }
 }
 
+// swtich login page to main game page when the user logs in
+// switch main game page to log out page when the user logs out
 function switchScreen(color, loginPage, mainPage) {
   document.querySelector("body").style.backgroundColor = color;
   document.getElementById("login-page").style.display = loginPage;
