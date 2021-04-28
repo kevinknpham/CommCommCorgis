@@ -2,12 +2,12 @@ let HOST = location.origin.replace(/^http/, "ws");
 let ws = new WebSocket(HOST);
 
 ws.onopen = (event) => {
-  ws.onmessage = (msg) => handleMessage(msg.data);
+  ws.onmessage = (msg) => handleMessageFromSever(msg.data);
   ws.onclose = (event) => console.log("ws closed");
   setChat();
 };
 
-function handleMessage(msg) {
+function handleMessageFromSever(msg) {
   console.log(msg);
   data = JSON.parse(msg);
   if (data.action) {

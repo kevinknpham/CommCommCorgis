@@ -53,7 +53,7 @@ function createCharacterAsset(username) {
 // update that character to game server list
 function addCharacterName(data) {
   if (data.name) {
-    sendCharacterToServer(data.name);
+    // sendCharacterToServer(data.name);
     ws.send(JSON.stringify({ action: "list" }));
   }
 }
@@ -80,8 +80,10 @@ function logout() {
 // Remove other user's character from user's game instance
 // update that character to the server list
 function removeCharacterName(data) {
+  console.log("remove?");
   if (data.name) {
-    removeCharacterFromServer(data.name);
+    console.log("removed???");
+    //removeCharacterFromServer(data.name);
     ws.send(JSON.stringify({ action: "list" }));
   }
 }
@@ -117,7 +119,9 @@ function createCharacterFromList(list) {
     } else if (username && document.getElementById(character.name)) {
       console.log("hello2");
       updateCharacterPosition(character);
-    } else if (logout) {
+    } else {
+      removeCharacterName(character.name);
+      CANVAS.removeChild(document.getElementById(character.name));
     }
   }
 }
