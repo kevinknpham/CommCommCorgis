@@ -1,7 +1,11 @@
 let username;
 const CANVAS = document.getElementById("myCanvas");
 
-window.addEventListener("unload", function (e) {
+window.addEventListener("beforeunload", function (e) {
+  logout();
+});
+
+window.addEventListener("onclose", function (e) {
   logout();
 });
 
@@ -27,7 +31,7 @@ function initiateUserCharacter() {
   username = document.getElementById("login-input").value;
   console.log(username);
   if (username && username.length > 0) {
-    sessionStorage.setItem("commcommcorgis_username", username);
+    // sessionStorage.setItem("commcommcorgis_username", username);
     sendCharacterToServer(username);
     createCharacterAsset(username);
     moveCharacter(username);
@@ -69,7 +73,7 @@ function logout() {
   switchScreen("pink", "block", "none");
   removeCharacterFromServer(username);
   CANVAS.removeChild(document.getElementById(username));
-  sessionStorage.removeItem("commcommcorgis_username");
+  // sessionStorage.removeItem("commcommcorgis_username");
   ws.send(JSON.stringify({ action: "list" }));
 }
 
@@ -110,9 +114,10 @@ function createCharacterFromList(list) {
       console.log("hello1");
       addCharacterName(character.name);
       createCharacterAsset(character.name);
-    } else {
+    } else if (username && document.getElementById(character.name)) {
       console.log("hello2");
       updateCharacterPosition(character);
+    } else if (logout) {
     }
   }
 }

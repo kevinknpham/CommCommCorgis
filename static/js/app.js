@@ -2,16 +2,20 @@
 const characterLength = 120;
 const characterConstant = 1.5; // left 2 top 3
 
-
 function moveCharacter(username) {
   let userCharacter = document.getElementById(username);
 
   document.getElementById("myCanvas").onclick = (event) => {
+    let currentLeftPosition =
+      event.clientX - characterLength / characterConstant;
+    let currentTopPosition =
+      event.clientY - characterLength / characterConstant;
 
-    let currentLeftPosition = event.clientX - characterLength / characterConstant;
-    let currentTopPosition = event.clientY - characterLength / characterConstant
-    
-    moveCharactertoPosition(userCharacter, currentLeftPosition, currentTopPosition);
+    moveCharactertoPosition(
+      userCharacter,
+      currentLeftPosition,
+      currentTopPosition
+    );
 
     sendUpdatedCharacterPosition(
       username,
@@ -32,12 +36,15 @@ function updateCharacterPosition(data) {
     let userCharacter = document.getElementById(data.name);
     let characterLeftPosition = data.x - characterLength / characterConstant;
     let characterTopPosition = data.y - characterLength / characterConstant;
-    moveCharactertoPosition(userCharacter, characterLeftPosition, characterTopPosition);
+    moveCharactertoPosition(
+      userCharacter,
+      characterLeftPosition,
+      characterTopPosition
+    );
   }
 }
 
 function sendUpdatedCharacterPosition(username, x, y) {
-  //let input = document.querySelector(".character");
   let datum = {
     name: username,
     x: parseInt(x),
