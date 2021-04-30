@@ -80,7 +80,7 @@ function sendCharacterToServer(username) {
 // click allow user to exit the game and go back to login page
 // remove character asset from user's game instance
 function logout() {
-  switchScreen("pink", "block", "none");
+  switchScreen("#d4dbf5", "block", "none");
   removeCharacterFromServer(username);
   CANVAS.removeChild(document.getElementById(username));
   // sessionStorage.removeItem("commcommcorgis_username");
