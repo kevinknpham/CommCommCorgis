@@ -88,3 +88,7 @@
 .flex3 {
   flex-grow: 3;
 }
+
+.message {
+  word-break: break-word;
+}

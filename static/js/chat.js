@@ -38,7 +38,7 @@ function createPost(info) {
     `<div class="post">` +
     `<div class="post-content">` +
     `<p class="bold">${info.user}</p>` +
-    `<p>${info.text}</p>` +
+    `<p class="message">${info.text}</p>` +
     `</div>`;
 
   return postContainer;
