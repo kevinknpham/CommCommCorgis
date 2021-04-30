@@ -24,7 +24,7 @@ function sendChat() {
   let input = document.querySelector(".post-input input");
   let datum = {
     text: input.value,
-    user: sessionStorage.getItem("commcommcorgis_username"),
+    user: username,
     action: "chat",
   };
   ws.send(JSON.stringify(datum));
