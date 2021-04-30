@@ -2,6 +2,8 @@
  * Server code for Comm Comm Corgis using Express and WebSockets
  */
 
+const DEBUG = true;
+
 const express = require("express");
 const path = require("path");
 const { Server } = require("ws");
@@ -26,8 +28,8 @@ const wss = new Server({ server });
 const roomManager = new RoomManager(["entrance"]);
 
 wss.on("connection", (ws) => {
-  console.log("Client connected");
-  ws.on("close", () => console.log("Client disconnected"));
+  debug("\u001b[32mClient connected\u001b[0m");
+  ws.on("close", () => debug("\u001b[32mClient disconnected\u001b[0m"));
   ws.on("message", (msg) => handleMessage(ws, msg));
 });
 
@@ -80,6 +82,11 @@ function handleLeave(ws, data) {
       name: data.name,
     };
     broadcastToAll(JSON.stringify(response));
+
+    debug("\u001b[34mLeave has been called:\u001b[0m");
+    debug(`${data.name} has left.`);
+    debug();
+    printList();
   } else {
     error(ws, "Character 'name' not specified.");
   }
@@ -95,6 +102,8 @@ function handleList(ws, data) {
   let result = roomManager.listCharacters(data.room);
 
   ws.send(JSON.stringify({ action: "list", list: result }));
+
+  debug("\u001b[34mList has been called:\u001b[0m");
 }
 
 /**
@@ -111,6 +120,11 @@ function handleUpdateChar(ws, data) {
     response.x = data.x;
     response.y = data.y;
     broadcastToAll(JSON.stringify(response));
+
+    debug("\u001b[34mUpdate has been called:\u001b[0m");
+    debug(`${data.name} has been moved to x of ${data.x} and y of ${data.y}.`);
+    debug();
+    printList();
   } else {
     error(ws, "Must specify 'name', 'x', and 'y'.");
     console.log(data);
@@ -136,12 +150,21 @@ function handleCreateChar(ws, data) {
         status: "success"
       }));
       broadcastToAll(JSON.stringify(response));
+
+      debug("\u001b[34mCreate has been called:\u001b[0m");
+      debug(`${data.name} has joined the game.`);
+      debug();
+      printList();
     } else {
       ws.send(JSON.stringify({
         action: "login",
         status: "failure",
         reason: "user_already_exists"
       }));
+      debug("\u001b[34mCreate has been called:\u001b[0m");
+      debug(`${data.name} already exists.  Failed to create new character.`);
+      debug();
+      printList();
     }
   } else {
     error(ws, "Character 'name' not specified.");
@@ -181,5 +204,28 @@ function handleChat(ws, data) {
  */
 function error(ws, msg) {
   ws.send("ERROR: " + msg);
-  console.error("\u001b[31mERROR:\u001b[0m" + msg);
+  debug("\u001b[31mERROR:\u001b[0m" + msg, console.error);
+}
+
+/**
+ * If DEBUG is true, prints all the characters to the console.
+ */
+function printList() {
+  debug("The list of players is as follows:")
+
+  const listOfPlayers = roomManager.listCharacters();
+  listOfPlayers.forEach(person => debug(`\u001b[1m${person.name}\u001b[0m is at (${person.x}, ${person.y})`));
+}
+
+/**
+ * Logs things to console if DEBUG is true
+ * @param {*} msg - thing to log to console
+ * @param {function} fn - fn to use, defaults to console.log
+ */
+function debug(msg, fn=console.log) {
+  if (msg) {
+    fn(msg);
+  } else {
+    fn();
+  }
 }
