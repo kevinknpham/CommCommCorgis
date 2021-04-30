@@ -42,11 +42,21 @@ function initiateUserCharacter() {
 
 // Create and append user's character to game background
 function createCharacterAsset(username) {
-  const newCharacter = document.createElement("img");
-  newCharacter.setAttribute("src", "assets/corgi-slide.png");
+  const newCharacter = document.createElement("div");
   newCharacter.classList.add("character");
   newCharacter.setAttribute("id", username);
   CANVAS.appendChild(newCharacter);
+
+  const nameTag = document.createElement("p");
+  nameTag.classList.add("name-tag");
+  nameTag.innerText = username;
+
+  const newCharacterImage = document.createElement("img");
+  newCharacterImage.setAttribute("src", "assets/corgi-slide.png");
+  newCharacterImage.classList.add("character-image");
+
+  newCharacter.appendChild(nameTag);
+  newCharacter.appendChild(newCharacterImage);
 }
 
 // Create other user's character and adds to user's game instance
