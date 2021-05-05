@@ -42,7 +42,7 @@ function handleMessage(ws, msg) {
   if (data.action) {
     const action = data.action.toLowerCase();
     if (data.name) {
-      data.name = data.name.replace(/[^\w]/gi,'').toLowerCase();
+      data.name = data.name.replace(/[^\w]/gi,'');
     }
     switch (action) {
       case "chat": // chat messages
