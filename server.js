@@ -83,10 +83,10 @@ function handleLeave(ws, data) {
     };
     broadcastToAll(JSON.stringify(response));
 
-    debug("\u001b[34mLeave has been called:\u001b[0m");
-    debug(`${data.name} has left.`);
-    debug();
-    printList();
+    debuggingDescription(
+      "\u001b[34mLeave has been called:\u001b[0m",
+      `${data.name} has left.`,
+    );
   } else {
     error(ws, "Character 'name' not specified.");
   }
@@ -104,6 +104,7 @@ function handleList(ws, data) {
   ws.send(JSON.stringify({ action: "list", list: result }));
 
   debug("\u001b[34mList has been called:\u001b[0m");
+  debug('');
 }
 
 /**
@@ -121,10 +122,10 @@ function handleUpdateChar(ws, data) {
     response.y = data.y;
     broadcastToAll(JSON.stringify(response));
 
-    debug("\u001b[34mUpdate has been called:\u001b[0m");
-    debug(`${data.name} has been moved to x of ${data.x} and y of ${data.y}.`);
-    debug();
-    printList();
+    debuggingDescription(
+      "\u001b[34mUpdate has been called:\u001b[0m",
+      `${data.name} has been moved to x of ${data.x} and y of ${data.y}.`
+    );
   } else {
     error(ws, "Must specify 'name', 'x', and 'y'.");
     console.log(data);
@@ -151,20 +152,21 @@ function handleCreateChar(ws, data) {
       }));
       broadcastToAll(JSON.stringify(response));
 
-      debug("\u001b[34mCreate has been called:\u001b[0m");
-      debug(`${data.name} has joined the game.`);
-      debug();
-      printList();
+      debuggingDescription(
+        "\u001b[34mCreate has been called:\u001b[0m",
+        `${data.name} has joined the game.`
+      );
     } else {
       ws.send(JSON.stringify({
         action: "login",
         status: "failure",
         reason: "user_already_exists"
       }));
-      debug("\u001b[34mCreate has been called:\u001b[0m");
-      debug(`${data.name} already exists.  Failed to create new character.`);
-      debug();
-      printList();
+
+      debuggingDescription(
+        "\u001b[34mCreate has been called:\u001b[0m",
+        `${data.name} already exists.  Failed to create new character.`
+      );
     }
   } else {
     error(ws, "Character 'name' not specified.");
@@ -214,7 +216,20 @@ function printList() {
   debug("The list of players is as follows:")
 
   const listOfPlayers = roomManager.listCharacters();
-  listOfPlayers.forEach(person => debug(`\u001b[1m${person.name}\u001b[0m is at (${person.x}, ${person.y})`));
+  listOfPlayers.forEach(person => debug(`  \u001b[1m${person.name}\u001b[0m is at (${person.x}, ${person.y})`));
+}
+
+/**
+ * Prints description to console when DEBUG is true
+ * @param  {...any} statements - descriptions to print
+ */
+function debuggingDescription(...statements) {
+  for (statement of statements) {
+    debug(statement);
+  }
+  debug('');
+  printList();
+  debug('');
 }
 
 /**
