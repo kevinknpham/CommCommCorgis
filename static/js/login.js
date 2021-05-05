@@ -32,8 +32,8 @@ function initiateUserCharacter() {
   console.log(username);
   if (username && username.length > 0) {
     // sessionStorage.setItem("commcommcorgis_username", username);
-    sendCharacterToServer(username);
-    createCharacterAsset(username);
+    sendUserDataToServer(username);
+    //createCharacterAsset(username);
     moveCharacter(username);
     ws.send(JSON.stringify({ action: "list" }));
     switchScreen("white", "none", "block");
@@ -61,15 +61,14 @@ function createCharacterAsset(username) {
 
 // Create other user's character and adds to user's game instance
 // update that character to game server list
-function addCharacterName(data) {
+function handleNewChar(data) {
   if (data.name) {
-    // sendCharacterToServer(data.name);
-    ws.send(JSON.stringify({ action: "list" }));
+    createCharacterAsset(data.name);
   }
 }
 
 // Create given user's character and adds to game server list
-function sendCharacterToServer(username) {
+function sendUserDataToServer(username) {
   let datum = {
     name: username,
     action: "create",
@@ -81,25 +80,21 @@ function sendCharacterToServer(username) {
 // remove character asset from user's game instance
 function logout() {
   switchScreen("#d4dbf5", "block", "none");
-  removeCharacterFromServer(username);
-  CANVAS.removeChild(document.getElementById(username));
+  sendLeaveRequestToServer(username);
+  //CANVAS.removeChild(document.getElementById(username)); //??
   // sessionStorage.removeItem("commcommcorgis_username");
-  ws.send(JSON.stringify({ action: "list" }));
 }
 
 // Remove other user's character from user's game instance
 // update that character to the server list
-function removeCharacterName(data) {
-  console.log("remove?");
+function handleRemoveChar(data) {
   if (data.name) {
-    console.log("removed???");
-    //removeCharacterFromServer(data.name);
-    ws.send(JSON.stringify({ action: "list" }));
+    CANVAS.removeChild(document.getElementById(data.name));
   }
 }
 
 // remove given user's character from the user's game instance
-function removeCharacterFromServer(username) {
+function sendLeaveRequestToServer(username) {
   let datum = {
     name: username,
     action: "leave",
@@ -108,7 +103,7 @@ function removeCharacterFromServer(username) {
 }
 
 // update character list to the server
-function updateCharacterList(data) {
+function handleList(data) {
   if (data.list) {
     createCharacterFromList(data.list);
   }
@@ -124,14 +119,11 @@ function createCharacterFromList(list) {
       !document.getElementById(character.name)
     ) {
       console.log("hello1");
-      addCharacterName(character.name);
-      createCharacterAsset(character.name);
-    } else if (username && document.getElementById(character.name)) {
+      handleNewChar(character.name);
+      //createCharacterAsset(character.name);
+    } else if (document.getElementById(character.name)) {
       console.log("hello2");
-      updateCharacterPosition(character);
-    } else {
-      removeCharacterName(character.name);
-      CANVAS.removeChild(document.getElementById(character.name));
+      handleMoveChar(character);
     }
   }
 }

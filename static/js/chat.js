@@ -1,4 +1,4 @@
-function addNewestChatMessage(data) {
+function handleChat(data) {
   console.log(data);
   if (data.user && data.text) {
     document.querySelector(".post-container").appendChild(createPost(data));
@@ -14,13 +14,13 @@ function setChat() {
   });
   input.addEventListener("keyup", function (e) {
     if (e.key === "Enter") {
-      sendChat();
+      sendChatRequestToServer();
     }
   });
-  postBtn.addEventListener("click", sendChat);
+  postBtn.addEventListener("click", sendChatRequestToServer);
 }
 
-function sendChat() {
+function sendChatRequestToServer() {
   let input = document.querySelector(".post-input input");
   let datum = {
     text: input.value,

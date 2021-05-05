@@ -15,19 +15,19 @@ function handleMessageFromSever(msg) {
 
     switch (action) {
       case "chat": // chat messages
-        addNewestChatMessage(data);
+        handleChat(data);
         break;
       case "new_char": // create new character
-        addCharacterName(data);
+        handleNewChar(data);
         break;
       case "remove_char": // remove character from game
-        removeCharacterName(data);
+        handleRemoveChar(data);
         break;
       case "move_char": // update character position
-        updateCharacterPosition(data);
+        handleMoveChar(data);
         break;
       case "list":
-        updateCharacterList(data);
+        handleList(data);
         break;
       default:
         console.log(action + " is not a valid action");
