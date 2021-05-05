@@ -16,11 +16,8 @@ function moveCharacter(username) {
     //   currentLeftPosition,
     //   currentTopPosition
     // );
-    sendUpdatedCharacterPosition(
-      username,
-      currentLeftPosition,
-      currentTopPosition
-    );
+
+    sendMoveRequestToServer(username, currentLeftPosition, currentTopPosition);
   };
 }
 
@@ -31,7 +28,7 @@ function moveCharactertoPosition(character, x, y) {
 
 function handleMoveChar(data) {
   console.log(data);
-  if (data.name && data.name !== username && data.x && data.y) {
+  if (data.name && data.x && data.y) {
     let userCharacter = document.getElementById(data.name);
     let characterLeftPosition = data.x;
     let characterTopPosition = data.y;
@@ -43,7 +40,7 @@ function handleMoveChar(data) {
   }
 }
 
-function sendUpdatedCharacterPosition(username, x, y) {
+function sendMoveRequestToServer(username, x, y) {
   let datum = {
     name: username,
     x: parseInt(x),
