@@ -119,7 +119,7 @@ function createCharacterFromList(list) {
       !document.getElementById(character.name)
     ) {
       console.log("hello1");
-      handleNewChar(character.name);
+      handleNewChar(character);
       //createCharacterAsset(character.name);
     } else if (document.getElementById(character.name)) {
       console.log("hello2");
