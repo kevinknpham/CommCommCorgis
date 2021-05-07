@@ -23,7 +23,7 @@ function initiateUserCharacter() {
   console.log(username);
   if (username && username.length > 0) {
     createCharacterAsset(username);
-    moveCharacter(username);
+    moveCharacter();
     switchScreen("white", "none", "block");
   }
 }
