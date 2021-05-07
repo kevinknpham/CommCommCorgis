@@ -1,0 +1,37 @@
+* {
+  box-sizing: border-box;
+  font-family: "Courier New", Courier, monospace;
+}
+
+body {
+  /* background-color: pink; */
+  background-color: #d4dbf5;
+}
+
+.bold {
+  font-weight: bold;
+  margin: 0px 0px;
+}
+
+.text {
+  margin: 4px 0px;
+}
+
+#main-page {
+  display: none;
+}
+
+h1 {
+  display: flex;
+  justify-content: center;
+}
+
+h2 {
+  padding: 8px;
+  margin: 8px 0px;
+}
+
+.contents {
+  display: flex;
+  justify-content: space-between;
+}
