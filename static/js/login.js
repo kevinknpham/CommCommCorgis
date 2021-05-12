@@ -16,12 +16,42 @@ function login() {
   input.addEventListener("input", function (e) {
     loginBtn.disabled = e.target.value.length === 0;
   });
+
   input.addEventListener("keyup", function (e) {
     if (e.key === "Enter") {
-      initiateUserCharacter();
+      revealCharacterSelection();
     }
   });
-  loginBtn.addEventListener("click", initiateUserCharacter);
+  loginBtn.addEventListener("click", revealCharacterSelection);
+}
+
+function revealCharacterSelection() {
+  switchScreen("white", "none", "block", "none");
+  setUpCharacterSelection();
+}
+
+function setUpCharacterSelection() {
+  const options = ["assets/corgi-slide", "assets/corgi-slide", "assets/corgi-slide", "assets/corgi-slide"];
+  let pictureDOMs = options.map(generateOption);
+  let characterSelectionContainer = document.querySelector(".character-selection");
+  pictureDOMs.forEach(picture => characterSelectionContainer.append(picture));
+  // let options = document.querySelectorAll(".character-selection-box");
+  // options.forEach(option => option.addEventListener("click", selectCharacter(option)))
+}
+
+function generateOption(url) {
+  const picture = document.createElement("picture");
+  const sourceImage = document.createElement("source");
+  picture.appendChild(sourceImage);
+  picture.classList.add("character-selection-box");
+  sourceImage.srcset = url;
+  picture.addEventListener("click", () => selectCharacter(url));
+  return picture;
+}
+
+function selectCharacter(url) {
+    initiateUserCharacter(); 
+    switchScreen("white", "none", "none", "block");
 }
 
 // Initialize user character and switch to the main game page from login page
@@ -36,7 +66,6 @@ function initiateUserCharacter() {
     //createCharacterAsset(username);
     moveCharacter(username);
     ws.send(JSON.stringify({ action: "list" }));
-    switchScreen("white", "none", "block");
   }
 }
 
@@ -79,7 +108,7 @@ function sendUserDataToServer(username) {
 // click allow user to exit the game and go back to login page
 // remove character asset from user's game instance
 function logout() {
-  switchScreen("#d4dbf5", "block", "none");
+  switchScreen("#d4dbf5", "block", "none", "none");
   sendLeaveRequestToServer(username);
   //CANVAS.removeChild(document.getElementById(username)); //??
   // sessionStorage.removeItem("commcommcorgis_username");
@@ -130,9 +159,10 @@ function createCharacterFromList(list) {
 
 // swtich login page to main game page when the user logs in
 // switch main game page to log out page when the user logs out
-function switchScreen(color, loginPage, mainPage) {
+function switchScreen(color, loginPage, characterPage, mainPage) {
   document.querySelector("body").style.backgroundColor = color;
   document.getElementById("login-page").style.display = loginPage;
+  document.getElementById("character-page").style.display = characterPage;
   document.getElementById("main-page").style.display = mainPage;
 }
 

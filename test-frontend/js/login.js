@@ -24,7 +24,7 @@ function initiateUserCharacter() {
   if (username && username.length > 0) {
     createCharacterAsset(username);
     moveCharacter();
-    switchScreen("white", "none", "block");
+    switchScreen("white", "none", "block", "none");
   }
 }
 
@@ -52,9 +52,10 @@ function createCharacterAsset(username) {
 
 // swtich login page to main game page when the user logs in
 // switch main game page to log out page when the user logs out
-function switchScreen(color, loginPage, mainPage) {
+function switchScreen(color, loginPage, characterPage, mainPage) {
   document.querySelector("body").style.backgroundColor = color;
   document.getElementById("login-page").style.display = loginPage;
+  document.getElementById("character-page").style.display = characterPage;
   document.getElementById("main-page").style.display = mainPage;
 }
 
