@@ -27,7 +27,6 @@ function login() {
 
 function revealCharacterSelection() {
   switchScreen("#d4dbf5", "none", "grid", "none");
-  setUpCharacterSelection();
 }
 
 // todo: make this full grid, not half grid

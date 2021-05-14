@@ -34,3 +34,4 @@ function handleMessageFromSever(msg) {
     }
   }
 }
+setUpCharacterSelection();
