@@ -205,7 +205,7 @@ function handleLoginResult(data) {
       revealCharacterSelection();
     } else if (data.status === "failure") {
       toggleLoadingScreen(false);
-      alert(`${username} is taken`);
+      alert(`${data.requestedName} is taken`);
     } else {
       console.log(data.status + " invalid login result status");
     }
