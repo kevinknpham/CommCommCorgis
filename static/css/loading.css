@@ -1,0 +1,33 @@
+#loading-screen {
+  display: none;
+}
+
+.loading-img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: solid 10px silver;
+  display: flex;
+  margin: 25% auto auto auto;
+  align-items: center;
+  align-content: center;
+  animation: rotation 1s cubic-bezier(0.01, 0.01, 1, 1) infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotateY(0deg);
+  }
+  25% {
+    transform: rotateY(45deg);
+  }
+  50% {
+    transform: rotateY(90deg);
+  }
+  75% {
+    transform: rotateY(45deg);
+  }
+  100% {
+    transform: rotateY(0deg);
+  }
+}

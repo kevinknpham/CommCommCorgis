@@ -19,10 +19,15 @@ function login() {
 
   input.addEventListener("keyup", function (e) {
     if (e.key === "Enter") {
-      revealCharacterSelection();
+      toggleLoadingScreen(true);
+      sendUserDataToServer(input.value);
+      // revealCharacterSelection();
     }
   });
-  loginBtn.addEventListener("click", revealCharacterSelection);
+  loginBtn.addEventListener("click", () => {
+    toggleLoadingScreen(true);
+    sendUserDataToServer(input.value);
+  });
 }
 
 function revealCharacterSelection() {
@@ -77,7 +82,7 @@ function initiateUserCharacter() {
   console.log(username);
   if (username && username.length > 0) {
     // sessionStorage.setItem("commcommcorgis_username", username);
-    sendUserDataToServer(username);
+    // sendUserDataToServer(username);
     //createCharacterAsset(username);
     moveCharacter(username);
     ws.send(JSON.stringify({ action: "list" }));
@@ -123,6 +128,7 @@ function sendUserDataToServer(username) {
 // click allow user to exit the game and go back to login page
 // remove character asset from user's game instance
 function logout() {
+  toggleLoadingScreen(false);
   switchScreen("loginPage", "#d4dbf5");
   sendLeaveRequestToServer(username);
   //CANVAS.removeChild(document.getElementById(username)); //??
@@ -191,6 +197,29 @@ function switchScreen(page, backgroundColor) {
       document.getElementById("main-page").style.display = "block";
       break;
   }
+}
+
+function handleLoginResult(data) {
+  if (data.status) {
+    if (data.status === "success") {
+      revealCharacterSelection();
+    } else if (data.status === "failure") {
+      toggleLoadingScreen(false);
+      alert(`${username} is taken`);
+    } else {
+      console.log(data.status + " invalid login result status");
+    }
+  }
+}
+
+function toggleLoadingScreen(showLoading) {
+  document.getElementById("loading-screen").style.display = showLoading
+    ? "block"
+    : "none";
+
+  document.querySelector(".login-screen").style.display = showLoading
+    ? "none"
+    : "block";
 }
 
 login();

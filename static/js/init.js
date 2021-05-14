@@ -29,6 +29,9 @@ function handleMessageFromSever(msg) {
       case "list":
         handleList(data);
         break;
+      case "login_result":
+        handleLoginResult(data);
+        break;
       default:
         console.log(action + " is not a valid action");
     }
