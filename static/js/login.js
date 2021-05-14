@@ -26,12 +26,13 @@ function login() {
 }
 
 function revealCharacterSelection() {
-  switchScreen("white", "none", "block", "none");
+  switchScreen("#d4dbf5", "none", "grid", "none");
   setUpCharacterSelection();
 }
 
+// todo: make this full grid, not half grid
 function setUpCharacterSelection() {
-  const options = ["assets/corgi-slide", "assets/corgi-slide", "assets/corgi-slide", "assets/corgi-slide"];
+  const options = ["assets/corgi-slide.png", "assets/corgi-slide.png", "assets/corgi-slide.png", "assets/corgi-slide.png"];
   let pictureDOMs = options.map(generateOption);
   let characterSelectionContainer = document.querySelector(".character-selection");
   pictureDOMs.forEach(picture => characterSelectionContainer.append(picture));
@@ -42,9 +43,19 @@ function setUpCharacterSelection() {
 function generateOption(url) {
   const picture = document.createElement("picture");
   const sourceImage = document.createElement("source");
+  const imgTag = document.createElement("img");
+
   picture.appendChild(sourceImage);
+  picture.appendChild(imgTag);
   picture.classList.add("character-selection-box");
+
+
   sourceImage.srcset = url;
+
+  imgTag.src = url; 
+  imgTag.alt = "corgi0";
+  imgTag.classList.add("character-selection-box-img");
+
   picture.addEventListener("click", () => selectCharacter(url));
   return picture;
 }

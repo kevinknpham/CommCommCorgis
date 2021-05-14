@@ -1,6 +1,6 @@
 * {
   box-sizing: border-box;
-  font-family: "Courier New", Courier, monospace;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 body {
@@ -22,8 +22,7 @@ body {
 }
 
 h1 {
-  display: flex;
-  justify-content: center;
+  text-align: center;
 }
 
 h2 {
