@@ -147,7 +147,7 @@ function handleCreateChar(ws, data) {
       response.x = 0;
       response.y = 0;
       ws.send(JSON.stringify({
-        action: "login",
+        action: "login_result",
         status: "success"
       }));
       broadcastToAll(JSON.stringify(response));
@@ -158,7 +158,7 @@ function handleCreateChar(ws, data) {
       );
     } else {
       ws.send(JSON.stringify({
-        action: "login",
+        action: "login_result",
         status: "failure",
         reason: "user_already_exists"
       }));

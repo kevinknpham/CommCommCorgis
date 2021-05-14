@@ -10,7 +10,7 @@ To set up the server run the following:
 By: Jong and Miguel
 
 ### Displaying game
-TBD how to do - could use DOM manipulation
+DOM manipulation is used to move characters around and to switch screens.
 
 ### Controlling game
 Will use mouse clicks for user to walk around environment.  Movements will be sent to server using WebSocket.
@@ -39,7 +39,7 @@ if `action` is create
 
 _A character is created and added to the game._
 * `name`: name of character
-* server will respond with a JSON formatted String with the `action` of 'login' and a field `status` that will be 'success' or 'failure'.  If it failed a `reason` field will also be included.
+* server will respond with a JSON formatted String with the `action` of 'login_result' and a field `status` that will be 'success' or 'failure'.  If it failed a `reason` field will also be included.
 
 if `action` is update
 
