@@ -26,15 +26,21 @@ function login() {
 }
 
 function revealCharacterSelection() {
-  switchScreen("#d4dbf5", "none", "grid", "none");
+  switchScreen("characterPage", "d4dbf5");
 }
 
-// todo: make this full grid, not half grid
 function setUpCharacterSelection() {
-  const options = ["assets/corgi-slide.png", "assets/corgi-slide.png", "assets/corgi-slide.png", "assets/corgi-slide.png"];
+  const options = [
+    "assets/corgi-slide.png",
+    "assets/corgi-slide.png",
+    "assets/corgi-slide.png",
+    "assets/corgi-slide.png",
+  ];
   let pictureDOMs = options.map(generateOption);
-  let characterSelectionContainer = document.querySelector(".character-selection");
-  pictureDOMs.forEach(picture => characterSelectionContainer.append(picture));
+  let characterSelectionContainer = document.querySelector(
+    ".character-selection"
+  );
+  pictureDOMs.forEach((picture) => characterSelectionContainer.append(picture));
   // let options = document.querySelectorAll(".character-selection-box");
   // options.forEach(option => option.addEventListener("click", selectCharacter(option)))
 }
@@ -48,10 +54,9 @@ function generateOption(url) {
   picture.appendChild(imgTag);
   picture.classList.add("character-selection-box");
 
-
   sourceImage.srcset = url;
 
-  imgTag.src = url; 
+  imgTag.src = url;
   imgTag.alt = "corgi0";
   imgTag.classList.add("character-selection-box-img");
 
@@ -60,8 +65,8 @@ function generateOption(url) {
 }
 
 function selectCharacter(url) {
-    initiateUserCharacter(); 
-    switchScreen("white", "none", "none", "block");
+  initiateUserCharacter();
+  switchScreen("mainPage", "white");
 }
 
 // Initialize user character and switch to the main game page from login page
@@ -118,7 +123,7 @@ function sendUserDataToServer(username) {
 // click allow user to exit the game and go back to login page
 // remove character asset from user's game instance
 function logout() {
-  switchScreen("#d4dbf5", "block", "none", "none");
+  switchScreen("loginPage", "#d4dbf5");
   sendLeaveRequestToServer(username);
   //CANVAS.removeChild(document.getElementById(username)); //??
   // sessionStorage.removeItem("commcommcorgis_username");
@@ -169,11 +174,23 @@ function createCharacterFromList(list) {
 
 // swtich login page to main game page when the user logs in
 // switch main game page to log out page when the user logs out
-function switchScreen(color, loginPage, characterPage, mainPage) {
-  document.querySelector("body").style.backgroundColor = color;
-  document.getElementById("login-page").style.display = loginPage;
-  document.getElementById("character-page").style.display = characterPage;
-  document.getElementById("main-page").style.display = mainPage;
+function switchScreen(page, backgroundColor) {
+  document.querySelector("body").style.backgroundColor = backgroundColor;
+  document.getElementById("login-page").style.display = "none";
+  document.getElementById("character-page").style.display = "none";
+  document.getElementById("main-page").style.display = "none";
+
+  switch (page) {
+    case "loginPage":
+      document.getElementById("login-page").style.display = "block";
+      break;
+    case "characterPage":
+      document.getElementById("character-page").style.display = "grid";
+      break;
+    case "mainPage":
+      document.getElementById("main-page").style.display = "block";
+      break;
+  }
 }
 
 login();
