@@ -70,7 +70,7 @@ if `action` is list
 
 _The server will respond with a list of the characters and their positions._
 * optional field `room`: room to list characters from (if not specified, all rooms' characters are listed)
-* server will respond with an JSON formatted String containing an `action` with the value 'list' and a `list` with a value of an array of objects, each containing a 'name', 'x', 'y', and 'color' attribute.
+* server will respond with an JSON formatted String containing an `action` with the value 'list' and a `list` with a value of an array of objects, each containing a 'name', 'x', 'y', and 'attributes' in similar style to other actions' responses.
 
 **Server message format**
 

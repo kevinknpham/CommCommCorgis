@@ -176,7 +176,9 @@ class Room {
         name: key,
         x: value.x,
         y: value.y,
-        color: value.color
+        attributes: {
+          color: value.color
+        }
       })
     }
     return result;
