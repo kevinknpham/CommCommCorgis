@@ -33,7 +33,22 @@
 }
 
 .character-selection-box-img:hover {
-  box-shadow: 10px 10px #aaa;
   background-color: white;
   width: 110%;
+}
+
+.gray-box-shadow:hover {
+  box-shadow: 10px 10px #aaa;
+}
+
+.red-box-shadow:hover {
+  box-shadow: 10px 10px #ff1700;
+}
+
+.green-box-shadow:hover {
+  box-shadow: 10px 10px #00b933;
+}
+
+.blue-box-shadow:hover {
+  box-shadow: 10px 10px #008eff;
 }

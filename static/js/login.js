@@ -10,6 +10,16 @@ const COLOR_TO_URL = Object.freeze(
   ])
 );
 
+// Used for box shadow on character selection
+const COLOR_TO_CLASS_NAME = Object.freeze(
+  new Map([
+    ["none", "gray-box-shadow"],
+    ["red", "red-box-shadow"],
+    ["green", "green-box-shadow"],
+    ["blue", "blue-box-shadow"],
+  ])
+);
+
 window.addEventListener("beforeunload", function (e) {
   logout();
 });
@@ -70,6 +80,8 @@ function generateOption(url, color) {
   imgTag.src = url;
   imgTag.alt = color;
   imgTag.classList.add("character-selection-box-img");
+
+  imgTag.classList.add(COLOR_TO_CLASS_NAME.get(color));
 
   picture.addEventListener("click", () => selectCharacter(color));
   return picture;
