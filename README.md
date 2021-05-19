@@ -7,13 +7,13 @@ To set up the server run the following:
 * `node server.js` or `npm start`
 
 ## Client
-By: Jong and Miguel
+By: Jong, Miguel, and Derek
 
 ### Displaying game
 DOM manipulation is used to move characters around and to switch screens.
 
 ### Collar colors
-* none - transparent
+* none - #aaa
 * red - #ff1700
 * green - #00b933
 * blue - #008eff
