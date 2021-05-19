@@ -84,7 +84,8 @@ if `action` is new_char
 * `name`: name of new character
 * `x`: x coordinate of new character (will start at 0)
 * `y`: y coordinate of new character (will start at 0)
-* `color`: color descriptor for corgi's appearance
+* `attributes`: JS Object that has one or more of the following attributes and their new value
+    - color: 'none' | 'red' | 'green' | 'blue'
 
 if `action` is modify_char
 * `name`: name of character to modify

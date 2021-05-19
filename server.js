@@ -171,7 +171,7 @@ function handleCreateChar(ws, data) {
       response.name = data.name;
       response.x = 0;
       response.y = 0;
-      response.color = 'none';
+      response.attributes.color = 'none';
       ws.send(JSON.stringify({
         action: "login_result",
         status: "success",
