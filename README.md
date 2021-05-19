@@ -68,7 +68,7 @@ if `action` is list
 
 _The server will respond with a list of the characters and their positions._
 * optional field `room`: room to list characters from (if not specified, all rooms' characters are listed)
-* server will respond with an JSON formatted String containing an `action` with the value 'list' and a `list` with a value of an array of objects, each containing a 'name', 'x', and 'y' attribute.
+* server will respond with an JSON formatted String containing an `action` with the value 'list' and a `list` with a value of an array of objects, each containing a 'name', 'x', 'y', and 'color' attribute.
 
 **Server message format**
 
@@ -82,6 +82,7 @@ if `action` is new_char
 * `name`: name of new character
 * `x`: x coordinate of new character (will start at 0)
 * `y`: y coordinate of new character (will start at 0)
+* `color`: color descriptor for corgi's appearance
 
 if `action` is modify_char
 * `name`: name of character to modify
