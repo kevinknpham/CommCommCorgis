@@ -42,6 +42,8 @@ _A character is created and added to the game._
 * server will respond with a JSON formatted String with the `action` of 'login_result' and a field `status` that will be 'success' or 'failure'.  If it failed a `reason` field will also be included.
 
 if `action` is change_attribute
+
+_Used to change appearance of a character, such as its color.  Currently not supported but can be modified to handle attributes like snowballs._
 * `name`: name of character
 * `attributes`: JS Object that has one or more of the following attributes and their new value
     - color: 'none' | 'red' | 'green' | 'blue'
