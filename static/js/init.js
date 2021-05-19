@@ -17,12 +17,6 @@ function handleMessageFromSever(msg) {
       case "chat": // chat messages
         handleChat(data);
         break;
-      case "new_char": // create new character
-        handleNewChar(data);
-        break;
-      case "remove_char": // remove character from game
-        handleRemoveChar(data);
-        break;
       case "move_char": // update character position
         handleMoveChar(data);
         break;
@@ -31,6 +25,15 @@ function handleMessageFromSever(msg) {
         break;
       case "login_result":
         handleLoginResult(data);
+        break;
+      case "new_char": // create new character
+        handleNewChar(data);
+        break;
+      case "modify_char": //modify charater appearance
+        handleModifyChar(data);
+        break;
+      case "remove_char": // remove character from game
+        handleRemoveChar(data);
         break;
       default:
         console.log(action + " is not a valid action");

@@ -1,6 +1,15 @@
 let username;
 const CANVAS = document.getElementById("myCanvas");
 
+const COLOR_TO_URL = Object.freeze(
+  new Map([
+    ["none", "assets/corgi-slide-none.png"],
+    ["red", "assets/corgi-slide-red.png"],
+    ["green", "assets/corgi-slide-green.png"],
+    ["blue", "assets/corgi-slide-blue.png"],
+  ])
+);
+
 window.addEventListener("beforeunload", function (e) {
   logout();
 });
@@ -35,22 +44,19 @@ function revealCharacterSelection() {
 }
 
 function setUpCharacterSelection() {
-  const options = [
-    "assets/corgi-slide.png",
-    "assets/corgi-slide.png",
-    "assets/corgi-slide.png",
-    "assets/corgi-slide.png",
-  ];
-  let pictureDOMs = options.map(generateOption);
+  // let pictureDOMs = Array.from(COLOR_TO_URL.keys()).map(generateOption);
   let characterSelectionContainer = document.querySelector(
     ".character-selection"
   );
-  pictureDOMs.forEach((picture) => characterSelectionContainer.append(picture));
+  for (let [color, url] of COLOR_TO_URL) {
+    characterSelectionContainer.append(generateOption(url, color));
+  }
+  // pictureDOMs.forEach((picture) => characterSelectionContainer.append(picture));
   // let options = document.querySelectorAll(".character-selection-box");
   // options.forEach(option => option.addEventListener("click", selectCharacter(option)))
 }
 
-function generateOption(url) {
+function generateOption(url, color) {
   const picture = document.createElement("picture");
   const sourceImage = document.createElement("source");
   const imgTag = document.createElement("img");
@@ -62,15 +68,16 @@ function generateOption(url) {
   sourceImage.srcset = url;
 
   imgTag.src = url;
-  imgTag.alt = "corgi0";
+  imgTag.alt = color;
   imgTag.classList.add("character-selection-box-img");
 
-  picture.addEventListener("click", () => selectCharacter(url));
+  picture.addEventListener("click", () => selectCharacter(color));
   return picture;
 }
 
-function selectCharacter(url) {
+function selectCharacter(color) {
   initiateUserCharacter();
+  sendUserColorToServer(color);
   switchScreen("mainPage", "white");
 }
 
@@ -90,7 +97,7 @@ function initiateUserCharacter() {
 }
 
 // Create and append user's character to game background
-function createCharacterAsset(username) {
+function createCharacterAsset(username, color) {
   const newCharacter = document.createElement("div");
   newCharacter.classList.add("character");
   newCharacter.setAttribute("id", username);
@@ -101,18 +108,45 @@ function createCharacterAsset(username) {
   nameTag.innerText = username;
 
   const newCharacterImage = document.createElement("img");
-  newCharacterImage.setAttribute("src", "assets/corgi-slide.png");
+  if (color) {
+    newCharacterImage.setAttribute("src", COLOR_TO_URL.get(color));
+  } else {
+    newCharacterImage.setAttribute("src", COLOR_TO_URL.get("none"));
+  }
   newCharacterImage.classList.add("character-image");
 
   newCharacter.appendChild(nameTag);
   newCharacter.appendChild(newCharacterImage);
 }
 
+function modifyCharacterAsset(username, url) {
+  document.querySelector(`#${username} img`).setAttribute("src", url);
+}
+
+// Sends the user's character color selection to the server
+function sendUserColorToServer(color) {
+  let datum = {
+    name: username,
+    attributes: { color: color },
+    action: "change_attribute",
+  };
+  ws.send(JSON.stringify(datum));
+}
+
+function handleModifyChar(data) {
+  if (data.name && data.attributes) {
+    console.log(data.attributes);
+    const characterURL = COLOR_TO_URL.get(data.attributes.color);
+    console.log(characterURL);
+    modifyCharacterAsset(data.name, characterURL);
+  }
+}
+
 // Create other user's character and adds to user's game instance
 // update that character to game server list
 function handleNewChar(data) {
   if (data.name) {
-    createCharacterAsset(data.name);
+    createCharacterAsset(data.name, data.attributes.color);
   }
 }
 
