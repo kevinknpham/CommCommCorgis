@@ -12,6 +12,12 @@ By: Jong and Miguel
 ### Displaying game
 DOM manipulation is used to move characters around and to switch screens.
 
+### Collar colors
+* none - transparent
+* red - #ff1700
+* green - #00b933
+* blue - #008eff
+
 ### Controlling game
 Will use mouse clicks for user to walk around environment.  Movements will be sent to server using WebSocket.
 
