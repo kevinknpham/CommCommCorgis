@@ -41,6 +41,11 @@ _A character is created and added to the game._
 * `name`: name of character
 * server will respond with a JSON formatted String with the `action` of 'login_result' and a field `status` that will be 'success' or 'failure'.  If it failed a `reason` field will also be included.
 
+if `action` is change_attribute
+* `name`: name of character
+* `attributes`: JS Object that has one or more of the following attributes and their new value
+    - color: 'none' | 'red' | 'green' | 'blue'
+
 if `action` is update
 
 _The specified character's position is updated._
@@ -77,6 +82,11 @@ if `action` is new_char
 * `name`: name of new character
 * `x`: x coordinate of new character (will start at 0)
 * `y`: y coordinate of new character (will start at 0)
+
+if `action` is modify_char
+* `name`: name of character to modify
+* `attributes`: JS Object that has one or more of the following attributes and their new value
+    - color: 'none' | 'red' | 'green' | 'blue'
 
 if `action` is move_char
 * `name`: name of character to move

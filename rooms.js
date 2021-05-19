@@ -26,6 +26,7 @@ class RoomManager {
     if (roomData) {
       return roomData.addCharacter(name, x, y);
     }
+    return false;
   }
 
   /**
@@ -55,6 +56,20 @@ class RoomManager {
   }
 
   /**
+     * Updates character's attributes
+     * @param {String} room room to update
+     * @param {String} name name of character
+     * @param {Object} newAttributes Object with updated attributes and values
+     */
+  changeAttribute(room, name, newAttributes) {
+    let roomData = this.#roomOccupants.get(room);
+    if (roomData) {
+      return roomData.changeAttribute(name, newAttributes);
+    }
+    return {};
+  }
+
+  /**
    * List names and positions of characters
    * @param {*} room room to list characters from.
    *                 If undefined, uses all rooms.
@@ -76,6 +91,8 @@ class RoomManager {
     }
   }
 }
+
+const COLORS = Object.freeze(['none', 'red', 'green', 'blue']);
 
 /**
  * 
@@ -102,7 +119,8 @@ class Room {
     }
     this.#characters.set(name, {
       x: 0,
-      y: 0
+      y: 0,
+      color: 'none'
     });
     return true;
   }
@@ -123,11 +141,29 @@ class Room {
    */
   updateCharacter(name, x, y) {
     if (this.#characters.has(name)) {
-      this.#characters.set(name, {
-        x: x,
-        y: y
-      });
+      const target = this.#characters.get(name);
+      target.x = x;
+      target.y = y;
     }
+  }
+
+  /**
+   * Updates character's attributes
+   * @param {String} name name of character
+   * @param {Object} newAttributes Object with updated attributes and values
+   */
+  changeAttribute(name, newAttributes) {
+    const target = this.#characters.get(name);
+    let result = {};
+    if (target) {
+      if (newAttributes.color) {
+        if (COLORS.includes(newAttributes.color)) {
+          target.color = newAttributes.color;
+          result.color = newAttributes.color;
+        }
+      }
+    }
+    return result;
   }
 
   /**
@@ -139,7 +175,8 @@ class Room {
       result.push({
         name: key,
         x: value.x,
-        y: value.y
+        y: value.y,
+        color: value.color
       })
     }
     return result;

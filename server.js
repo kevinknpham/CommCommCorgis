@@ -48,23 +48,48 @@ function handleMessage(ws, msg) {
       case "chat": // chat messages
         handleChat(ws, data);
         break;
+      case "update": // update character position
+        handleUpdateChar(ws, data);
+        break;
       case "create": // create new character
         handleCreateChar(ws, data);
         break;
       case "leave": // remove character from game
         handleLeave(ws, data);
         break;
-      case "update": // update character position
-        handleUpdateChar(ws, data);
-        break;
       case "list": // list characters
         handleList(ws, data);
+        break;
+      case "change_attribute":
+        handleChangeAttribute(ws, data);
         break;
       default:
         error(ws, msg + " is not a valid action");
     }
   } else {
     error(ws, "Please specify an action (chat, create, leave, update)");
+  }
+}
+
+/**
+ * Update character's appearance
+ * @param {WebSocket} ws - WebSocket for error responses
+ * @param {Object} data - must have 'color'
+ */
+function handleChangeAttribute(ws, data) {
+  if (data.name && data.attributes) {
+    const changeAttributeResult = roomManager.changeAttribute("entrance", data.name, data.attributes);
+    let response = {action: "modify_char"};
+    response.name = data.name;
+    response.attributes = data.attributes;
+    broadcastToAll(JSON.stringify(response));
+
+    debuggingDescription(
+      "\u001b[34mChange attribute has been called:\u001b[0m",
+      `${data.name}'s appearance has been changed.`
+    );
+  } else {
+    error(ws, "Character 'name' or 'attributes' not specified.")
   }
 }
 
@@ -85,7 +110,7 @@ function handleLeave(ws, data) {
 
     debuggingDescription(
       "\u001b[34mLeave has been called:\u001b[0m",
-      `${data.name} has left.`,
+      `${data.name} has left.`
     );
   } else {
     error(ws, "Character 'name' not specified.");
@@ -218,7 +243,7 @@ function printList() {
   debug("The list of players is as follows:")
 
   const listOfPlayers = roomManager.listCharacters();
-  listOfPlayers.forEach(person => debug(`  \u001b[1m${person.name}\u001b[0m is at (${person.x}, ${person.y})`));
+  listOfPlayers.forEach(person => debug(`  \u001b[1m${person.name}\u001b[0m is at (${person.x}, ${person.y}) with a color of ${person.color}`));
 }
 
 /**
