@@ -109,7 +109,7 @@ function initiateUserCharacter() {
 }
 
 // Create and append user's character to game background
-function createCharacterAsset(username, color) {
+function createCharacterAsset(username, color, x, y) {
   const newCharacter = document.createElement("div");
   newCharacter.classList.add("character");
   newCharacter.setAttribute("id", username);
@@ -129,6 +129,9 @@ function createCharacterAsset(username, color) {
 
   newCharacter.appendChild(nameTag);
   newCharacter.appendChild(newCharacterImage);
+
+  newCharacter.style.left = x;
+  newCharacter.style.top = y;
 }
 
 function modifyCharacterAsset(username, url) {
@@ -158,7 +161,7 @@ function handleModifyChar(data) {
 // update that character to game server list
 function handleNewChar(data) {
   if (data.name) {
-    createCharacterAsset(data.name, data.attributes.color);
+    createCharacterAsset(data.name, data.attributes.color, data.x, data.y);
   }
 }
 
