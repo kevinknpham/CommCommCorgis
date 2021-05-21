@@ -124,8 +124,8 @@ class Room {
       return false;
     }
     this.#characters.set(name, {
-      x: 0,
-      y: 0,
+      x: x,
+      y: y,
       color: 'none'
     });
     return true;

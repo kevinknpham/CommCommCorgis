@@ -25,7 +25,7 @@ const server = app
 
 const wss = new Server({ server });
 
-const roomManager = new RoomManager([
+const ROOM_INFO = [
   {
     name: "entrance",
     // bounds: [[-10, -10], [-10, 10000], [10000, 10000], [10000, -10]]
@@ -43,7 +43,9 @@ const roomManager = new RoomManager([
       [-49, 361]
     ]
   }
-]);
+];
+
+const roomManager = new RoomManager(ROOM_INFO);
 
 wss.on("connection", (ws) => {
   debug("\u001b[32mClient connected\u001b[0m");
@@ -270,7 +272,7 @@ function printList() {
   debug("The list of players is as follows:")
 
   const listOfPlayers = roomManager.listCharacters();
-  listOfPlayers.forEach(person => debug(`  \u001b[1m${person.name}\u001b[0m is at (${person.x}, ${person.y}) with a color of ${person.color}`));
+  listOfPlayers.forEach(person => debug(`  \u001b[1m${person.name}\u001b[0m is at (${person.x}, ${person.y}) with a color of ${person.attributes.color}`));
 }
 
 /**
@@ -297,4 +299,9 @@ function debug(msg, fn=console.log) {
   } else {
     fn();
   }
+}
+
+// ==========DEBUG========== //
+for (const [ptX, ptY] of ROOM_INFO[0].bounds) {
+  roomManager.addCharacter("entrance", `[${ptX}, ${ptY}]`, ptX, ptY);
 }
