@@ -25,7 +25,12 @@ const server = app
 
 const wss = new Server({ server });
 
-const roomManager = new RoomManager(["entrance"]);
+const roomManager = new RoomManager([
+  {
+    name: "entrance",
+    bounds: [[0, 0], [0, 1], [1, 1], [1, 0]]
+  }
+]);
 
 wss.on("connection", (ws) => {
   debug("\u001b[32mClient connected\u001b[0m");
@@ -139,18 +144,25 @@ function handleList(ws, data) {
  */
 function handleUpdateChar(ws, data) {
   if (data.name && data.x && data.y) {
-    roomManager.updateCharacter("entrance", data.name, data.x, data.y);
+    const updateResult = roomManager.updateCharacter("entrance", data.name, data.x, data.y);
 
-    let response = { action: "move_char" };
-    response.name = data.name;
-    response.x = data.x;
-    response.y = data.y;
-    broadcastToAll(JSON.stringify(response));
+    if (updateResult) {
+      let response = { action: "move_char" };
+      response.name = data.name;
+      response.x = data.x;
+      response.y = data.y;
+      broadcastToAll(JSON.stringify(response));
 
-    debuggingDescription(
-      "\u001b[34mUpdate has been called:\u001b[0m",
-      `${data.name} has been moved to x of ${data.x} and y of ${data.y}.`
-    );
+      debuggingDescription(
+        "\u001b[34mUpdate has been called:\u001b[0m",
+        `${data.name} has been moved to x of ${data.x} and y of ${data.y}.`
+      );
+    } else {
+      debuggingDescription(
+        "\u001b[34mUpdate failed:\u001b[0m",
+        `${data.name} can't be moved to x of ${data.x} and y of ${data.y}.`
+      );
+    }
   } else {
     error(ws, "Must specify 'name', 'x', and 'y'.");
     console.log(data);

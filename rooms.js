@@ -10,7 +10,7 @@ class RoomManager {
   constructor(rooms) {
     this.#roomOccupants = new Map();
     for (let i = 0; i < rooms.length; i++) {
-      this.#roomOccupants.set(rooms[i], new Room());
+      this.#roomOccupants.set(rooms[i].name, new Room(rooms[i].bounds));
     }
   }
 
@@ -47,12 +47,14 @@ class RoomManager {
    * @param {String} name name of character
    * @param {Integer} x new x location
    * @param {Integer} y new y location
+   * @return true iff successful
    */
   updateCharacter(room, name, x, y) {
     let roomData = this.#roomOccupants.get(room);
     if (roomData) {
-      roomData.updateCharacter(name, x, y);
+      return roomData.updateCharacter(name, x, y);
     }
+    return false;
   }
 
   /**
@@ -60,6 +62,7 @@ class RoomManager {
      * @param {String} room room to update
      * @param {String} name name of character
      * @param {Object} newAttributes Object with updated attributes and values
+     * @return attributes that were changed
      */
   changeAttribute(room, name, newAttributes) {
     let roomData = this.#roomOccupants.get(room);
@@ -93,18 +96,21 @@ class RoomManager {
 }
 
 const COLORS = Object.freeze(['none', 'red', 'green', 'blue']);
+const pointInPolygon = require('point-in-polygon');
 
 /**
  * 
  */
 class Room {
   #characters
+  #bounds
 
   /**
    * Construct empty room.
    */
-  constructor() {
+  constructor(bounds) {
     this.#characters = new Map();
+    this.#bounds = bounds;
   }
 
   /**
@@ -138,19 +144,26 @@ class Room {
    * @param {String} name name of character
    * @param {Integer} x new x location
    * @param {Integer} y new y location
+   * @return true iff successful
    */
   updateCharacter(name, x, y) {
     if (this.#characters.has(name)) {
-      const target = this.#characters.get(name);
-      target.x = x;
-      target.y = y;
+      if (pointInPolygon([x, y], this.#bounds)) {
+        const target = this.#characters.get(name);
+        target.x = x;
+        target.y = y;
+        return true;
+      }
+      return false;
     }
+    return false;
   }
 
   /**
    * Updates character's attributes
    * @param {String} name name of character
    * @param {Object} newAttributes Object with updated attributes and values
+   * @return attributes that were changed
    */
   changeAttribute(name, newAttributes) {
     const target = this.#characters.get(name);

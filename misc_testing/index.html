@@ -13,13 +13,14 @@
 
         ws.onopen = () => {
           ws.send(JSON.stringify({
-            action: "list",
-            name: "jong",
+            action: "update",
+            name: "derek",
+            x: 1,
+            y: 0.5,
             attributes: {
               color: "red"
             }
           }));
-          // ws.send('{"action":"change_attribute", "name": "jong", "attributes": {"color": "blue"}}');
         }
 
     </script>
