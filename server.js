@@ -28,7 +28,7 @@ const wss = new Server({ server });
 const roomManager = new RoomManager([
   {
     name: "entrance",
-    bounds: [[0, 0], [0, 1], [1, 1], [1, 0]]
+    bounds: [[0, 0], [0, 1000], [1000, 1000], [1000, 0]]
   }
 ]);
 
