@@ -148,13 +148,13 @@ class Room {
    */
   updateCharacter(name, x, y) {
     if (this.#characters.has(name)) {
-      if (pointInPolygon([x, y], this.#bounds)) {
+      // if (pointInPolygon([x, y], this.#bounds)) {
         const target = this.#characters.get(name);
         target.x = x;
         target.y = y;
         return true;
-      }
-      return false;
+      // }
+      // return false;
     }
     return false;
   }
