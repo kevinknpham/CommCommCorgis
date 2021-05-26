@@ -130,8 +130,8 @@ function createCharacterAsset(username, color, x, y) {
   newCharacter.appendChild(nameTag);
   newCharacter.appendChild(newCharacterImage);
 
-  newCharacter.style.left = x;
-  newCharacter.style.top = y;
+  newCharacter.style.left = `${x}px`;
+  newCharacter.style.top = `${y}px`;
 }
 
 function modifyCharacterAsset(username, url) {
