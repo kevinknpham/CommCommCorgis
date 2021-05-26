@@ -1,6 +1,40 @@
 let username;
 const CANVAS = document.getElementById("myCanvas");
 
+const STANDARD_WIDTH = 1920;
+const STANDARD_HEIGHT = 1080;
+
+let clientWidth = pseudoMediaQueryWidth(screen.width);
+let clientHeight = pseudoMediaQueryHeight(screen.height);
+
+
+//
+// function pseudoMediaQueryWidth(width) {
+//   if (width < 1280) {
+//     return 
+//   } else if (width < ...) {
+
+//   } else if (width < 1920) {
+
+//   } else if (width <) {
+
+//   }
+// }
+
+
+let screenRatio = screen.width / STANDARD_WIDTH;
+let inverseScreenRatio = STANDARD_WIDTH / screen.width;
+
+function convertStandardSizeToClientSize(measurement) {
+  return measurement * screenRatio;
+}
+
+function convertClientSizeToStandardSize(measurement) {
+  return measurement * inverseScreenRatio;
+}
+
+function 
+
 const COLOR_TO_URL = Object.freeze(
   new Map([
     ["none", "assets/corgi-slide-none.png"],
@@ -270,5 +304,6 @@ function toggleLoadingScreen(showLoading) {
     ? "none"
     : "block";
 }
+
 
 login();
