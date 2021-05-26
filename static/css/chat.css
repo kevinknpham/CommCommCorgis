@@ -1,7 +1,8 @@
 .chat {
   background-color: #d4dbf5;
-  width: 30%;
-  height: 100%;
+  width: 576px;
+  height: 850px;
+  margin-left: 8px;
   border: 1px solid black;
   border-radius: 8px;
   display: flex;

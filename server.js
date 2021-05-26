@@ -40,9 +40,9 @@ const ROOM_INFO = [
       [1131, 681],
       [85, 680],
       [79, 362],
-      [-49, 361]
-    ]
-  }
+      [-49, 361],
+    ],
+  },
 ];
 
 const roomManager = new RoomManager(ROOM_INFO);
@@ -62,7 +62,7 @@ function handleMessage(ws, msg) {
   if (data.action) {
     const action = data.action.toLowerCase();
     if (data.name) {
-      data.name = data.name.replace(/[^\w]/gi,'');
+      data.name = data.name.replace(/[^\w]/gi, "");
     }
     switch (action) {
       case "chat": // chat messages
@@ -98,8 +98,12 @@ function handleMessage(ws, msg) {
  */
 function handleChangeAttribute(ws, data) {
   if (data.name && data.attributes) {
-    const changeAttributeResult = roomManager.changeAttribute("entrance", data.name, data.attributes);
-    let response = {action: "modify_char"};
+    const changeAttributeResult = roomManager.changeAttribute(
+      "entrance",
+      data.name,
+      data.attributes
+    );
+    let response = { action: "modify_char" };
     response.name = data.name;
     response.attributes = data.attributes;
     broadcastToAll(JSON.stringify(response));
@@ -109,7 +113,7 @@ function handleChangeAttribute(ws, data) {
       `${data.name}'s appearance has been changed.`
     );
   } else {
-    error(ws, "Character 'name' or 'attributes' not specified.")
+    error(ws, "Character 'name' or 'attributes' not specified.");
   }
 }
 
@@ -149,7 +153,7 @@ function handleList(ws, data) {
   ws.send(JSON.stringify({ action: "list", list: result }));
 
   debug("\u001b[34mList has been called:\u001b[0m");
-  debug('');
+  debug("");
 }
 
 /**
@@ -159,7 +163,12 @@ function handleList(ws, data) {
  */
 function handleUpdateChar(ws, data) {
   if (data.name && data.x && data.y) {
-    const updateResult = roomManager.updateCharacter("entrance", data.name, data.x, data.y);
+    const updateResult = roomManager.updateCharacter(
+      "entrance",
+      data.name,
+      data.x,
+      data.y
+    );
 
     if (updateResult) {
       let response = { action: "move_char" };
@@ -199,12 +208,14 @@ function handleCreateChar(ws, data) {
       response.x = 0;
       response.y = 0;
       response.attributes = {};
-      response.attributes.color = 'none';
-      ws.send(JSON.stringify({
-        action: "login_result",
-        status: "success",
-        name: data.name
-      }));
+      response.attributes.color = "none";
+      ws.send(
+        JSON.stringify({
+          action: "login_result",
+          status: "success",
+          name: data.name,
+        })
+      );
       broadcastToAll(JSON.stringify(response));
 
       debuggingDescription(
@@ -212,12 +223,14 @@ function handleCreateChar(ws, data) {
         `${data.name} has joined the game.`
       );
     } else {
-      ws.send(JSON.stringify({
-        action: "login_result",
-        status: "failure",
-        reason: "user_already_exists",
-        requested_name: data.name
-      }));
+      ws.send(
+        JSON.stringify({
+          action: "login_result",
+          status: "failure",
+          reason: "user_already_exists",
+          requested_name: data.name,
+        })
+      );
 
       debuggingDescription(
         "\u001b[34mCreate has been called:\u001b[0m",
@@ -269,10 +282,14 @@ function error(ws, msg) {
  * If DEBUG is true, prints all the characters to the console.
  */
 function printList() {
-  debug("The list of players is as follows:")
+  debug("The list of players is as follows:");
 
   const listOfPlayers = roomManager.listCharacters();
-  listOfPlayers.forEach(person => debug(`  \u001b[1m${person.name}\u001b[0m is at (${person.x}, ${person.y}) with a color of ${person.attributes.color}`));
+  listOfPlayers.forEach((person) =>
+    debug(
+      `  \u001b[1m${person.name}\u001b[0m is at (${person.x}, ${person.y}) with a color of ${person.attributes.color}`
+    )
+  );
 }
 
 /**
@@ -283,9 +300,9 @@ function debuggingDescription(...statements) {
   for (statement of statements) {
     debug(statement);
   }
-  debug('');
+  debug("");
   printList();
-  debug('');
+  debug("");
 }
 
 /**
@@ -293,7 +310,7 @@ function debuggingDescription(...statements) {
  * @param {*} msg - thing to log to console
  * @param {function} fn - fn to use, defaults to console.log
  */
-function debug(msg, fn=console.log) {
+function debug(msg, fn = console.log) {
   if (msg) {
     fn(msg);
   } else {
@@ -302,6 +319,6 @@ function debug(msg, fn=console.log) {
 }
 
 // ==========DEBUG========== //
-// for (const [ptX, ptY] of ROOM_INFO[0].bounds) {
-//   roomManager.addCharacter("entrance", `[${ptX}, ${ptY}]`, ptX, ptY);
-// }
+for (const [ptX, ptY] of ROOM_INFO[0].bounds) {
+  roomManager.addCharacter("entrance", `[${ptX}, ${ptY}]`, ptX, ptY);
+}
