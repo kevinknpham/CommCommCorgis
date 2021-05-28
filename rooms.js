@@ -2,7 +2,7 @@
  * Object to hold rooms and their relationship to one another.
  */
 class RoomManager {
-  #roomOccupants
+  #roomOccupants;
 
   /**
    * @param {String[]} rooms list of room names
@@ -58,12 +58,12 @@ class RoomManager {
   }
 
   /**
-     * Updates character's attributes
-     * @param {String} room room to update
-     * @param {String} name name of character
-     * @param {Object} newAttributes Object with updated attributes and values
-     * @return attributes that were changed
-     */
+   * Updates character's attributes
+   * @param {String} room room to update
+   * @param {String} name name of character
+   * @param {Object} newAttributes Object with updated attributes and values
+   * @return attributes that were changed
+   */
   changeAttribute(room, name, newAttributes) {
     let roomData = this.#roomOccupants.get(room);
     if (roomData) {
@@ -95,15 +95,15 @@ class RoomManager {
   }
 }
 
-const COLORS = Object.freeze(['none', 'red', 'green', 'blue']);
-const pointInPolygon = require('point-in-polygon');
+const COLORS = Object.freeze(["none", "red", "green", "blue"]);
+const pointInPolygon = require("point-in-polygon");
 
 /**
- * 
+ *
  */
 class Room {
-  #characters
-  #bounds
+  #characters;
+  #bounds;
 
   /**
    * Construct empty room.
@@ -126,7 +126,7 @@ class Room {
     this.#characters.set(name, {
       x: x,
       y: y,
-      color: 'none'
+      color: "none",
     });
     return true;
   }
@@ -149,10 +149,10 @@ class Room {
   updateCharacter(name, x, y) {
     if (this.#characters.has(name)) {
       // if (pointInPolygon([x, y], this.#bounds)) {
-        const target = this.#characters.get(name);
-        target.x = x;
-        target.y = y;
-        return true;
+      const target = this.#characters.get(name);
+      target.x = x;
+      target.y = y;
+      return true;
       // }
       // return false;
     }
@@ -190,9 +190,9 @@ class Room {
         x: value.x,
         y: value.y,
         attributes: {
-          color: value.color
-        }
-      })
+          color: value.color,
+        },
+      });
     }
     return result;
   }
