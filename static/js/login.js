@@ -1,97 +1,89 @@
 let username;
-const CANVAS = document.getElementById("myCanvas");
-
-const STANDARD_WIDTH = 1920;
-const STANDARD_HEIGHT = 1080;
-
-let clientWidth = pseudoMediaQueryWidth(screen.width);
-let clientHeight = pseudoMediaQueryHeight(screen.height);
 
 
-//
+// trying out "media query"
+// let clientWidth = pseudoMediaQueryWidth(screen.width);
+// let clientHeight = pseudoMediaQueryHeight(screen.height);
+
 // function pseudoMediaQueryWidth(width) {
 //   if (width < 1280) {
-//     return 
-//   } else if (width < ...) {
-
+//     return 960;
+//   } else if (width < 1600) {
+//     return 1280;
 //   } else if (width < 1920) {
-
-//   } else if (width <) {
-
+//     return 1600;
+//   } else if (width < 2560) {
+//     return 1920;
 //   }
 // }
 
-
-let screenRatio = screen.width / STANDARD_WIDTH;
-let inverseScreenRatio = STANDARD_WIDTH / screen.width;
-
-function convertStandardSizeToClientSize(measurement) {
-  return measurement * screenRatio;
-}
-
-function convertClientSizeToStandardSize(measurement) {
-  return measurement * inverseScreenRatio;
-}
-
-function 
+// function pseudoMediaQueryHeight(width) {
+//   if (width < 720) {
+//     return 540;
+//   } else if (width < 900) {
+//     return 720;
+//   } else if (width < 1080) {
+//     return 900;
+//   } else if (width < 1440) {
+//     return 1080;
+//   }
+// }
 
 const COLOR_TO_URL = Object.freeze(
   new Map([
-    ["none", "assets/corgi-slide-none.png"],
-    ["red", "assets/corgi-slide-red.png"],
-    ["green", "assets/corgi-slide-green.png"],
-    ["blue", "assets/corgi-slide-blue.png"],
+    ['none', 'assets/corgi-slide-none.png'],
+    ['red', 'assets/corgi-slide-red.png'],
+    ['green', 'assets/corgi-slide-green.png'],
+    ['blue', 'assets/corgi-slide-blue.png']
   ])
 );
 
 // Used for box shadow on character selection
 const COLOR_TO_CLASS_NAME = Object.freeze(
   new Map([
-    ["none", "gray-box-shadow"],
-    ["red", "red-box-shadow"],
-    ["green", "green-box-shadow"],
-    ["blue", "blue-box-shadow"],
+    ['none', 'gray-box-shadow'],
+    ['red', 'red-box-shadow'],
+    ['green', 'green-box-shadow'],
+    ['blue', 'blue-box-shadow']
   ])
 );
 
-window.addEventListener("beforeunload", function (e) {
+window.addEventListener('beforeunload', function (e) {
   logout();
 });
 
-window.addEventListener("onclose", function (e) {
+window.addEventListener('onclose', function (e) {
   logout();
 });
 
 // click or press enter allow user to join the game
 function login() {
-  const input = document.getElementById("login-input");
-  const loginBtn = document.getElementById("login-button");
-  input.addEventListener("input", function (e) {
+  const input = document.getElementById('login-input');
+  const loginBtn = document.getElementById('login-button');
+  input.addEventListener('input', function (e) {
     loginBtn.disabled = e.target.value.length === 0;
   });
 
-  input.addEventListener("keyup", function (e) {
-    if (e.key === "Enter") {
+  input.addEventListener('keyup', function (e) {
+    if (e.key === 'Enter') {
       toggleLoadingScreen(true);
       sendUserDataToServer(input.value);
       // revealCharacterSelection();
     }
   });
-  loginBtn.addEventListener("click", () => {
+  loginBtn.addEventListener('click', () => {
     toggleLoadingScreen(true);
     sendUserDataToServer(input.value);
   });
 }
 
 function revealCharacterSelection() {
-  switchScreen("characterPage", "d4dbf5");
+  switchScreen('characterPage', 'd4dbf5');
 }
 
 function setUpCharacterSelection() {
   // let pictureDOMs = Array.from(COLOR_TO_URL.keys()).map(generateOption);
-  let characterSelectionContainer = document.querySelector(
-    ".character-selection"
-  );
+  let characterSelectionContainer = document.querySelector('.character-selection');
   for (let [color, url] of COLOR_TO_URL) {
     characterSelectionContainer.append(generateOption(url, color));
   }
@@ -101,65 +93,65 @@ function setUpCharacterSelection() {
 }
 
 function generateOption(url, color) {
-  const picture = document.createElement("picture");
-  const sourceImage = document.createElement("source");
-  const imgTag = document.createElement("img");
+  const picture = document.createElement('picture');
+  const sourceImage = document.createElement('source');
+  const imgTag = document.createElement('img');
 
   picture.appendChild(sourceImage);
   picture.appendChild(imgTag);
-  picture.classList.add("character-selection-box");
+  picture.classList.add('character-selection-box');
 
   sourceImage.srcset = url;
 
   imgTag.src = url;
   imgTag.alt = color;
-  imgTag.classList.add("character-selection-box-img");
+  imgTag.classList.add('character-selection-box-img');
 
   imgTag.classList.add(COLOR_TO_CLASS_NAME.get(color));
 
-  picture.addEventListener("click", () => selectCharacter(color));
+  picture.addEventListener('click', () => selectCharacter(color));
   return picture;
 }
 
 function selectCharacter(color) {
   initiateUserCharacter();
   sendUserColorToServer(color);
-  switchScreen("mainPage", "white");
+  switchScreen('mainPage', 'white');
 }
 
 // Initialize user character and switch to the main game page from login page
 // and send the user data to server
 // only allow if user types something in login page
 function initiateUserCharacter() {
-  username = document.getElementById("login-input").value;
+  username = document.getElementById('login-input').value;
   console.log(username);
   if (username && username.length > 0) {
     // sessionStorage.setItem("commcommcorgis_username", username);
     // sendUserDataToServer(username);
     //createCharacterAsset(username);
     moveCharacter(username);
-    ws.send(JSON.stringify({ action: "list" }));
+    ws.send(JSON.stringify({action: 'list'}));
   }
 }
 
 // Create and append user's character to game background
 function createCharacterAsset(username, color, x, y) {
-  const newCharacter = document.createElement("div");
-  newCharacter.classList.add("character");
-  newCharacter.setAttribute("id", username);
+  const newCharacter = document.createElement('div');
+  newCharacter.classList.add('character');
+  newCharacter.setAttribute('id', username);
   CANVAS.appendChild(newCharacter);
 
-  const nameTag = document.createElement("p");
-  nameTag.classList.add("name-tag");
+  const nameTag = document.createElement('p');
+  nameTag.classList.add('name-tag');
   nameTag.innerText = username;
 
-  const newCharacterImage = document.createElement("img");
+  const newCharacterImage = document.createElement('img');
   if (color) {
-    newCharacterImage.setAttribute("src", COLOR_TO_URL.get(color));
+    newCharacterImage.setAttribute('src', COLOR_TO_URL.get(color));
   } else {
-    newCharacterImage.setAttribute("src", COLOR_TO_URL.get("none"));
+    newCharacterImage.setAttribute('src', COLOR_TO_URL.get('none'));
   }
-  newCharacterImage.classList.add("character-image");
+  newCharacterImage.classList.add('character-image');
 
   newCharacter.appendChild(nameTag);
   newCharacter.appendChild(newCharacterImage);
@@ -169,15 +161,15 @@ function createCharacterAsset(username, color, x, y) {
 }
 
 function modifyCharacterAsset(username, url) {
-  document.querySelector(`#${username} img`).setAttribute("src", url);
+  document.querySelector(`#${username} img`).setAttribute('src', url);
 }
 
 // Sends the user's character color selection to the server
 function sendUserColorToServer(color) {
   let datum = {
     name: username,
-    attributes: { color: color },
-    action: "change_attribute",
+    attributes: {color: color},
+    action: 'change_attribute'
   };
   ws.send(JSON.stringify(datum));
 }
@@ -203,7 +195,7 @@ function handleNewChar(data) {
 function sendUserDataToServer(username) {
   let datum = {
     name: username,
-    action: "create",
+    action: 'create'
   };
   ws.send(JSON.stringify(datum));
 }
@@ -212,7 +204,7 @@ function sendUserDataToServer(username) {
 // remove character asset from user's game instance
 function logout() {
   toggleLoadingScreen(false);
-  switchScreen("loginPage", "#d4dbf5");
+  switchScreen('loginPage', '#d4dbf5');
   sendLeaveRequestToServer(username);
   //CANVAS.removeChild(document.getElementById(username)); //??
   // sessionStorage.removeItem("commcommcorgis_username");
@@ -230,7 +222,7 @@ function handleRemoveChar(data) {
 function sendLeaveRequestToServer(username) {
   let datum = {
     name: username,
-    action: "leave",
+    action: 'leave'
   };
   ws.send(JSON.stringify(datum));
 }
@@ -247,15 +239,12 @@ function handleList(data) {
 // if not, then update that character position to the server
 function createCharacterFromList(list) {
   for (let character of list) {
-    if (
-      username !== character.name &&
-      !document.getElementById(character.name)
-    ) {
-      console.log("hello1");
+    if (username !== character.name && !document.getElementById(character.name)) {
+      console.log('hello1');
       handleNewChar(character);
       //createCharacterAsset(character.name);
     } else if (document.getElementById(character.name)) {
-      console.log("hello2");
+      console.log('hello2');
       handleMoveChar(character);
     }
   }
@@ -264,46 +253,41 @@ function createCharacterFromList(list) {
 // swtich login page to main game page when the user logs in
 // switch main game page to log out page when the user logs out
 function switchScreen(page, backgroundColor) {
-  document.querySelector("body").style.backgroundColor = backgroundColor;
-  document.getElementById("login-page").style.display = "none";
-  document.getElementById("character-page").style.display = "none";
-  document.getElementById("main-page").style.display = "none";
+  document.querySelector('body').style.backgroundColor = backgroundColor;
+  document.getElementById('login-page').style.display = 'none';
+  document.getElementById('character-page').style.display = 'none';
+  document.getElementById('main-page').style.display = 'none';
 
   switch (page) {
-    case "loginPage":
-      document.getElementById("login-page").style.display = "block";
+    case 'loginPage':
+      document.getElementById('login-page').style.display = 'block';
       break;
-    case "characterPage":
-      document.getElementById("character-page").style.display = "grid";
+    case 'characterPage':
+      document.getElementById('character-page').style.display = 'grid';
       break;
-    case "mainPage":
-      document.getElementById("main-page").style.display = "block";
+    case 'mainPage':
+      document.getElementById('main-page').style.display = 'block';
       break;
   }
 }
 
 function handleLoginResult(data) {
   if (data.status) {
-    if (data.status === "success") {
+    if (data.status === 'success') {
       revealCharacterSelection();
-    } else if (data.status === "failure") {
+    } else if (data.status === 'failure') {
       toggleLoadingScreen(false);
       alert(`${data.requested_name} is taken`);
     } else {
-      console.log(data.status + " invalid login result status");
+      console.log(data.status + ' invalid login result status');
     }
   }
 }
 
 function toggleLoadingScreen(showLoading) {
-  document.getElementById("loading-screen").style.display = showLoading
-    ? "block"
-    : "none";
+  document.getElementById('loading-screen').style.display = showLoading ? 'block' : 'none';
 
-  document.querySelector(".login-screen").style.display = showLoading
-    ? "none"
-    : "block";
+  document.querySelector('.login-screen').style.display = showLoading ? 'none' : 'block';
 }
-
 
 login();

@@ -26,6 +26,6 @@
   height: 850px;
   background-image: url("../assets/ctc_main.png");
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
   position: relative;
 }
