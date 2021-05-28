@@ -1,34 +1,5 @@
 let username;
 
-
-// trying out "media query"
-// let clientWidth = pseudoMediaQueryWidth(screen.width);
-// let clientHeight = pseudoMediaQueryHeight(screen.height);
-
-// function pseudoMediaQueryWidth(width) {
-//   if (width < 1280) {
-//     return 960;
-//   } else if (width < 1600) {
-//     return 1280;
-//   } else if (width < 1920) {
-//     return 1600;
-//   } else if (width < 2560) {
-//     return 1920;
-//   }
-// }
-
-// function pseudoMediaQueryHeight(width) {
-//   if (width < 720) {
-//     return 540;
-//   } else if (width < 900) {
-//     return 720;
-//   } else if (width < 1080) {
-//     return 900;
-//   } else if (width < 1440) {
-//     return 1080;
-//   }
-// }
-
 const COLOR_TO_URL = Object.freeze(
   new Map([
     ['none', 'assets/corgi-slide-none.png'],
@@ -158,6 +129,8 @@ function createCharacterAsset(username, color, x, y) {
 
   newCharacter.style.left = `${x}px`;
   newCharacter.style.top = `${y}px`;
+
+  newCharacter.style.width = `${applyConversionToScreen(characterLength, 1)}px`
 }
 
 function modifyCharacterAsset(username, url) {

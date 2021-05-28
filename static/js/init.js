@@ -3,8 +3,8 @@ let ws = new WebSocket(HOST);
 
 const STANDARD_WIDTH = 1920;
 const STANDARD_HEIGHT = 1080;
-const STANDARD_GAME_RATIO = 0.7;
-const STANDARD_CHAT_RATIO = 1 - STANDARD_GAME_RATIO;
+const GAME_RATIO = 0.7;
+const CHAT_RATIO = 1 - GAME_RATIO;
 
 // Ignore non-16:9 ratio screen
 let screenRatio = screen.width / STANDARD_WIDTH;
@@ -26,15 +26,18 @@ function applyConversionToScreen(measurement, ratio) {
 
 // change the dimension of game screen
 const CANVAS = document.getElementById('myCanvas');
-CANVAS.style.width = applyConversionToScreen(STANDARD_WIDTH, STANDARD_GAME_RATIO);
-CANVAS.style.height = applyConversionToScreen(STANDARD_HEIGHT, STANDARD_GAME_RATIO);
+CANVAS.style.width = `${applyConversionToScreen(STANDARD_WIDTH, GAME_RATIO)}px`;
+CANVAS.style.height = `${applyConversionToScreen(STANDARD_HEIGHT, GAME_RATIO)}px`;
+
+console.log(`${applyConversionToScreen(STANDARD_WIDTH, GAME_RATIO)}px`);
+console.log(`${applyConversionToScreen(STANDARD_HEIGHT, GAME_RATIO)}px`);
 
 // change the dimension of chat
 const CHAT = document.getElementById('chat');
+CHAT.style.width = `${applyConversionToScreen(STANDARD_WIDTH, CHAT_RATIO)}px`;
+CHAT.style.height = `${applyConversionToScreen(STANDARD_HEIGHT, GAME_RATIO)}px`;
 
-CHAT.style.width = applyConversionToScreen(STANDARD_WIDTH, STANDARD_CHAT_RATIO);
-CHAT.style.height = applyConversionToScreen(STANDARD_HEIGHT, STANDARD_GAME_RATIO);
-
+const CHARACTERS = document.querySelector
 
 ws.onopen = event => {
   ws.onmessage = msg => handleMessageFromSever(msg.data);
