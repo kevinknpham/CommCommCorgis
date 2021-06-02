@@ -3,10 +3,12 @@
   width: 576px;
   height: 850px;
   margin-left: 8px;
+  margin-top: 8px;
   border: 1px solid black;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 
 .header {
@@ -72,7 +74,7 @@
 .post-container {
   display: flex;
   flex-direction: column;
-  height: 75vh;
+  height: 90vh;
   overflow-y: scroll;
 }
 
