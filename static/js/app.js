@@ -17,7 +17,7 @@ function moveCharacter(username) {
     //   currentTopPosition
     // );
 
-    sendMoveRequestToServer(username, currentLeftPosition, currentTopPosition);
+    sendMoveRequestToServer(username, convertStandardWidthToClientWidth(currentLeftPosition), convertStandardHeightToClientHeight(currentTopPosition));
   };
 }
 
@@ -30,8 +30,8 @@ function handleMoveChar(data) {
   console.log(data);
   if (data.name && data.x && data.y) {
     let userCharacter = document.getElementById(data.name);
-    let characterLeftPosition = data.x;
-    let characterTopPosition = data.y;
+    let characterLeftPosition = convertClientWidthToStandardWidth(data.x);
+    let characterTopPosition = convertClientHeightToStandardHeight(data.y);
     moveCharactertoPosition(
       userCharacter,
       characterLeftPosition,

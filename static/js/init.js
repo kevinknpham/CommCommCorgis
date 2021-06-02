@@ -4,8 +4,6 @@ let ws = new WebSocket(HOST);
 console.log(screen.width + " first");
 console.log(screen.height + " first");
 
-
-
 // change the dimension of game screen
 const CANVAS = document.getElementById('myCanvas');
 
@@ -19,22 +17,38 @@ const CALCULATED_GAME_WIDTH = USER_SCREEN_WIDTH * 0.7;
 const CALCULATED_CHAT_WIDTH = USER_SCREEN_WIDTH * 0.3;
 const CALCULATED_GAME_HEIGHT = Math.min(CALCULATED_GAME_WIDTH * 468 / 740, USER_SCREEN_HEIGHT - 20);
 
-
 // server to client
-const screenRatio = USER_SCREEN_WIDTH / 1920;
-// function convertStandardSizeToClientSize(measurement) {
-//   return measurement * screenRatio;
-// }
+const STANDARD_WIDTH = 1920;
+const STANDARD_HEIGHT = 1080;
+const SCREEN_WIDTH_RATIO = USER_SCREEN_WIDTH / STANDARD_WIDTH;
+const SCREEN_HEIGHT_RATIO = USER_SCREEN_HEIGHT / STANDARD_HEIGHT;
+const INVERSE_SCREEN_WIDTH_RATIO = STANDARD_WIDTH / USER_SCREEN_WIDTH;
+const INVERSE_SCREEN_HEIGHT_RATIO = STANDARD_HEIGHT / USER_SCREEN_HEIGHT;
 
-// // client to server
-// function convertClientSizeToStandardSize(measurement) {
-//   return measurement * inverseScreenRatio;
-// }
-
-function applyConversionToScreen(measurement) {
-  return Math.floor(measurement * screenRatio);
+// server to client height
+function convertStandardHeightToClientHeight(measurement) {
+  return measurement * SCREEN_HEIGHT_RATIO;
 }
 
+// server to client width
+function convertStandardWidthToClientWidth(measurement) {
+  return measurement * SCREEN_WIDTH_RATIO;
+}
+
+// client to server height
+function convertClientHeightToStandardHeight(measurement) {
+  return measurement * INVERSE_SCREEN_HEIGHT_RATIO;
+}
+
+// client to server width
+function convertClientWidthToStandardWidth(measurement) {
+  return measurement * INVERSE_SCREEN_WIDTH_RATIO;
+}
+
+
+function applyConversionToScreen(measurement) {
+  return Math.floor(convertStandardWidthToClientWidth(measurement));
+}
 
 // CANVAS.style.width = `${applyConversionToScreen(STANDARD_WIDTH, GAME_RATIO)}px`;
 // CANVAS.style.height = `${applyConversionToScreen(STANDARD_HEIGHT, GAME_RATIO)}px`;
