@@ -161,7 +161,7 @@ function handleModifyChar(data) {
 // update that character to game server list
 function handleNewChar(data) {
   if (data.name) {
-    createCharacterAsset(data.name, data.attributes.color, data.x, data.y);
+    createCharacterAsset(data.name, data.attributes.color, convertStandardWidthToClientWidth(data.x), convertStandardHeightToClientHeight(data.y));
   }
 }
 
