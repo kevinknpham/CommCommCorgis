@@ -37,15 +37,23 @@ function login() {
 
   input.addEventListener('keyup', function (e) {
     if (e.key === 'Enter') {
-      toggleLoadingScreen(true);
-      sendUserDataToServer(input.value);
+      submitUserName(input.value);
       // revealCharacterSelection();
     }
   });
   loginBtn.addEventListener('click', () => {
-    toggleLoadingScreen(true);
-    sendUserDataToServer(input.value);
+    submitUserName(input.value);
   });
+}
+
+function submitUserName(username) {
+  const userNamePattern = /[A-Za-z0-9]+/;
+  if (userNamePattern.test(username)) {
+    toggleLoadingScreen(true);
+    sendUserDataToServer(username);
+  } else {
+    alert(`Username is not alpha-numberic`);
+  }
 }
 
 function revealCharacterSelection() {
@@ -54,7 +62,9 @@ function revealCharacterSelection() {
 
 function setUpCharacterSelection() {
   // let pictureDOMs = Array.from(COLOR_TO_URL.keys()).map(generateOption);
-  let characterSelectionContainer = document.querySelector('.character-selection');
+  let characterSelectionContainer = document.querySelector(
+    '.character-selection'
+  );
   for (let [color, url] of COLOR_TO_URL) {
     characterSelectionContainer.append(generateOption(url, color));
   }
@@ -101,7 +111,7 @@ function initiateUserCharacter() {
     // sendUserDataToServer(username);
     //createCharacterAsset(username);
     moveCharacter(username);
-    ws.send(JSON.stringify({action: 'list'}));
+    ws.send(JSON.stringify({ action: 'list' }));
   }
 }
 
@@ -130,8 +140,8 @@ function createCharacterAsset(username, color, x, y) {
   newCharacter.style.left = `${x}px`;
   newCharacter.style.top = `${y}px`;
 
-  newCharacter.style.width = `${applyConversionToScreen(characterLength)}px`
-  newCharacter.style.height = `${applyConversionToScreen(characterLength)}px`
+  newCharacter.style.width = `${applyConversionToScreen(characterLength)}px`;
+  newCharacter.style.height = `${applyConversionToScreen(characterLength)}px`;
 }
 
 function modifyCharacterAsset(username, url) {
@@ -142,7 +152,7 @@ function modifyCharacterAsset(username, url) {
 function sendUserColorToServer(color) {
   let datum = {
     name: username,
-    attributes: {color: color},
+    attributes: { color: color },
     action: 'change_attribute'
   };
   ws.send(JSON.stringify(datum));
@@ -161,7 +171,12 @@ function handleModifyChar(data) {
 // update that character to game server list
 function handleNewChar(data) {
   if (data.name) {
-    createCharacterAsset(data.name, data.attributes.color, convertStandardWidthToClientWidth(data.x), convertStandardHeightToClientHeight(data.y));
+    createCharacterAsset(
+      data.name,
+      data.attributes.color,
+      convertStandardWidthToClientWidth(data.x),
+      convertStandardHeightToClientHeight(data.y)
+    );
   }
 }
 
@@ -213,7 +228,10 @@ function handleList(data) {
 // if not, then update that character position to the server
 function createCharacterFromList(list) {
   for (let character of list) {
-    if (username !== character.name && !document.getElementById(character.name)) {
+    if (
+      username !== character.name &&
+      !document.getElementById(character.name)
+    ) {
       console.log('hello1');
       handleNewChar(character);
       //createCharacterAsset(character.name);
@@ -259,9 +277,13 @@ function handleLoginResult(data) {
 }
 
 function toggleLoadingScreen(showLoading) {
-  document.getElementById('loading-screen').style.display = showLoading ? 'block' : 'none';
+  document.getElementById('loading-screen').style.display = showLoading
+    ? 'block'
+    : 'none';
 
-  document.querySelector('.login-screen').style.display = showLoading ? 'none' : 'block';
+  document.querySelector('.login-screen').style.display = showLoading
+    ? 'none'
+    : 'block';
 }
 
 login();

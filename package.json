@@ -32,6 +32,5 @@
     "point-in-polygon": "^1.1.0",
     "utf-8-validate": "^5.0.4",
     "ws": "^7.4.2"
-  },
-  "prettier": ".prettierrc.json"
+  }
 }
