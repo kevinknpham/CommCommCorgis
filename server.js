@@ -148,7 +148,7 @@ function handleLeave(ws) {
  *                        only list characters in that room.
  */
 function handleList(ws, data) {
-  let result = roomManager.listCharacters(data.room);
+  let result = roomManager.listCharacters(false, data.room);
 
   ws.send(JSON.stringify({ action: 'list', list: result }));
 
@@ -276,7 +276,7 @@ function error(ws, msg) {
 function printList() {
   debug('The list of players is as follows:');
 
-  const listOfPlayers = roomManager.listCharacters();
+  const listOfPlayers = roomManager.listCharacters(true);
   listOfPlayers.forEach((person) =>
     debug(
       `  \u001b[1m(${person.id})${person.name}\u001b[0m is at (${person.x}, ${person.y}) with a color of ${person.attributes.color}`

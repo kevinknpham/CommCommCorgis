@@ -95,16 +95,16 @@ class RoomManager {
    * @returns Object[] containing characters in the given room or all rooms if
    *          not specified.
    */
-  listCharacters(room = undefined) {
+  listCharacters(includeId, room = undefined) {
     if (room) {
       let roomData = this.#roomOccupants.get(room);
       if (roomData) {
-        return roomData.listCharacters();
+        return roomData.listCharacters(includeId);
       }
     } else {
       let result = [];
       for (let roomData of this.#roomOccupants.values()) {
-        result = result.concat(roomData.listCharacters());
+        result = result.concat(roomData.listCharacters(includeId));
       }
       return result;
     }
@@ -250,11 +250,11 @@ class Room {
   /**
    * List names and positions of characters in room
    */
-  listCharacters() {
+  listCharacters(includeId = false) {
     let result = [];
     for (let [key, value] of this.#characters) {
       result.push({
-        id: key,
+        id: includeId ? key : null,
         name: value.name,
         x: value.x,
         y: value.y,
