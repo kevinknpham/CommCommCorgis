@@ -24,7 +24,7 @@
 .background-formatter {
   width: 1344px;
   height: 850px;
-  background-image: url("../assets/ctc_main.png");
+  background-image: url('../assets/ctc_main.png');
   background-repeat: no-repeat;
   background-size: contain;
   position: relative;
