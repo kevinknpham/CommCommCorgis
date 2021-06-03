@@ -99,7 +99,11 @@ CHAT.style.height = `${CALCULATED_CHAT_HEIGHT}px`;
 
 ws.onopen = (event) => {
   ws.onmessage = (msg) => handleMessageFromSever(msg.data);
-  ws.onclose = (event) => console.log('ws closed');
+  ws.onclose = (event) => {
+    console.log('ws closed');
+    alert('You are disconnected due to inactivity.');
+    window.location.reload();
+  };
   setChat();
 };
 
