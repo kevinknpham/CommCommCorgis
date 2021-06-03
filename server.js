@@ -54,7 +54,7 @@ wss.on('connection', (ws) => {
     debug('\u001b[32mClient disconnected\u001b[0m');
   });
   ws.on('message', (msg) => handleMessage(ws, msg));
-  ws.socketId = socketIdCounter++;
+  ws.id = socketIdCounter++;
 });
 
 /**
