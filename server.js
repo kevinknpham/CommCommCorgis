@@ -7,7 +7,7 @@ const DEBUG = true;
 const express = require('express');
 const path = require('path');
 const { Server } = require('ws');
-const RoomManager = require('./rooms');
+const { RoomManager, SUCCESS_STATUS, FAILURE_STATUS } = require('./rooms');
 
 const PORT = process.env.PORT || 3456;
 const INDEX = './static/index.html';
@@ -45,10 +45,16 @@ const ROOM_INFO = [
 
 const roomManager = new RoomManager(ROOM_INFO);
 
+let socketIdCounter = 0;
+
 wss.on('connection', (ws) => {
   debug('\u001b[32mClient connected\u001b[0m');
-  ws.on('close', () => debug('\u001b[32mClient disconnected\u001b[0m'));
+  ws.on('close', () => {
+    handleLeave(ws);
+    debug('\u001b[32mClient disconnected\u001b[0m');
+  });
   ws.on('message', (msg) => handleMessage(ws, msg));
+  ws.socketId = socketIdCounter++;
 });
 
 /**
@@ -59,9 +65,7 @@ function handleMessage(ws, msg) {
   data = JSON.parse(msg);
   if (data.action) {
     const action = data.action.toLowerCase();
-    if (data.name) {
-      data.name = data.name.replace(/[^\w]/gi, '');
-    }
+
     switch (action) {
       case 'chat': // chat messages
         handleChat(ws, data);
@@ -73,7 +77,7 @@ function handleMessage(ws, msg) {
         handleCreateChar(ws, data);
         break;
       case 'leave': // remove character from game
-        handleLeave(ws, data);
+        handleLeave(ws);
         break;
       case 'list': // list characters
         handleList(ws, data);
@@ -91,51 +95,49 @@ function handleMessage(ws, msg) {
 
 /**
  * Update character's appearance
- * @param {WebSocket} ws - WebSocket for error responses
+ * @param {WebSocket} ws - websocket for user identification and error responses
  * @param {Object} data - must have 'color'
  */
 function handleChangeAttribute(ws, data) {
-  if (data.name && data.attributes) {
+  if (data.attributes) {
     const changeAttributeResult = roomManager.changeAttribute(
       'entrance',
-      data.name,
+      ws.id,
       data.attributes
     );
-    let response = { action: 'modify_char' };
-    response.name = data.name;
-    response.attributes = data.attributes;
-    broadcastToAll(JSON.stringify(response));
 
-    debuggingDescription(
-      '\u001b[34mChange attribute has been called:\u001b[0m',
-      `${data.name}'s appearance has been changed.`
-    );
+    if (changeAttributeResult) {
+      changeAttributeResult.action = 'modify_char';
+      broadcastToAll(JSON.stringify(changeAttributeResult));
+
+      debuggingDescription(
+        '\u001b[34mChange attribute has been called:\u001b[0m',
+        `${roomManager.getName(
+          'entrance',
+          ws.id
+        )}'s appearance has been changed.`
+      );
+    }
   } else {
-    error(ws, "Character 'name' or 'attributes' not specified.");
+    error(ws, "Character 'attributes' not specified.");
   }
 }
 
 /**
  * Remove character from game
- * @param {WebSocket} ws - WebSocket for error responses
- * @param {Object} data - must have 'name'
+ * @param {WebSocket} ws - websocket for user identification and error responses
  */
-function handleLeave(ws, data) {
-  if (data.name) {
-    roomManager.removeCharacter('entrance', data.name);
+function handleLeave(ws) {
+  let removeCharacterResult = roomManager.removeCharacter('entrance', ws.id);
 
-    let response = {
-      action: 'remove_char',
-      name: data.name
-    };
-    broadcastToAll(JSON.stringify(response));
+  if (removeCharacterResult) {
+    removeCharacterResult.action = 'remove_char';
+    broadcastToAll(JSON.stringify(removeCharacterResult));
 
     debuggingDescription(
       '\u001b[34mLeave has been called:\u001b[0m',
-      `${data.name} has left.`
+      `${roomManager.getName('entrance', ws.id)} has left.`
     );
-  } else {
-    error(ws, "Character 'name' not specified.");
   }
 }
 
@@ -157,82 +159,74 @@ function handleList(ws, data) {
 /**
  *
  * @param {WebSocket} ws - WebSocket for error handling
- * @param {Object} data - must contain 'name', 'x', and 'y' fields
+ * @param {Object} data - must contain 'x' and 'y' fields
  */
 function handleUpdateChar(ws, data) {
-  if (data.name && data.x && data.y) {
-    const updateResult = roomManager.updateCharacter(
+  if (data.x && data.y) {
+    const updateCharacterResult = roomManager.updateCharacter(
       'entrance',
-      data.name,
+      ws.id,
       data.x,
       data.y
     );
 
-    if (updateResult) {
-      let response = { action: 'move_char' };
-      response.name = data.name;
-      response.x = data.x;
-      response.y = data.y;
-      broadcastToAll(JSON.stringify(response));
+    if (updateCharacterResult) {
+      updateCharacterResult.action = 'move_char';
+      broadcastToAll(JSON.stringify(updateCharacterResult));
 
       debuggingDescription(
         '\u001b[34mUpdate has been called:\u001b[0m',
-        `${data.name} has been moved to x of ${data.x} and y of ${data.y}.`
+        `${roomManager.getName('entrance', ws.id)} has been moved to x of ${
+          data.x
+        } and y of ${data.y}.`
       );
     } else {
       debuggingDescription(
         '\u001b[34mUpdate failed:\u001b[0m',
-        `${data.name} can't be moved to x of ${data.x} and y of ${data.y}.`
+        `${roomManager.getName('entrance', ws.id)} can't be moved to x of ${
+          data.x
+        } and y of ${data.y}.`
       );
     }
   } else {
-    error(ws, "Must specify 'name', 'x', and 'y'.");
+    error(ws, "Must specify 'x' and 'y'.");
     console.log(data);
   }
 }
 
 /**
  * Adds new character when they join the game
- * @param {WebSocket} ws - websocket for error response
+ * @param {WebSocket} ws - websocket for user identification and error response
  * @param {Object} data - object with 'name' field for user
  */
 function handleCreateChar(ws, data) {
   if (data.name) {
-    let createCharResult = roomManager.addCharacter('entrance', data.name);
+    // Remove non-alphanumeric characters
+    data.name = data.name.replace(/[^\w]/gi, '');
 
-    if (createCharResult) {
-      let response = { action: 'new_char' };
-      response.name = data.name;
-      response.x = 0;
-      response.y = 0;
-      response.attributes = {};
-      response.attributes.color = 'none';
-      ws.send(
-        JSON.stringify({
-          action: 'login_result',
-          status: 'success',
-          name: data.name
-        })
-      );
-      broadcastToAll(JSON.stringify(response));
+    let createCharResult = roomManager.addCharacter(
+      'entrance',
+      ws.id,
+      data.name
+    );
 
+    createCharResult.userResponse.action = 'login_result';
+    ws.send(JSON.stringify(createCharResult.userResponse));
+
+    if (createCharResult.userResponse.status === SUCCESS_STATUS) {
       debuggingDescription(
         '\u001b[34mCreate has been called:\u001b[0m',
         `${data.name} has joined the game.`
       );
-    } else {
-      ws.send(
-        JSON.stringify({
-          action: 'login_result',
-          status: 'failure',
-          reason: 'user_already_exists',
-          requested_name: data.name
-        })
-      );
 
+      if (createCharResult.broadcast) {
+        createCharResult.broadcast.action = 'new_char';
+        broadcastToAll(JSON.stringify(createCharResult.broadcast));
+      }
+    } else {
       debuggingDescription(
         '\u001b[34mCreate has been called:\u001b[0m',
-        `${data.name} already exists.  Failed to create new character.`
+        `${data.name} could not be created.  Reason: ${createCharResult.userResponse.explanation}`
       );
     }
   } else {
@@ -252,7 +246,7 @@ function broadcastToAll(msg) {
 
 /**
  * Broadcasts chat messages to everyone
- * @param {WebSocket} ws - websocket for error responses
+ * @param {WebSocket} ws - websocket for user identification and error responses
  * @param {Object} data - JSON object with 'user' and 'text' field
  */
 function handleChat(ws, data) {
