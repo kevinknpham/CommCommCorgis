@@ -237,7 +237,7 @@ class Room {
       if (newAttributes.color) {
         if (COLORS.includes(newAttributes.color)) {
           target.attributes.color = newAttributes.color;
-          result.attributes.color = newAttributes.color;
+          result.color = newAttributes.color;
         }
       }
     }
