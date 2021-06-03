@@ -254,7 +254,8 @@ class Room {
     let result = [];
     for (let [key, value] of this.#characters) {
       result.push({
-        name: key,
+        id: key,
+        name: value.name,
         x: value.x,
         y: value.y,
         attributes: {

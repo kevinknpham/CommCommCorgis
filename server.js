@@ -279,7 +279,7 @@ function printList() {
   const listOfPlayers = roomManager.listCharacters();
   listOfPlayers.forEach((person) =>
     debug(
-      `  \u001b[1m${person.name}\u001b[0m is at (${person.x}, ${person.y}) with a color of ${person.attributes.color}`
+      `  \u001b[1m(${person.id})${person.name}\u001b[0m is at (${person.x}, ${person.y}) with a color of ${person.attributes.color}`
     )
   );
 }
