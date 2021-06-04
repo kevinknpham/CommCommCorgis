@@ -7,7 +7,7 @@ function moveCharacter(username) {
 
   document.getElementById('myCanvas').onclick = (event) => {
     let currentLeftPosition =
-      event.clientX - characterLength / characterConstant;
+      event.clientX - characterLength / characterConstant - adjustment;
     let currentTopPosition =
       event.clientY - characterLength / characterConstant;
 

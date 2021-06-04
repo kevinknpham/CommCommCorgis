@@ -56,6 +56,7 @@ console.log(USER_TO_STANDARD_RATIO);
 
 let temp_content_width;
 let temp_content_height;
+let adjustment = 0;
 
 if (USER_SCREEN_RATIO === STANDARD_HEIGHT_TO_WIDTH) {
   // e.g. 16:9 ratio
@@ -70,6 +71,8 @@ if (USER_SCREEN_RATIO === STANDARD_HEIGHT_TO_WIDTH) {
   temp_content_height = STANDARD_HEIGHT * USER_TO_STANDARD_RATIO;
   temp_content_width = STANDARD_WIDTH * USER_TO_STANDARD_RATIO;
 }
+
+adjustment = (USER_SCREEN_WIDTH - temp_content_width) * 0.5;
 
 console.log(temp_content_width + ' CONTENT WIDTH');
 console.log(temp_content_height + ' CONTENT HEIGHT');
