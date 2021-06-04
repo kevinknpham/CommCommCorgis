@@ -5,7 +5,7 @@ const characterConstant = 1.5; // left 2 top 3
 function moveCharacter(username) {
   let userCharacter = document.getElementById(username);
 
-  document.getElementById("myCanvas").onclick = (event) => {
+  document.getElementById('myCanvas').onclick = (event) => {
     let currentLeftPosition =
       event.clientX - characterLength / characterConstant;
     let currentTopPosition =
@@ -17,7 +17,11 @@ function moveCharacter(username) {
     //   currentTopPosition
     // );
 
-    sendMoveRequestToServer(username, convertClientWidthToStandardWidth(currentLeftPosition), convertClientHeightToStandardHeight(currentTopPosition));
+    sendMoveRequestToServer(
+      username,
+      convertClientWidthToStandardWidth(currentLeftPosition),
+      convertClientHeightToStandardHeight(currentTopPosition)
+    );
   };
 }
 
@@ -45,7 +49,7 @@ function sendMoveRequestToServer(username, x, y) {
     name: username,
     x: parseInt(x),
     y: parseInt(y),
-    action: "update",
+    action: 'update'
   };
   ws.send(JSON.stringify(datum));
   console.log(datum);

@@ -5,47 +5,28 @@ let ws = new WebSocket(HOST);
 // console.log(screen.height + ' first');
 
 // change the dimension of game screen
-const CANVAS = document.getElementById('myCanvas');
-const CHAT = document.getElementById('chat');
-
 const STANDARD_WIDTH = 1920;
 const STANDARD_HEIGHT = 1080;
 
-// const STANDARD_HEIGHT_TO_WIDTH = STANDARD_HEIGHT / STANDARD_WIDTH;
-// const STANDARD_WIDTH_TO_HEIGHT = STANDARD_WIDTH / STANDARD_HEIGHT;
+const STANDARD_HEIGHT_TO_WIDTH = STANDARD_HEIGHT / STANDARD_WIDTH;
+const STANDARD_WIDTH_TO_HEIGHT = STANDARD_WIDTH / STANDARD_HEIGHT;
 
 const USER_SCREEN_WIDTH = window.innerWidth;
 const USER_SCREEN_HEIGHT = window.innerHeight;
 
-// console.log(USER_SCREEN_HEIGHT + ' USER_SCREEN_HEIGHT');
-// console.log(USER_SCREEN_WIDTH + ' USER_SCREEN_WIDTH');
+const USER_SCREEN_RATIO = USER_SCREEN_HEIGHT / USER_SCREEN_WIDTH;
+const USER_TO_STANDARD_RATIO = USER_SCREEN_HEIGHT / STANDARD_HEIGHT;
+const STANDARD_TO_USER_RATIO = STANDARD_HEIGHT / USER_SCREEN_HEIGHT;
 
-// the idea below is using screen width to setting width and height of both game and chat
-// const CALCULATED_GAME_WIDTH = USER_SCREEN_WIDTH * 0.7;
-// const CALCULATED_CHAT_WIDTH = USER_SCREEN_WIDTH * 0.3;
-// const CALCULATED_GAME_HEIGHT = Math.min(
-//   (CALCULATED_GAME_WIDTH * 468) / 740,
-//   USER_SCREEN_HEIGHT - 20
-// );
-// const CALCULATED_CHAT_HEIGHT = CALCULATED_GAME_HEIGHT;
+console.log(USER_SCREEN_HEIGHT + ' USER_SCREEN_HEIGHT');
+console.log(USER_SCREEN_WIDTH + ' USER_SCREEN_WIDTH');
 
-// the idea below is using screen height to setting width and height of both game and chat
-// const CALCULATED_GAME_HEIGHT = USER_SCREEN_HEIGHT * 0.8;
-// const CALCULATED_GAME_WIDTH = (CALCULATED_GAME_HEIGHT * 740) / 468;
-// const CALCULATED_CHAT_WIDTH = USER_SCREEN_WIDTH - CALCULATED_GAME_WIDTH;
-// const CALCULATED_CHAT_HEIGHT = CALCULATED_GAME_HEIGHT;
-// CANVAS.style.width = `${applyConversionToScreen(STANDARD_WIDTH, GAME_RATIO)}px`;
-// CANVAS.style.height = `${applyConversionToScreen(
-//   STANDARD_HEIGHT,
-//   GAME_RATIO
-// )}px`;
+console.log(USER_TO_STANDARD_RATIO);
 
 // this idea below is using screen resolution ratio to setting width and height of both game and chat
 // first we have standard game and chat size
 // second based on ratio, if it is 16:9 (standard), scale it by the ratio of screen width to standard width (1920)
-// const USER_SCREEN_RATIO = USER_SCREEN_HEIGHT / USER_SCREEN_WIDTH;
-// const USER_TO_STANDARD_RATIO = USER_SCREEN_HEIGHT / STANDARD_HEIGHT;
-// const STANDARD_TO_USER_RATIO = STANDARD_HEIGHT / USER_SCREEN_HEIGHT;
+
 // let temp_game_height;
 // let temp_game_width;
 // let temp_chat_height;
@@ -72,6 +53,51 @@ const USER_SCREEN_HEIGHT = window.innerHeight;
 //   temp_game_width = (temp_game_height * 740) / 468;
 //   temp_chat_width = STANDARD_WIDTH * USER_TO_STANDARD_RATIO - temp_game_width;
 // }
+
+let temp_content_width;
+let temp_content_height;
+
+if (USER_SCREEN_RATIO === STANDARD_HEIGHT_TO_WIDTH) {
+  // e.g. 16:9 ratio
+  temp_content_height = STANDARD_HEIGHT * USER_TO_STANDARD_RATIO;
+  temp_content_width = STANDARD_WIDTH * USER_TO_STANDARD_RATIO;
+} else if (USER_SCREEN_RATIO > STANDARD_HEIGHT_TO_WIDTH) {
+  // e.g. 4:3 ratio
+  temp_content_height = USER_SCREEN_WIDTH * STANDARD_HEIGHT_TO_WIDTH;
+  temp_content_width = USER_SCREEN_WIDTH;
+} else {
+  // e.g. 21:9 ratio
+  temp_content_height = STANDARD_HEIGHT * USER_TO_STANDARD_RATIO;
+  temp_content_width = STANDARD_WIDTH * USER_TO_STANDARD_RATIO;
+}
+
+console.log(temp_content_width + ' CONTENT WIDTH');
+console.log(temp_content_height + ' CONTENT HEIGHT');
+
+const CONTENT = document.getElementById('content');
+CONTENT.style.width = `${temp_content_width}px`;
+CONTENT.style.height = `${temp_content_height}px`;
+
+const CANVAS = document.getElementById('myCanvas');
+const CHAT = document.getElementById('chat');
+
+let game_height = temp_content_height * 0.9;
+let chat_height = game_height;
+
+let game_width = (game_height * 740) / 468;
+let chat_width = temp_content_width - game_width - 10;
+
+console.log(game_width + ' GAME WIDTH');
+console.log(game_height + ' GAME HEIGHT');
+
+console.log(chat_width + ' CHAT WIDTH');
+console.log(chat_height + ' CHAT HEIGHT');
+
+CANVAS.style.width = `${game_width}px`;
+CANVAS.style.height = `${game_height}px`;
+
+CHAT.style.width = `${chat_width}px`;
+CHAT.style.height = `${chat_height}px`;
 
 // const CALCULATED_GAME_HEIGHT = temp_game_height;
 // const CALCULATED_GAME_WIDTH = temp_game_width;
