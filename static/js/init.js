@@ -10,14 +10,15 @@ const CHAT = document.getElementById('chat');
 
 const STANDARD_WIDTH = 1920;
 const STANDARD_HEIGHT = 1080;
-const STANDARD_HEIGHT_TO_WIDTH = STANDARD_HEIGHT / STANDARD_WIDTH;
-const STANDARD_WIDTH_TO_HEIGHT = STANDARD_WIDTH / STANDARD_HEIGHT;
+
+// const STANDARD_HEIGHT_TO_WIDTH = STANDARD_HEIGHT / STANDARD_WIDTH;
+// const STANDARD_WIDTH_TO_HEIGHT = STANDARD_WIDTH / STANDARD_HEIGHT;
 
 const USER_SCREEN_WIDTH = window.innerWidth;
 const USER_SCREEN_HEIGHT = window.innerHeight;
 
-console.log(USER_SCREEN_HEIGHT + ' USER_SCREEN_HEIGHT');
-console.log(USER_SCREEN_WIDTH + ' USER_SCREEN_WIDTH');
+// console.log(USER_SCREEN_HEIGHT + ' USER_SCREEN_HEIGHT');
+// console.log(USER_SCREEN_WIDTH + ' USER_SCREEN_WIDTH');
 
 // the idea below is using screen width to setting width and height of both game and chat
 // const CALCULATED_GAME_WIDTH = USER_SCREEN_WIDTH * 0.7;
@@ -42,47 +43,47 @@ console.log(USER_SCREEN_WIDTH + ' USER_SCREEN_WIDTH');
 // this idea below is using screen resolution ratio to setting width and height of both game and chat
 // first we have standard game and chat size
 // second based on ratio, if it is 16:9 (standard), scale it by the ratio of screen width to standard width (1920)
-const USER_SCREEN_RATIO = USER_SCREEN_HEIGHT / USER_SCREEN_WIDTH;
-const USER_TO_STANDARD_RATIO = USER_SCREEN_HEIGHT / STANDARD_HEIGHT;
-const STANDARD_TO_USER_RATIO = STANDARD_HEIGHT / USER_SCREEN_HEIGHT;
-let temp_game_height;
-let temp_game_width;
-let temp_chat_height;
-let temp_chat_width;
-if (USER_SCREEN_RATIO === STANDARD_HEIGHT_TO_WIDTH) {
-  // e.g) 16:9
-  temp_game_height = STANDARD_HEIGHT * USER_TO_STANDARD_RATIO * 0.9;
-  temp_chat_height = temp_game_height;
+// const USER_SCREEN_RATIO = USER_SCREEN_HEIGHT / USER_SCREEN_WIDTH;
+// const USER_TO_STANDARD_RATIO = USER_SCREEN_HEIGHT / STANDARD_HEIGHT;
+// const STANDARD_TO_USER_RATIO = STANDARD_HEIGHT / USER_SCREEN_HEIGHT;
+// let temp_game_height;
+// let temp_game_width;
+// let temp_chat_height;
+// let temp_chat_width;
+// if (USER_SCREEN_RATIO === STANDARD_HEIGHT_TO_WIDTH) {
+//   // e.g) 16:9
+//   temp_game_height = STANDARD_HEIGHT * USER_TO_STANDARD_RATIO * 0.9;
+//   temp_chat_height = temp_game_height;
 
-  temp_game_width = (temp_game_height * 740) / 468;
-  temp_chat_width = USER_SCREEN_WIDTH - temp_game_width;
-} else if (USER_SCREEN_RATIO > STANDARD_HEIGHT_TO_WIDTH) {
-  // e.g) 4:3
-  temp_game_height = 0.9 * USER_SCREEN_WIDTH * STANDARD_HEIGHT_TO_WIDTH;
-  temp_chat_height = temp_game_height;
+//   temp_game_width = (temp_game_height * 740) / 468;
+//   temp_chat_width = USER_SCREEN_WIDTH - temp_game_width;
+// } else if (USER_SCREEN_RATIO > STANDARD_HEIGHT_TO_WIDTH) {
+//   // e.g) 4:3
+//   temp_game_height = 0.9 * USER_SCREEN_WIDTH * STANDARD_HEIGHT_TO_WIDTH;
+//   temp_chat_height = temp_game_height;
 
-  temp_game_width = (temp_game_height * 740) / 468;
-  temp_chat_width = USER_SCREEN_WIDTH - temp_game_width;
-} else {
-  // e.g) 21:9
-  temp_game_height = STANDARD_HEIGHT * USER_TO_STANDARD_RATIO * 0.9;
-  temp_chat_height = temp_game_height;
+//   temp_game_width = (temp_game_height * 740) / 468;
+//   temp_chat_width = USER_SCREEN_WIDTH - temp_game_width;
+// } else {
+//   // e.g) 21:9
+//   temp_game_height = STANDARD_HEIGHT * USER_TO_STANDARD_RATIO * 0.9;
+//   temp_chat_height = temp_game_height;
 
-  temp_game_width = (temp_game_height * 740) / 468;
-  temp_chat_width = STANDARD_WIDTH * USER_TO_STANDARD_RATIO - temp_game_width;
-}
+//   temp_game_width = (temp_game_height * 740) / 468;
+//   temp_chat_width = STANDARD_WIDTH * USER_TO_STANDARD_RATIO - temp_game_width;
+// }
 
-const CALCULATED_GAME_HEIGHT = temp_game_height;
-const CALCULATED_GAME_WIDTH = temp_game_width;
-const CALCULATED_CHAT_HEIGHT = temp_chat_height;
-const CALCULATED_CHAT_WIDTH = temp_chat_width;
+// const CALCULATED_GAME_HEIGHT = temp_game_height;
+// const CALCULATED_GAME_WIDTH = temp_game_width;
+// const CALCULATED_CHAT_HEIGHT = temp_chat_height;
+// const CALCULATED_CHAT_WIDTH = temp_chat_width;
 
-console.log(CALCULATED_CHAT_HEIGHT + ' CHAT HEIGHT');
-console.log(CALCULATED_GAME_WIDTH + ' GAME WIDTH');
-console.log(CALCULATED_CHAT_WIDTH + ' CHAT WIDTH');
+// console.log(CALCULATED_CHAT_HEIGHT + ' CHAT HEIGHT');
+// console.log(CALCULATED_GAME_WIDTH + ' GAME WIDTH');
+// console.log(CALCULATED_CHAT_WIDTH + ' CHAT WIDTH');
 
-CANVAS.style.width = `${CALCULATED_GAME_WIDTH}px`;
-CANVAS.style.height = `${CALCULATED_GAME_HEIGHT}px`;
+// CANVAS.style.width = `${CALCULATED_GAME_WIDTH}px`;
+// CANVAS.style.height = `${CALCULATED_GAME_HEIGHT}px`;
 
 // console.log(`${applyConversionToScreen(STANDARD_WIDTH, GAME_RATIO)}px`);
 // console.log(`${applyConversionToScreen(STANDARD_HEIGHT, GAME_RATIO)}px`);
@@ -93,8 +94,8 @@ CANVAS.style.height = `${CALCULATED_GAME_HEIGHT}px`;
 // console.log(CALCULATED_CHAT_HEIGHT + ' RATIO');
 // CHAT.style.width = `${applyConversionToScreen(STANDARD_WIDTH, CHAT_RATIO)}px`;
 // CHAT.style.height = `${applyConversionToScreen(STANDARD_HEIGHT, GAME_RATIO)}px`;
-CHAT.style.width = `${CALCULATED_CHAT_WIDTH}px`;
-CHAT.style.height = `${CALCULATED_CHAT_HEIGHT}px`;
+// CHAT.style.width = `${CALCULATED_CHAT_WIDTH}px`;
+// CHAT.style.height = `${CALCULATED_CHAT_HEIGHT}px`;
 // console.log(CHAT.style.height + ' CHAT STYLE HEIGHT');
 
 ws.onopen = (event) => {

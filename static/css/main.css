@@ -33,4 +33,5 @@ h2 {
 .contents {
   display: flex;
   justify-content: center;
+  width: 100vw;
 }
