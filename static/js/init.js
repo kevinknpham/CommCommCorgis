@@ -21,7 +21,7 @@ const STANDARD_TO_USER_RATIO = STANDARD_HEIGHT / USER_SCREEN_HEIGHT;
 console.log(USER_SCREEN_HEIGHT + ' USER_SCREEN_HEIGHT');
 console.log(USER_SCREEN_WIDTH + ' USER_SCREEN_WIDTH');
 
-console.log(USER_TO_STANDARD_RATIO);
+console.log(USER_TO_STANDARD_RATIO + ' USER_TO_STANDARD_RATIO');
 
 // this idea below is using screen resolution ratio to setting width and height of both game and chat
 // first we have standard game and chat size
@@ -71,8 +71,9 @@ if (USER_SCREEN_RATIO === STANDARD_HEIGHT_TO_WIDTH) {
   temp_content_height = STANDARD_HEIGHT * USER_TO_STANDARD_RATIO;
   temp_content_width = STANDARD_WIDTH * USER_TO_STANDARD_RATIO;
 }
-
+console.log(temp_content_width + ' temp_content_width');
 adjustment = (USER_SCREEN_WIDTH - temp_content_width) * 0.5;
+console.log(adjustment + ' adjustment');
 
 console.log(temp_content_width + ' CONTENT WIDTH');
 console.log(temp_content_height + ' CONTENT HEIGHT');
