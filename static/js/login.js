@@ -139,9 +139,9 @@ function createCharacterAsset(username, color, x, y) {
 
   newCharacter.style.left = `${x}px`;
   newCharacter.style.top = `${y}px`;
-
-  newCharacter.style.width = `${applyConversionToScreen(characterLength)}px`;
-  newCharacter.style.height = `${applyConversionToScreen(characterLength)}px`;
+  newCharacter.style.width = `${characterLength}px`;
+  newCharacter.style.height = `${characterLength}px`;
+  console.log(characterLength);
 }
 
 function modifyCharacterAsset(username, url) {
