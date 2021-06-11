@@ -10,7 +10,7 @@ const COLOR_TO_URL = Object.freeze(
 );
 
 function placeImage(url) {
-  const image = document.createElement('img');
+  const image = new Image();
   image.src = url;
   return image;
 }
@@ -24,6 +24,7 @@ class CanvasManager {
     this.#canvas = canvas;
     this.#ctx = canvas.getContext('2d');
     this.#characterManager = characterManager;
+    this.#ctx.imageSmoothingEnabled = false;
   }
 
   clearCanvas() {
@@ -34,6 +35,7 @@ class CanvasManager {
       this.#canvas.width,
       this.#canvas.height
     );
+    this.#ctx.save();
   }
 
   saveCanvasState() {
@@ -42,16 +44,17 @@ class CanvasManager {
 
   drawOnCanvas() {
     const characterList = this.#characterManager.listCharacters();
-    for (let i = 0; i < characterList.lenght; i++) {
+    for (let i = 0; i < characterList.length; i++) {
       const name = characterList[i];
       const info = this.#characterManager.getCharacterInfo(name);
       this.#ctx.drawImage(
-        placeImage(COLOR_TO_URL.get(info.attributes.color)),
+        placeImage('assets/corgi-slide-blue.png'),
         info.currentX,
         info.currentY,
         120,
         120
       );
+      console.log(name + ' is in characterList');
     }
   }
 }

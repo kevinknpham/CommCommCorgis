@@ -62,12 +62,9 @@ function setUpCharacterSelection() {
 
 function generateOption(url, color) {
   const image = document.createElement('img');
-  image.classList.add('character-selection-box');
-
   image.src = url;
   image.alt = color;
-
-  image.classList.add('character-selection-box-img');
+  image.classList.add('character-selection-box');
   image.classList.add(COLOR_TO_CLASS_NAME.get(color));
 
   image.addEventListener('click', () => selectCharacter(color));
@@ -92,35 +89,6 @@ function initiateUserCharacter() {
   }
 }
 
-// Create and append user's character to game background
-function createCharacterAsset(username, color, x, y) {
-  // const newCharacter = document.createElement('div');
-  // newCharacter.classList.add('character');
-  // newCharacter.setAttribute('id', username);
-  // CANVAS.appendChild(newCharacter);
-  // const nameTag = document.createElement('p');
-  // nameTag.classList.add('name-tag');
-  // nameTag.innerText = username;
-  // const newCharacterImage = document.createElement('img');
-  // if (color) {
-  //   newCharacterImage.setAttribute('src', COLOR_TO_URL.get(color));
-  // } else {
-  //   newCharacterImage.setAttribute('src', COLOR_TO_URL.get('none'));
-  // }
-  // newCharacterImage.classList.add('character-image');
-  // newCharacter.appendChild(nameTag);
-  // newCharacter.appendChild(newCharacterImage);
-  // newCharacter.style.left = `${x}px`;
-  // newCharacter.style.top = `${y}px`;
-  // newCharacter.style.width = `${characterLength}px`;
-  // newCharacter.style.height = `${characterLength}px`;
-  // console.log(characterLength);
-}
-
-function modifyCharacterAsset(username, url) {
-  document.querySelector(`#${username} img`).setAttribute('src', url);
-}
-
 // Sends the user's character color selection to the server
 function sendUserColorToServer(color) {
   let datum = {
@@ -133,10 +101,7 @@ function sendUserColorToServer(color) {
 
 function handleModifyChar(data) {
   if (data.name && data.attributes) {
-    console.log(data.attributes);
-    const characterURL = COLOR_TO_URL.get(data.attributes.color);
-    console.log(characterURL);
-    modifyCharacterAsset(data.name, characterURL);
+    characters.changeAttribute(data.name, data.attributes.color);
   }
 }
 
@@ -144,7 +109,7 @@ function handleModifyChar(data) {
 // update that character to game server list
 function handleNewChar(data) {
   if (data.name) {
-    createCharacterAsset(data.name, data.attributes.color, data.x, data.y);
+    characters.addCharacter(data.name, data.attributes.color, data.x, data.y);
   }
 }
 
@@ -169,7 +134,7 @@ function logout() {
 // update that character to the server list
 function handleRemoveChar(data) {
   if (data.name) {
-    CANVAS.removeChild(document.getElementById(data.name));
+    characters.removeCharacter(data.name);
   }
 }
 
@@ -196,12 +161,12 @@ function createCharacterFromList(list) {
   for (let character of list) {
     if (
       username !== character.name &&
-      !document.getElementById(character.name)
+      !characters.getCharacterInfo(character.name)
     ) {
       console.log('hello1');
       handleNewChar(character);
       //createCharacterAsset(character.name);
-    } else if (document.getElementById(character.name)) {
+    } else if (characters.getCharacterInfo(character.name)) {
       console.log('hello2');
       handleMoveChar(character);
     }
