@@ -1,14 +1,5 @@
 let username;
 
-const COLOR_TO_URL = Object.freeze(
-  new Map([
-    ['none', 'assets/corgi-slide-none.png'],
-    ['red', 'assets/corgi-slide-red.png'],
-    ['green', 'assets/corgi-slide-green.png'],
-    ['blue', 'assets/corgi-slide-blue.png']
-  ])
-);
-
 // Used for box shadow on character selection
 const COLOR_TO_CLASS_NAME = Object.freeze(
   new Map([
@@ -61,37 +52,26 @@ function revealCharacterSelection() {
 }
 
 function setUpCharacterSelection() {
-  // let pictureDOMs = Array.from(COLOR_TO_URL.keys()).map(generateOption);
   let characterSelectionContainer = document.querySelector(
     '.character-selection'
   );
   for (let [color, url] of COLOR_TO_URL) {
     characterSelectionContainer.append(generateOption(url, color));
   }
-  // pictureDOMs.forEach((picture) => characterSelectionContainer.append(picture));
-  // let options = document.querySelectorAll(".character-selection-box");
-  // options.forEach(option => option.addEventListener("click", selectCharacter(option)))
 }
 
 function generateOption(url, color) {
-  const picture = document.createElement('picture');
-  const sourceImage = document.createElement('source');
-  const imgTag = document.createElement('img');
+  const image = document.createElement('img');
+  image.classList.add('character-selection-box');
 
-  picture.appendChild(sourceImage);
-  picture.appendChild(imgTag);
-  picture.classList.add('character-selection-box');
+  image.src = url;
+  image.alt = color;
 
-  sourceImage.srcset = url;
+  image.classList.add('character-selection-box-img');
+  image.classList.add(COLOR_TO_CLASS_NAME.get(color));
 
-  imgTag.src = url;
-  imgTag.alt = color;
-  imgTag.classList.add('character-selection-box-img');
-
-  imgTag.classList.add(COLOR_TO_CLASS_NAME.get(color));
-
-  picture.addEventListener('click', () => selectCharacter(color));
-  return picture;
+  image.addEventListener('click', () => selectCharacter(color));
+  return image;
 }
 
 function selectCharacter(color) {
@@ -107,9 +87,6 @@ function initiateUserCharacter() {
   username = document.getElementById('login-input').value;
   console.log(username);
   if (username && username.length > 0) {
-    // sessionStorage.setItem("commcommcorgis_username", username);
-    // sendUserDataToServer(username);
-    //createCharacterAsset(username);
     moveCharacter(username);
     ws.send(JSON.stringify({ action: 'list' }));
   }
@@ -117,31 +94,27 @@ function initiateUserCharacter() {
 
 // Create and append user's character to game background
 function createCharacterAsset(username, color, x, y) {
-  const newCharacter = document.createElement('div');
-  newCharacter.classList.add('character');
-  newCharacter.setAttribute('id', username);
-  CANVAS.appendChild(newCharacter);
-
-  const nameTag = document.createElement('p');
-  nameTag.classList.add('name-tag');
-  nameTag.innerText = username;
-
-  const newCharacterImage = document.createElement('img');
-  if (color) {
-    newCharacterImage.setAttribute('src', COLOR_TO_URL.get(color));
-  } else {
-    newCharacterImage.setAttribute('src', COLOR_TO_URL.get('none'));
-  }
-  newCharacterImage.classList.add('character-image');
-
-  newCharacter.appendChild(nameTag);
-  newCharacter.appendChild(newCharacterImage);
-
-  newCharacter.style.left = `${x}px`;
-  newCharacter.style.top = `${y}px`;
-  newCharacter.style.width = `${characterLength}px`;
-  newCharacter.style.height = `${characterLength}px`;
-  console.log(characterLength);
+  // const newCharacter = document.createElement('div');
+  // newCharacter.classList.add('character');
+  // newCharacter.setAttribute('id', username);
+  // CANVAS.appendChild(newCharacter);
+  // const nameTag = document.createElement('p');
+  // nameTag.classList.add('name-tag');
+  // nameTag.innerText = username;
+  // const newCharacterImage = document.createElement('img');
+  // if (color) {
+  //   newCharacterImage.setAttribute('src', COLOR_TO_URL.get(color));
+  // } else {
+  //   newCharacterImage.setAttribute('src', COLOR_TO_URL.get('none'));
+  // }
+  // newCharacterImage.classList.add('character-image');
+  // newCharacter.appendChild(nameTag);
+  // newCharacter.appendChild(newCharacterImage);
+  // newCharacter.style.left = `${x}px`;
+  // newCharacter.style.top = `${y}px`;
+  // newCharacter.style.width = `${characterLength}px`;
+  // newCharacter.style.height = `${characterLength}px`;
+  // console.log(characterLength);
 }
 
 function modifyCharacterAsset(username, url) {
@@ -190,8 +163,6 @@ function logout() {
   toggleLoadingScreen(false);
   switchScreen('loginPage', '#d4dbf5');
   sendLeaveRequestToServer(username);
-  //CANVAS.removeChild(document.getElementById(username)); //??
-  // sessionStorage.removeItem("commcommcorgis_username");
 }
 
 // Remove other user's character from user's game instance
