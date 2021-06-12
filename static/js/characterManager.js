@@ -1,18 +1,18 @@
 const DISPLACEMENT_PER_FRAME = 1;
 
 class CharacterManager {
-  #characters;
+  characters;
 
   constructor() {
-    this.#characters = new Map();
+    this.characters = new Map();
   }
 
   getCharacterInfo(name) {
-    return this.#characters.get(name);
+    return this.characters.get(name);
   }
 
   addCharacter(name, x = 0, y = 0) {
-    this.#characters.set(name, {
+    this.characters.set(name, {
       currentX: x,
       currentY: y,
       targetX: x,
@@ -24,17 +24,17 @@ class CharacterManager {
   }
 
   removeCharacter(name) {
-    this.#characters.delete(name);
+    this.characters.delete(name);
   }
 
   moveCharacter(name, x, y) {
-    const characterinfo = this.#characters.get(name);
+    const characterinfo = this.characters.get(name);
     characterinfo.targetX = x;
     characterinfo.targetY = y;
   }
 
   updateAllCharacterCurrentPositions() {
-    for (let [character, info] of this.#characters) {
+    for (let [character, info] of this.characters) {
       if (info.targetX > info.currentX) {
         info.currentX += DISPLACEMENT_PER_FRAME;
       } else if (info.targetX < info.currentX) {
@@ -50,10 +50,10 @@ class CharacterManager {
   }
 
   changeAttribute(name, color) {
-    this.#characters.get(name).attributes.color = color;
+    this.characters.get(name).attributes.color = color;
   }
 
   listCharacters() {
-    return Array.from(this.#characters.keys());
+    return Array.from(this.characters.keys());
   }
 }

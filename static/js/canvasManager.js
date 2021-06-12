@@ -16,38 +16,37 @@ function placeImage(url) {
 }
 
 class CanvasManager {
-  #canvas;
-  #ctx;
-  #characterManager;
+  canvas;
+  ctx;
+  characterManager;
 
   constructor(canvas, characterManager) {
-    this.#canvas = canvas;
-    this.#ctx = canvas.getContext('2d');
-    this.#characterManager = characterManager;
-    this.#ctx.imageSmoothingEnabled = false;
+    this.canvas = canvas;
+    this.ctx = canvas.getContext('2d');
+    this.characterManager = characterManager;
   }
 
   clearCanvas() {
-    this.#ctx.drawImage(
+    this.ctx.drawImage(
       placeImage(CANVAS_BACKGROUND_IMAGE_URL),
       0,
       0,
-      this.#canvas.width,
-      this.#canvas.height
+      this.canvas.width,
+      this.canvas.height
     );
-    this.#ctx.save();
+    this.ctx.save();
   }
 
   saveCanvasState() {
-    this.#characterManager.updateAllCharacterCurrentPositions();
+    this.characterManager.updateAllCharacterCurrentPositions();
   }
 
   drawOnCanvas() {
-    const characterList = this.#characterManager.listCharacters();
+    const characterList = this.characterManager.listCharacters();
     for (let i = 0; i < characterList.length; i++) {
       const name = characterList[i];
-      const info = this.#characterManager.getCharacterInfo(name);
-      this.#ctx.drawImage(
+      const info = this.characterManager.getCharacterInfo(name);
+      this.ctx.drawImage(
         placeImage('assets/corgi-slide-blue.png'),
         info.currentX,
         info.currentY,

@@ -46,3 +46,6 @@ function sendMoveRequestToServer(username, x, y) {
 }
 
 animate();
+characters.addCharacter('Kevin');
+
+setTimeout(() => characters.moveCharacter('Kevin', 100, 200), 10000);
