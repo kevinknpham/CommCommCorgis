@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      #canvas {
+        width: 1344px;
+        height: 850px;
+      }
+    </style>
+    <script>
+      window.addEventListener('load', () => {
+        let canvas = document.getElementById('canvas');
+
+        const CANVAS_WIDTH = 740;
+        const CANVAS_HEIGHT = 468;
+        const SCALE_FACTOR = 3;
+
+        canvas.width = CANVAS_WIDTH * SCALE_FACTOR;
+        canvas.height = CANVAS_HEIGHT * SCALE_FACTOR;
+
+        let ctx = canvas.getContext('2d');
+        ctx.fillStyle = 'orange';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        textX = 300 * SCALE_FACTOR;
+        textY = 200 * SCALE_FACTOR;
+
+        const FONT_SIZE = 12;
+
+        ctx.font = `${FONT_SIZE * SCALE_FACTOR}px monospace`;
+        ctx.textAlign = 'center';
+        ctx.shadowColor = 'white';
+        ctx.shadowBlur = 7;
+        ctx.lineWidth = 5;
+        ctx.strokeText('dfdf', textX, textY);
+
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = 'black';
+        ctx.fillText('dfdf', textX, textY);
+      });
+    </script>
+  </head>
+  <body>
+    <canvas id="canvas" width="1480" height="936"></canvas>
+  </body>
+</html>
