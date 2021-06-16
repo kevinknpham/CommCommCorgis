@@ -1,4 +1,4 @@
-const DISPLACEMENT_PER_FRAME = 1;
+const DISPLACEMENT_CONSTANT = 10;
 
 class CharacterManager {
   characters;
@@ -35,17 +35,33 @@ class CharacterManager {
 
   updateAllCharacterCurrentPositions() {
     for (let [character, info] of this.characters) {
-      if (info.targetX > info.currentX) {
-        info.currentX += DISPLACEMENT_PER_FRAME;
-      } else if (info.targetX < info.currentX) {
-        info.currentX -= DISPLACEMENT_PER_FRAME;
+      const displacementX = info.targetX - info.currentX;
+      const displacementY = info.targetY - info.currentY;
+      if (info.targetX !== info.currentX) {
+        if (displacementX < 1 && displacementX > -1) {
+          info.currentX = info.targetX;
+        } else {
+          info.currentX += displacementX / DISPLACEMENT_CONSTANT;
+        }
       }
+      if (info.targetY !== info.currentY) {
+        if (displacementY < 1 && displacementY > -1) {
+          info.currentY = info.targetY;
+        } else {
+          info.currentY += displacementY / DISPLACEMENT_CONSTANT;
+        }
+      }
+      // if (info.targetX > info.currentX) {
+      //   info.currentX += DISPLACEMENT_PER_FRAME;
+      // } else if (info.targetX < info.currentX) {
+      //   info.currentX -= DISPLACEMENT_PER_FRAME;
+      // }
 
-      if (info.targetY > info.currentY) {
-        info.currentY += DISPLACEMENT_PER_FRAME;
-      } else if (info.targetY < info.currentY) {
-        info.currentY -= DISPLACEMENT_PER_FRAME;
-      }
+      // if (info.targetY > info.currentY) {
+      //   info.currentY += DISPLACEMENT_PER_FRAME;
+      // } else if (info.targetY < info.currentY) {
+      //   info.currentY -= DISPLACEMENT_PER_FRAME;
+      // }
     }
   }
 

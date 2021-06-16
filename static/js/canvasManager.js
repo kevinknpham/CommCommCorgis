@@ -1,4 +1,5 @@
 const CANVAS_BACKGROUND_IMAGE_URL = '../assets/ctc_main.png';
+const CHARACTER_LENGTH = 75;
 
 const COLOR_TO_URL = Object.freeze(
   new Map([
@@ -47,13 +48,14 @@ class CanvasManager {
       const name = characterList[i];
       const info = this.characterManager.getCharacterInfo(name);
       this.ctx.drawImage(
-        placeImage('assets/corgi-slide-blue.png'),
+        placeImage(COLOR_TO_URL.get(info.attributes.color)),
         info.currentX,
         info.currentY,
-        120,
-        120
+        CHARACTER_LENGTH,
+        CHARACTER_LENGTH
       );
-      console.log(name + ' is in characterList');
+      //console.log(name + ' is in characterList');
+      //console.log(info.attributes.color + ' color');
     }
   }
 }
