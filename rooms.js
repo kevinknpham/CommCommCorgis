@@ -229,16 +229,16 @@ class Room {
    */
   updateCharacter(id, x, y) {
     if (this.#characters.has(id)) {
-      // if (pointInPolygon([x, y], this.#bounds)) {
-      const target = this.#characters.get(id);
-      target.x = x;
-      target.y = y;
-      return {
-        name: target.name,
-        x: x,
-        y: y
-      };
-      // }
+      if (pointInPolygon([x, y], this.#bounds)) {
+        const target = this.#characters.get(id);
+        target.x = x;
+        target.y = y;
+        return {
+          name: target.name,
+          x: x,
+          y: y
+        };
+      }
       // return false;
     }
     return null;
