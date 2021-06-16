@@ -311,6 +311,6 @@ function debug(msg, fn = console.log) {
 }
 
 // ==========DEBUG========== //
-for (const [ptX, ptY] of ROOM_INFO[0].bounds) {
-  roomManager.addCharacter('entrance', `[${ptX}, ${ptY}]`, ptX, ptY);
-}
+// for (const [ptX, ptY] of ROOM_INFO[0].bounds) {
+//   roomManager.addCharacter('entrance', `[${ptX}, ${ptY}]`, ptX, ptY);
+// }

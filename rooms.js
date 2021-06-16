@@ -8,12 +8,14 @@ const FAILURE_STATUS = 'failure';
  */
 class RoomManager {
   #roomOccupants;
+  #names;
 
   /**
    * @param {String[]} rooms list of room names
    */
   constructor(rooms) {
     this.#roomOccupants = new Map();
+    this.#names = new Set();
     for (let i = 0; i < rooms.length; i++) {
       this.#roomOccupants.set(rooms[i].name, new Room(rooms[i].bounds));
     }
@@ -30,9 +32,23 @@ class RoomManager {
    *                  for all users
    */
   addCharacter(room, id, name, x = 0, y = 0) {
+    if (this.#names.has(name)) {
+      let res = {};
+      res.userResponse = {};
+      res.userResponse.status = FAILURE_STATUS;
+      res.userResponse.reason = 'user_already_exists';
+      res.userResponse.explanation =
+        'The requested username has been taken by another user.';
+      res.userResponse.requested_name = name;
+      return res;
+    }
     let roomData = this.#roomOccupants.get(room);
     if (roomData) {
-      return roomData.addCharacter(id, name, x, y);
+      let res = roomData.addCharacter(id, name, x, y);
+      if (res.userResponse.status === SUCCESS_STATUS) {
+        this.#names.addCharacter(name);
+      }
+      return res;
     }
     let res = {};
     res.userResponse = {};
@@ -52,7 +68,11 @@ class RoomManager {
   removeCharacter(room, id) {
     let roomData = this.#roomOccupants.get(room);
     if (roomData) {
-      return roomData.removeCharacter(id);
+      let res = roomData.removeCharacter(id);
+      if (res) {
+        this.#names.delete(res.name);
+      }
+      return res;
     }
     return null;
   }
