@@ -1,5 +1,15 @@
 const CANVAS_BACKGROUND_IMAGE_URL = '../assets/ctc_main.png';
-const CHARACTER_LENGTH = 75;
+
+// Current corgi image is 1024x700
+const CHARACTER_WIDTH = 75;
+const CHARACTER_LENGTH = 51;
+
+const NAME_VERTICAL_TEXT_OFFSET = 10;
+const NAME_HORIZONTAL_BUFFER = 5;
+const NAME_TEXT_MAX_WIDTH = CHARACTER_WIDTH + 2 * NAME_HORIZONTAL_BUFFER;
+const NAME_FONT_SIZE_PX = 50;
+const NAME_FONT_FAMILY = 'monospace';
+const NAME_FONT = `${NAME_FONT_SIZE_PX}px ${NAME_FONT_FAMILY}`;
 
 const COLOR_TO_URL = Object.freeze(
   new Map([
@@ -11,14 +21,19 @@ const COLOR_TO_URL = Object.freeze(
 );
 
 function drawNameOnImage(ctx, text, x, y) {
-  ctx.font = '50px monospace';
+  textX = x + CHARACTER_WIDTH * 0.5;
+  textY = y - NAME_VERTICAL_TEXT_OFFSET;
+
+  ctx.font = NAME_FONT;
+  ctx.textAlign = 'center';
   ctx.shadowColor = 'white';
   ctx.shadowBlur = 7;
   ctx.lineWidth = 5;
-  ctx.strokeText(text, x + 10, y);
+  ctx.strokeText(text, textX, textY, NAME_TEXT_MAX_WIDTH);
+
   ctx.shadowBlur = 0;
   ctx.fillStyle = 'black';
-  ctx.fillText(text, x + 10, y);
+  ctx.fillText(text, textX, textY, NAME_TEXT_MAX_WIDTH);
 }
 
 function placeImage(url) {
@@ -39,6 +54,7 @@ class CanvasManager {
   }
 
   clearCanvas() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.drawImage(
       placeImage(CANVAS_BACKGROUND_IMAGE_URL),
       0,
@@ -63,7 +79,7 @@ class CanvasManager {
         placeImage(COLOR_TO_URL.get(info.attributes.color)),
         info.currentX,
         info.currentY,
-        CHARACTER_LENGTH,
+        CHARACTER_WIDTH,
         CHARACTER_LENGTH
       );
       //console.log(name + ' is in characterList');
