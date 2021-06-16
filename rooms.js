@@ -46,7 +46,7 @@ class RoomManager {
     if (roomData) {
       let res = roomData.addCharacter(id, name, x, y);
       if (res.userResponse.status === SUCCESS_STATUS) {
-        this.#names.addCharacter(name);
+        this.#names.add(name);
       }
       return res;
     }
