@@ -82,9 +82,9 @@ function selectCharacter(color) {
 // only allow if user types something in login page
 function initiateUserCharacter() {
   username = document.getElementById('login-input').value;
-  console.log(username);
+  console.log(username + ' is initiated');
   if (username && username.length > 0) {
-    moveCharacter(username);
+    // moveCharacter(username);
     ws.send(JSON.stringify({ action: 'list' }));
   }
 }
@@ -109,7 +109,7 @@ function handleModifyChar(data) {
 // update that character to game server list
 function handleNewChar(data) {
   if (data.name) {
-    characters.addCharacter(data.name, data.attributes.color, data.x, data.y);
+    characters.addCharacter(data.name);
   }
 }
 
@@ -186,7 +186,7 @@ function switchScreen(page, backgroundColor) {
       document.getElementById('login-page').style.display = 'block';
       break;
     case 'characterPage':
-      document.getElementById('character-page').style.display = 'grid';
+      document.getElementById('character-page').style.display = 'block';
       break;
     case 'mainPage':
       document.getElementById('main-page').style.display = 'flex';
