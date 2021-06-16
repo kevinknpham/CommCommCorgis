@@ -186,7 +186,7 @@ function switchScreen(page, backgroundColor) {
       document.getElementById('login-page').style.display = 'block';
       break;
     case 'characterPage':
-      document.getElementById('character-page').style.display = 'grid';
+      document.getElementById('character-page').style.display = 'block';
       break;
     case 'mainPage':
       document.getElementById('main-page').style.display = 'flex';
