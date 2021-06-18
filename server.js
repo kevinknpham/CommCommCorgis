@@ -7,7 +7,7 @@ const DEBUG = true;
 const express = require('express');
 const path = require('path');
 const { Server } = require('ws');
-const { RoomManager, SUCCESS_STATUS, FAILURE_STATUS } = require('./rooms');
+const { RoomManager } = require('./rooms');
 
 const PORT = process.env.PORT || 3456;
 const INDEX = './static/index.html';
@@ -102,24 +102,20 @@ function handleMessage(ws, msg) {
  */
 function handleChangeAttribute(ws, data) {
   if (data.attributes) {
-    const changeAttributeResult = roomManager.changeAttribute(
-      'entrance',
-      ws.id,
-      data.attributes
+    roomManager.changeAttribute('entrance', ws.id, data.attributes);
+    const characterInfo = roomManager.getInfo(ws.id);
+
+    let result = {};
+    result.action = 'modify_char';
+    result.name = characterInfo.name;
+    result.attributes = characterInfo.attributes;
+
+    broadcastToAll(JSON.stringify(result));
+
+    debuggingDescription(
+      '\u001b[34mChange attribute has been called:\u001b[0m',
+      `${characterInfo.name}'s appearance has been changed.`
     );
-
-    if (changeAttributeResult) {
-      changeAttributeResult.action = 'modify_char';
-      broadcastToAll(JSON.stringify(changeAttributeResult));
-
-      debuggingDescription(
-        '\u001b[34mChange attribute has been called:\u001b[0m',
-        `${roomManager.getName(
-          'entrance',
-          ws.id
-        )}'s appearance has been changed.`
-      );
-    }
   } else {
     error(ws, "Character 'attributes' not specified.");
   }
@@ -130,15 +126,19 @@ function handleChangeAttribute(ws, data) {
  * @param {WebSocket} ws - websocket for user identification and error responses
  */
 function handleLeave(ws) {
-  let removeCharacterResult = roomManager.removeCharacter('entrance', ws.id);
+  if (roomManager.containsId(ws.id)) {
+    let name = roomManager.getInfo(ws.id).name;
 
-  if (removeCharacterResult) {
-    removeCharacterResult.action = 'remove_char';
-    broadcastToAll(JSON.stringify(removeCharacterResult));
+    roomManager.removeCharacter(ws.id);
+
+    let result = {};
+    result.action = 'remove_char';
+    result.name = name;
+    broadcastToAll(JSON.stringify(result));
 
     debuggingDescription(
       '\u001b[34mLeave has been called:\u001b[0m',
-      `${roomManager.getName('entrance', ws.id)} has left.`
+      `${name} has left.`
     );
   }
 }
@@ -164,31 +164,25 @@ function handleList(ws, data) {
  * @param {Object} data - must contain 'x' and 'y' fields
  */
 function handleUpdateChar(ws, data) {
-  if (data.x && data.y) {
-    const updateCharacterResult = roomManager.updateCharacter(
-      'entrance',
-      ws.id,
-      data.x,
-      data.y
-    );
+  if ((data.x || data.x === 0) && (data.y || data.y === 0)) {
+    if (roomManager.containsId(ws.id)) {
+      roomManager.updateCharacter(ws.id, data.x, data.y);
+      const characterInfo = roomManager.getInfo(ws.id);
 
-    if (updateCharacterResult) {
-      updateCharacterResult.action = 'move_char';
-      broadcastToAll(JSON.stringify(updateCharacterResult));
+      let result = {};
+      result.action = 'move_char';
+      result.name = characterInfo.name;
+      result.x = characterInfo.x;
+      result.y = characterInfo.y;
+      broadcastToAll(JSON.stringify(result));
 
       debuggingDescription(
         '\u001b[34mUpdate has been called:\u001b[0m',
-        `${roomManager.getName('entrance', ws.id)} has been moved to x of ${
-          data.x
-        } and y of ${data.y}.`
+        `${characterInfo.name} is now at x of ${data.x} and y of ${data.y}.`
       );
     } else {
-      debuggingDescription(
-        '\u001b[34mUpdate failed:\u001b[0m',
-        `${roomManager.getName('entrance', ws.id)} can't be moved to x of ${
-          data.x
-        } and y of ${data.y}.`
-      );
+      error(ws, 'Character not added yet.');
+      console.log(data);
     }
   } else {
     error(ws, "Must specify 'x' and 'y'.");
@@ -206,29 +200,42 @@ function handleCreateChar(ws, data) {
     // Remove non-alphanumeric characters
     data.name = data.name.replace(/[^\w]/gi, '');
 
-    let createCharResult = roomManager.addCharacter(
-      'entrance',
-      ws.id,
-      data.name
-    );
+    roomManager.addCharacter('entrance', ws.id, data.name);
 
-    createCharResult.userResponse.action = 'login_result';
-    ws.send(JSON.stringify(createCharResult.userResponse));
+    if (roomManager.containsId(ws.id)) {
+      const characterInfo = roomManager.getInfo(ws.id);
+      let userResult = {};
+      userResult.action = 'login_result';
+      userResult.status = 'success';
+      userResult.name = characterInfo.name;
 
-    if (createCharResult.userResponse.status === SUCCESS_STATUS) {
+      ws.send(JSON.stringify(userResult));
+
+      let broadcastResult = {};
+      broadcastResult.action = 'new_char';
+      broadcastResult.name = characterInfo.name;
+      broadcastResult.x = characterInfo.x;
+      broadcastResult.y = characterInfo.y;
+      broadcastResult.attributes = characterInfo.attributes;
+      broadcastToAll(JSON.stringify(broadcastResult));
+
       debuggingDescription(
         '\u001b[34mCreate has been called:\u001b[0m',
-        `${data.name} has joined the game.`
+        `${characterInfo.name} has joined the game.`
       );
-
-      if (createCharResult.broadcast) {
-        createCharResult.broadcast.action = 'new_char';
-        broadcastToAll(JSON.stringify(createCharResult.broadcast));
-      }
     } else {
+      let userResult = {};
+      userResult.action = 'login_result';
+      userResult.status = 'failure';
+      userResult.reason = 'user_already_exists';
+      userResult.explanation =
+        'The requested username has been taken by another user.';
+      userResult.requestedName = data.name;
+      ws.send(JSON.stringify(userResult));
+
       debuggingDescription(
         '\u001b[34mCreate has been called:\u001b[0m',
-        `${data.name} could not be created.  Reason: ${createCharResult.userResponse.explanation}`
+        `${data.name} could not be created.`
       );
     }
   } else {
