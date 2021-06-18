@@ -17,7 +17,16 @@ class RoomManager {
     this.#names = new Set();
     this.#idToRoomName = new Map();
     for (let i = 0; i < rooms.length; i++) {
-      this.#roomOccupants.set(rooms[i].name, new Room(rooms[i].bounds));
+      const roomInfo = rooms[i];
+      this.#roomOccupants.set(
+        roomInfo.name,
+        new Room(
+          roomInfo.bounds,
+          roomInfo.image,
+          roomInfo.width,
+          roomInfo.height
+        )
+      );
     }
   }
 
@@ -128,6 +137,18 @@ class RoomManager {
   containsId(id) {
     return this.#idToRoomName.has(id);
   }
+
+  /**
+   * Gets room of user
+   * @param {Integer} id id of user
+   * @returns room of user
+   */
+  getRoomInfoFromId(id) {
+    const roomName = this.#idToRoomName.get(id);
+    const roomInfo = this.#roomOccupants.get(roomName).getRoomInfo();
+    roomInfo.name = roomName;
+    return roomInfo;
+  }
 }
 
 /**
@@ -136,13 +157,19 @@ class RoomManager {
 class Room {
   #characters;
   #bounds;
+  #url;
+  #width;
+  #height;
 
   /**
    * Construct empty room.
    */
-  constructor(bounds) {
+  constructor(bounds, imageUrl, width, height) {
     this.#characters = new Map();
     this.#bounds = bounds;
+    this.#url = imageUrl;
+    this.#width = width;
+    this.#height = height;
   }
 
   /**
@@ -232,6 +259,17 @@ class Room {
    */
   getInfo(id) {
     return this.#characters.has(id) ? this.#characters.get(id) : null;
+  }
+
+  /**
+   * Gets information about room and rendering it on client side
+   */
+  getRoomInfo() {
+    return {
+      backgroundUrl: this.#url,
+      width: this.#width,
+      height: this.#height
+    };
   }
 }
 

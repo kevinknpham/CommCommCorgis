@@ -54,7 +54,8 @@ if `action` is create
 _A character is created and added to the game._
 
 - `name`: name of character
-- server will respond with a JSON formatted String with the `action` of 'login_result' and a field `status` that will be 'success' or 'failure'. If it failed a `reason` field will also be included.
+- optional field `room`: room to start in
+- server will respond with a JSON formatted String with the `action` of 'login_result' and a field `status` that will be 'success' or 'failure'. If it failed a `reason` field will also be included. If it succeeded, a `roomInfo` field will be included with a value of an object containing the `name`, `backgroundUrl`, `width`, and `height` info for the room to help with client side rendering.
 
 if `action` is change_attribute
 

@@ -25,9 +25,10 @@ const server = app
 
 const wss = new Server({ server });
 
+const DEFAULT_ROOM = 'ctc';
 const ROOM_INFO = [
   {
-    name: 'entrance',
+    name: 'ctc',
     bounds: [
       [-24, -17],
       [-24, 233],
@@ -41,7 +42,10 @@ const ROOM_INFO = [
       [490, 148],
       [254, 148],
       [254, -17]
-    ]
+    ],
+    image: 'assets/ctc_main.png',
+    width: 633,
+    height: 361
   }
 ];
 
@@ -200,7 +204,11 @@ function handleCreateChar(ws, data) {
     // Remove non-alphanumeric characters
     data.name = data.name.replace(/[^\w]/gi, '');
 
-    roomManager.addCharacter('entrance', ws.id, data.name);
+    if (data.room) {
+      roomManager.addCharacter(room, ws.id, data.name);
+    } else {
+      roomManager.addCharacter(DEFAULT_ROOM, ws.id, data.name);
+    }
 
     if (roomManager.containsId(ws.id)) {
       const characterInfo = roomManager.getInfo(ws.id);
@@ -208,6 +216,7 @@ function handleCreateChar(ws, data) {
       userResult.action = 'login_result';
       userResult.status = 'success';
       userResult.name = characterInfo.name;
+      userResult.roomInfo = roomManager.getRoomInfoFromId(ws.id);
 
       ws.send(JSON.stringify(userResult));
 
