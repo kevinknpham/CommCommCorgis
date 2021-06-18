@@ -1,8 +1,14 @@
+//background image is 740x468
 const CANVAS_BACKGROUND_IMAGE_URL = '../assets/ctc_main.png';
 
+const SCALE_FACTOR = 5;
+
+const CANVAS_WIDTH = 740 * SCALE_FACTOR;
+const CANVAS_HEIGHT = 468 * SCALE_FACTOR;
+
 // Current corgi image is 1024x700
-const CHARACTER_WIDTH = 75;
-const CHARACTER_LENGTH = 51;
+const CHARACTER_WIDTH = 75 * SCALE_FACTOR;
+const CHARACTER_LENGTH = 51 * SCALE_FACTOR;
 
 const NAME_VERTICAL_TEXT_OFFSET = 10;
 const NAME_HORIZONTAL_BUFFER = 5;
@@ -49,6 +55,8 @@ class CanvasManager {
 
   constructor(canvas, characterManager) {
     this.canvas = canvas;
+    this.canvas.width = CANVAS_WIDTH;
+    this.canvas.height = CANVAS_HEIGHT;
     this.ctx = canvas.getContext('2d');
     this.characterManager = characterManager;
   }
@@ -74,11 +82,16 @@ class CanvasManager {
     for (let i = 0; i < characterList.length; i++) {
       const name = characterList[i];
       const info = this.characterManager.getCharacterInfo(name);
-      drawNameOnImage(this.ctx, name, info.currentX, info.currentY);
+      drawNameOnImage(
+        this.ctx,
+        name,
+        info.currentX * SCALE_FACTOR,
+        info.currentY * SCALE_FACTOR
+      );
       this.ctx.drawImage(
         placeImage(COLOR_TO_URL.get(info.attributes.color)),
-        info.currentX,
-        info.currentY,
+        info.currentX * SCALE_FACTOR,
+        info.currentY * SCALE_FACTOR,
         CHARACTER_WIDTH,
         CHARACTER_LENGTH
       );
