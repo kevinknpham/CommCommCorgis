@@ -165,6 +165,7 @@ function createCharacterFromList(list) {
     ) {
       console.log('hello1');
       handleNewChar(character);
+      characters.changeAttribute(character.name, character.attributes.color);
       //createCharacterAsset(character.name);
     } else if (characters.getCharacterInfo(character.name)) {
       console.log('hello2');
