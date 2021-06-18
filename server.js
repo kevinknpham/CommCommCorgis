@@ -102,7 +102,7 @@ function handleMessage(ws, msg) {
  */
 function handleChangeAttribute(ws, data) {
   if (data.attributes) {
-    roomManager.changeAttribute('entrance', ws.id, data.attributes);
+    roomManager.changeAttribute(ws.id, data.attributes);
     const characterInfo = roomManager.getInfo(ws.id);
 
     let result = {};
