@@ -1,7 +1,5 @@
 const COLORS = Object.freeze(['none', 'red', 'green', 'blue']);
 const pointInPolygon = require('point-in-polygon');
-const SUCCESS_STATUS = 'success';
-const FAILURE_STATUS = 'failure';
 
 /**
  * Object to hold rooms and their relationship to one another.
@@ -9,6 +7,7 @@ const FAILURE_STATUS = 'failure';
 class RoomManager {
   #roomOccupants;
   #names;
+  #idToRoomName;
 
   /**
    * @param {String[]} rooms list of room names
@@ -16,6 +15,7 @@ class RoomManager {
   constructor(rooms) {
     this.#roomOccupants = new Map();
     this.#names = new Set();
+    this.#idToRoomName = new Map();
     for (let i = 0; i < rooms.length; i++) {
       this.#roomOccupants.set(rooms[i].name, new Room(rooms[i].bounds));
     }
@@ -28,53 +28,33 @@ class RoomManager {
    * @param {String} name name of character
    * @param {Integer} x x position - defaults to 0
    * @param {Integer} y y position - defaults to 0
-   * @return {Object} contains userResponse for user and broadcast with message
-   *                  for all users
    */
   addCharacter(room, id, name, x = 0, y = 0) {
-    if (this.#names.has(name)) {
-      let res = {};
-      res.userResponse = {};
-      res.userResponse.status = FAILURE_STATUS;
-      res.userResponse.reason = 'user_already_exists';
-      res.userResponse.explanation =
-        'The requested username has been taken by another user.';
-      res.userResponse.requested_name = name;
-      return res;
-    }
     let roomData = this.#roomOccupants.get(room);
-    if (roomData) {
-      let res = roomData.addCharacter(id, name, x, y);
-      if (res.userResponse.status === SUCCESS_STATUS) {
+    if (!this.#idToRoomName.has(id) && roomData) {
+      if (!this.#idToRoomName.has(id) && !this.#names.has(name)) {
+        this.#idToRoomName.set(id, room);
         this.#names.add(name);
+        roomData.addCharacter(id, name, x, y);
       }
-      return res;
     }
-    let res = {};
-    res.userResponse = {};
-    res.userResponse.status = FAILURE_STATUS;
-    res.userResponse.reason = 'database_error';
-    res.userResponse.explanation = 'The database has not been set up.';
-    res.userResponse.requested_name = name;
-    return res;
   }
 
   /**
    * Removes character from given room
    * @param {String} room room to remove from
    * @param {Integer} id id of character
-   * @return {Object} response to broadcast to all users or null if no change
    */
-  removeCharacter(room, id) {
-    let roomData = this.#roomOccupants.get(room);
+  removeCharacter(id) {
+    let roomData = this.#roomOccupants.get(this.#idToRoomName.get(id));
     if (roomData) {
-      let res = roomData.removeCharacter(id);
-      if (res) {
-        this.#names.delete(res.name);
+      const deletedData = roomData.getInfo(id);
+      if (deletedData) {
+        roomData.removeCharacter(id);
+        this.#names.delete(deletedData.name);
+        this.#idToRoomName.delete(id);
       }
-      return res;
     }
-    return null;
   }
 
   /**
@@ -83,14 +63,12 @@ class RoomManager {
    * @param {Integer} id id of character
    * @param {Integer} x new x location
    * @param {Integer} y new y location
-   * @return {Object} response to broadcast to all users
    */
-  updateCharacter(room, id, x, y) {
-    let roomData = this.#roomOccupants.get(room);
+  updateCharacter(id, x, y) {
+    let roomData = this.#roomOccupants.get(this.#idToRoomName.get(id));
     if (roomData) {
-      return roomData.updateCharacter(id, x, y);
+      roomData.updateCharacter(id, x, y);
     }
-    return null;
   }
 
   /**
@@ -98,14 +76,12 @@ class RoomManager {
    * @param {String} room room to update
    * @param {Integer} id id of character
    * @param {Object} newAttributes Object with updated attributes and values
-   * @return {Object} response to broadcast to all users or null if no change
    */
-  changeAttribute(room, id, newAttributes) {
-    let roomData = this.#roomOccupants.get(room);
+  changeAttribute(id, newAttributes) {
+    let roomData = this.#roomOccupants.get(this.#idToRoomName.get(id));
     if (roomData) {
-      return roomData.changeAttribute(id, newAttributes);
+      roomData.changeAttribute(id, newAttributes);
     }
-    return null;
   }
 
   /**
@@ -136,12 +112,21 @@ class RoomManager {
    * @param {Integer} id id of character
    * @returns name of user matching id or null if not found
    */
-  getName(room, id) {
-    let roomData = this.#roomOccupants.get(room);
+  getInfo(id) {
+    let roomData = this.#roomOccupants.get(this.#idToRoomName.get(id));
     if (roomData) {
-      return roomData.getName(id);
+      return roomData.getInfo(id);
     }
     return null;
+  }
+
+  /**
+   * Checks if user exists
+   * @param {Integer} id
+   * @returns true iff id is being tracked by this RoomManager
+   */
+  containsId(id) {
+    return this.#idToRoomName.has(id);
   }
 }
 
@@ -166,58 +151,26 @@ class Room {
    * @param {String} name name of character
    * @param {Integer} x x position - defaults to 0
    * @param {Integer} y y position - defaults to 0
-   * @return {Object} contains userResponse for user and broadcast with message
-   *                  for all users
    */
   addCharacter(id, name, x = 0, y = 0) {
-    if (this.#characters.has(name)) {
-      let res = {};
-      res.userResponse = {};
-      res.userResponse.status = FAILURE_STATUS;
-      res.userResponse.reason = 'user_already_exists';
-      res.userResponse.explanation =
-        'The requested username has been taken by another user.';
-      res.userResponse.requested_name = name;
-      return res;
+    if (!this.#characters.has(name)) {
+      this.#characters.set(id, {
+        name: name,
+        x: x,
+        y: y,
+        attributes: {
+          color: 'none'
+        }
+      });
     }
-
-    this.#characters.set(id, {
-      name: name,
-      x: x,
-      y: y,
-      attributes: {
-        color: 'none'
-      }
-    });
-
-    let res = {};
-
-    res.broadcast = {};
-    res.broadcast.name = name;
-    res.broadcast.x = x;
-    res.broadcast.y = y;
-    res.broadcast.attributes = {};
-    res.broadcast.attributes.color = 'none';
-
-    res.userResponse = {};
-    res.userResponse.status = SUCCESS_STATUS;
-    res.userResponse.name = name;
-
-    return res;
   }
 
   /**
    * Removes character from room
    * @param {Integer} id id of character
-   * @return {Object} response to broadcast to all users or null if no change
    */
   removeCharacter(id) {
-    const removedData = this.#characters.get(id);
-    if (removedData) {
-      this.#characters.delete(id);
-      return { name: removedData.name };
-    }
-    return null;
+    this.#characters.delete(id);
   }
 
   /**
@@ -225,7 +178,6 @@ class Room {
    * @param {Integer} id id of character
    * @param {Integer} x new x location
    * @param {Integer} y new y location
-   * @return {Object} response to broadcast to all users or null if no change
    */
   updateCharacter(id, x, y) {
     if (this.#characters.has(id)) {
@@ -233,26 +185,17 @@ class Room {
         const target = this.#characters.get(id);
         target.x = x;
         target.y = y;
-        return {
-          name: target.name,
-          x: x,
-          y: y
-        };
       }
-      // return false;
     }
-    return null;
   }
 
   /**
    * Updates character's attributes
    * @param {Integer} id id of character
    * @param {Object} newAttributes Object with updated attributes and values
-   * @return {Object} response to broadcast to all users
    */
   changeAttribute(id, newAttributes) {
     const target = this.#characters.get(id);
-    let result = {};
     if (target) {
       if (newAttributes.color) {
         if (COLORS.includes(newAttributes.color)) {
@@ -261,14 +204,11 @@ class Room {
         }
       }
     }
-    return {
-      name: target.name,
-      attributes: result
-    };
   }
 
   /**
    * List names and positions of characters in room
+   * @returns list for this room
    */
   listCharacters(includeId = false) {
     let result = [];
@@ -289,15 +229,13 @@ class Room {
   /**
    * Get name of user using id
    * @param {Integer} id id of character
-   * @returns name of user matching id or null if not found
+   * @returns info of user matching id or null if not found
    */
-  getName(id) {
+  getInfo(id) {
     return this.#characters.has(id) ? this.#characters.get(id) : null;
   }
 }
 
 module.exports = {
-  RoomManager: RoomManager,
-  SUCCESS_STATUS: SUCCESS_STATUS,
-  FAILURE_STATUS: FAILURE_STATUS
+  RoomManager: RoomManager
 };
