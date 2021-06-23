@@ -55,7 +55,7 @@ _A character is created and added to the game._
 
 - `name`: name of character
 - optional field `room`: room to start in
-- server will respond with a JSON formatted String with the `action` of 'login_result' and a field `status` that will be 'success' or 'failure'. If it failed a `reason` field will also be included. If it succeeded, a `roomInfo` field will be included with a value of an object containing the `name`, `backgroundUrl`, `width`, and `height` info for the room to help with client side rendering.
+- server will respond with a JSON formatted String with the `action` of 'login_result' and a field `status` that will be 'success' or 'failure'. If it failed a `reason` field will also be included. If it succeeded, a `roomInfo` field will be included with a value of an object containing the `name`, `doors`, `backgroundUrl`, `width`, and `height` info for the room to help with client side rendering. `doors` is an array of key-value pairs, each represented as an array of length 2 itself. Each key is a length 2 array representing a point and each value is the name of corresponding room.
 
 if `action` is change_attribute
 
@@ -76,6 +76,13 @@ if `action` is leave
 _The specified character is removed from the game._
 
 - no required fields
+
+if `action` is change_room
+
+_The specified character is moved from one room to the next_
+
+- `new_room`: room to move character to
+- server will respond with an `action` of 'change_room_result' and the info for the new room formatted the same as create's login_result.
 
 if `action` is chat
 

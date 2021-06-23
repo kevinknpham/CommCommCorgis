@@ -29,6 +29,28 @@ const DEFAULT_ROOM = 'ctc';
 const ROOM_INFO = [
   {
     name: 'ctc',
+    doors: [[[84, 425], 'hub_games']],
+    bounds: [
+      [-24, -17],
+      [-24, 233],
+      [54, 233],
+      [54, 426],
+      [699, 426],
+      [699, -17],
+      [545, -17],
+      [545, 158],
+      [490, 158],
+      [490, 148],
+      [254, 148],
+      [254, -17]
+    ],
+    image: 'assets/ctc_main.png',
+    width: 633,
+    height: 361
+  },
+  {
+    name: 'hub_games',
+    doors: [[[84, 425], 'ctc']],
     bounds: [
       [-24, -17],
       [-24, 233],
@@ -85,6 +107,9 @@ function handleMessage(ws, msg) {
       case 'leave': // remove character from game
         handleLeave(ws);
         break;
+      case 'change_room':
+        handleChangeRoom(ws, data);
+        break;
       case 'list': // list characters
         handleList(ws, data);
         break;
@@ -99,6 +124,43 @@ function handleMessage(ws, msg) {
   }
 }
 
+function handleChangeRoom(ws, data) {
+  if (data.new_room && roomManager.containsRoom(data.new_room)) {
+    const oldCharacterInfo = roomManager.getCharacterInfo(ws.id);
+    roomManager.removeCharacter(ws.id);
+    roomManager.addCharacter(data.new_room, ws.id, oldCharacterInfo.name);
+
+    const newCharacterInfo = roomManager.getCharacterInfo(ws.id);
+    let userResult = {};
+    userResult.action = 'change_room_result';
+    userResult.roomInfo = roomManager.getRoomInfoFromId(ws.id);
+
+    ws.send(JSON.stringify(userResult, replacer));
+
+    let removeCharBroadcast = {};
+    removeCharBroadcast.action = 'remove_char';
+    removeCharBroadcast.name = oldCharacterInfo.name;
+    removeCharBroadcast.room = oldCharacterInfo.room;
+    broadcastToAll(JSON.stringify(result));
+
+    let newCharBroadcast = {};
+    newCharBroadcast.action = 'new_char';
+    newCharBroadcast.name = oldCharacterInfo.name;
+    newCharBroadcast.x = oldCharacterInfo.x;
+    newCharBroadcast.y = oldCharacterInfo.y;
+    newCharBroadcast.attributes = oldCharacterInfo.attributes;
+    newCharBroadcast.room = newCharacterInfo.room;
+    broadcastToAll(JSON.stringify(newCharBroadcast));
+
+    debuggingDescription(
+      '\u001b[34mChange room has been called:\u001b[0m',
+      `${oldCharacterInfo.name} has moved from ${oldCharacterInfo.room} to ${newCharacterInfo.room}.`
+    );
+  } else {
+    error(ws, 'new_room not specified or is not a valid room name.');
+  }
+}
+
 /**
  * Update character's appearance
  * @param {WebSocket} ws - websocket for user identification and error responses
@@ -107,12 +169,13 @@ function handleMessage(ws, msg) {
 function handleChangeAttribute(ws, data) {
   if (data.attributes) {
     roomManager.changeAttribute(ws.id, data.attributes);
-    const characterInfo = roomManager.getInfo(ws.id);
+    const characterInfo = roomManager.getCharacterInfo(ws.id);
 
     let result = {};
     result.action = 'modify_char';
     result.name = characterInfo.name;
     result.attributes = characterInfo.attributes;
+    result.room = characterInfo.room;
 
     broadcastToAll(JSON.stringify(result));
 
@@ -131,18 +194,19 @@ function handleChangeAttribute(ws, data) {
  */
 function handleLeave(ws) {
   if (roomManager.containsId(ws.id)) {
-    let name = roomManager.getInfo(ws.id).name;
+    const characterInfo = roomManager.getCharacterInfo(ws.id);
 
     roomManager.removeCharacter(ws.id);
 
     let result = {};
     result.action = 'remove_char';
-    result.name = name;
+    result.name = characterInfo.name;
+    result.room = characterInfo.room;
     broadcastToAll(JSON.stringify(result));
 
     debuggingDescription(
       '\u001b[34mLeave has been called:\u001b[0m',
-      `${name} has left.`
+      `${characterInfo.name} has left.`
     );
   }
 }
@@ -171,13 +235,14 @@ function handleUpdateChar(ws, data) {
   if ((data.x || data.x === 0) && (data.y || data.y === 0)) {
     if (roomManager.containsId(ws.id)) {
       roomManager.updateCharacter(ws.id, data.x, data.y);
-      const characterInfo = roomManager.getInfo(ws.id);
+      const characterInfo = roomManager.getCharacterInfo(ws.id);
 
       let result = {};
       result.action = 'move_char';
       result.name = characterInfo.name;
       result.x = characterInfo.x;
       result.y = characterInfo.y;
+      result.room = characterInfo.room;
       broadcastToAll(JSON.stringify(result));
 
       debuggingDescription(
@@ -211,14 +276,14 @@ function handleCreateChar(ws, data) {
     }
 
     if (roomManager.containsId(ws.id)) {
-      const characterInfo = roomManager.getInfo(ws.id);
+      const characterInfo = roomManager.getCharacterInfo(ws.id);
       let userResult = {};
       userResult.action = 'login_result';
       userResult.status = 'success';
       userResult.name = characterInfo.name;
       userResult.roomInfo = roomManager.getRoomInfoFromId(ws.id);
 
-      ws.send(JSON.stringify(userResult));
+      ws.send(JSON.stringify(userResult, replacer));
 
       let broadcastResult = {};
       broadcastResult.action = 'new_char';
@@ -226,6 +291,7 @@ function handleCreateChar(ws, data) {
       broadcastResult.x = characterInfo.x;
       broadcastResult.y = characterInfo.y;
       broadcastResult.attributes = characterInfo.attributes;
+      broadcastResult.room = characterInfo.room;
       broadcastToAll(JSON.stringify(broadcastResult));
 
       debuggingDescription(
@@ -272,6 +338,7 @@ function handleChat(ws, data) {
     result = { action: 'chat' };
     result.user = data.user;
     result.text = data.text;
+    result.room = roomManager.getRoomInfoFromId(ws.id).name;
     broadcastToAll(JSON.stringify(result));
   } else {
     error(ws, 'Chat messages must contain "user" and "text" fields.');
@@ -321,14 +388,22 @@ function debuggingDescription(...statements) {
  * @param {function} fn - fn to use, defaults to console.log
  */
 function debug(msg, fn = console.log) {
-  if (msg) {
-    fn(msg);
-  } else {
-    fn();
+  if (DEBUG) {
+    if (msg) {
+      fn(msg);
+    } else {
+      fn();
+    }
   }
 }
 
-// ==========DEBUG========== //
-// for (const [ptX, ptY] of ROOM_INFO[0].bounds) {
-//   roomManager.addCharacter('entrance', `[${ptX}, ${ptY}]`, ptX, ptY);
-// }
+function replacer(key, value) {
+  if (value instanceof Map) {
+    return {
+      dataType: 'Map',
+      value: Array.from(value.entries()) // or with spread: value: [...value]
+    };
+  } else {
+    return value;
+  }
+}

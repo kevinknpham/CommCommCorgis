@@ -21,6 +21,8 @@ class RoomManager {
       this.#roomOccupants.set(
         roomInfo.name,
         new Room(
+          roomInfo.name,
+          roomInfo.doors,
           roomInfo.bounds,
           roomInfo.image,
           roomInfo.width,
@@ -57,7 +59,7 @@ class RoomManager {
   removeCharacter(id) {
     let roomData = this.#roomOccupants.get(this.#idToRoomName.get(id));
     if (roomData) {
-      const deletedData = roomData.getInfo(id);
+      const deletedData = roomData.getCharacterInfo(id);
       if (deletedData) {
         roomData.removeCharacter(id);
         this.#names.delete(deletedData.name);
@@ -95,7 +97,7 @@ class RoomManager {
 
   /**
    * List names and positions of characters
-   * @param {*} room room to list characters from.
+   * @param {String} room room to list characters from.
    *                 If undefined, uses all rooms.
    * @returns Object[] containing characters in the given room or all rooms if
    *          not specified.
@@ -119,12 +121,15 @@ class RoomManager {
    * Get name of user using id
    * @param {String} room room character is in
    * @param {Integer} id id of character
-   * @returns name of user matching id or null if not found
+   * @returns info of user matching id or null if not found
    */
-  getInfo(id) {
-    let roomData = this.#roomOccupants.get(this.#idToRoomName.get(id));
+  getCharacterInfo(id) {
+    const roomName = this.#idToRoomName.get(id);
+    let roomData = this.#roomOccupants.get(roomName);
     if (roomData) {
-      return roomData.getInfo(id);
+      let res = roomData.getCharacterInfo(id);
+      res.room = roomName;
+      return res;
     }
     return null;
   }
@@ -146,8 +151,16 @@ class RoomManager {
   getRoomInfoFromId(id) {
     const roomName = this.#idToRoomName.get(id);
     const roomInfo = this.#roomOccupants.get(roomName).getRoomInfo();
-    roomInfo.name = roomName;
     return roomInfo;
+  }
+
+  /**
+   * Checks if room exists
+   * @param {String} room name of room
+   * @returns true iff the room exists
+   */
+  containsRoom(room) {
+    return this.#roomOccupants.has(room);
   }
 }
 
@@ -155,7 +168,9 @@ class RoomManager {
  *
  */
 class Room {
+  #name;
   #characters;
+  #doors;
   #bounds;
   #url;
   #width;
@@ -164,8 +179,10 @@ class Room {
   /**
    * Construct empty room.
    */
-  constructor(bounds, imageUrl, width, height) {
+  constructor(name, doors, bounds, imageUrl, width, height) {
+    this.#name = name;
     this.#characters = new Map();
+    this.#doors = new Map(doors);
     this.#bounds = bounds;
     this.#url = imageUrl;
     this.#width = width;
@@ -257,7 +274,7 @@ class Room {
    * @param {Integer} id id of character
    * @returns info of user matching id or null if not found
    */
-  getInfo(id) {
+  getCharacterInfo(id) {
     return this.#characters.has(id) ? this.#characters.get(id) : null;
   }
 
@@ -266,9 +283,11 @@ class Room {
    */
   getRoomInfo() {
     return {
+      name: this.#name,
       backgroundUrl: this.#url,
       width: this.#width,
-      height: this.#height
+      height: this.#height,
+      doors: this.#doors
     };
   }
 }
