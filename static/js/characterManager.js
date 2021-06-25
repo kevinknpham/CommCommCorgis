@@ -1,4 +1,5 @@
 const DISPLACEMENT_CONSTANT = 10;
+let isCloseToDoor = true;
 
 class CharacterManager {
   characters;
@@ -51,17 +52,19 @@ class CharacterManager {
           info.currentY += displacementY / DISPLACEMENT_CONSTANT;
         }
       }
-      // if (info.targetX > info.currentX) {
-      //   info.currentX += DISPLACEMENT_PER_FRAME;
-      // } else if (info.targetX < info.currentX) {
-      //   info.currentX -= DISPLACEMENT_PER_FRAME;
-      // }
+    }
+    const userCharacter = this.characters.get(username);
 
-      // if (info.targetY > info.currentY) {
-      //   info.currentY += DISPLACEMENT_PER_FRAME;
-      // } else if (info.targetY < info.currentY) {
-      //   info.currentY -= DISPLACEMENT_PER_FRAME;
-      // }
+    if (
+      userCharacter &&
+      userCharacter.currentX === userCharacter.targetX &&
+      userCharacter.currentY === userCharacter.targetY
+    ) {
+      if (this.isNearDoor(userCharacter)) {
+        if (isCloseToDoor) {
+          this.changeRoom(userCharacter);
+        }
+      }
     }
   }
 
@@ -71,5 +74,24 @@ class CharacterManager {
 
   listCharacters() {
     return Array.from(this.characters.keys());
+  }
+
+  changeRoom(name) {
+    console.log('RoomChange!!!');
+    confirm('Would you like to move to this room?');
+    isCloseToDoor = false;
+  }
+
+  isNearDoor(name) {
+    const doorPositionX = 84;
+    const doorPositionY = 425;
+
+    const distance =
+      (name.currentX - doorPositionX) * (name.currentX - doorPositionX) +
+      (name.currentY - doorPositionY) * (name.currentY - doorPositionY);
+    if (distance > 1000) {
+      isCloseToDoor = true;
+    }
+    return distance < 1000;
   }
 }

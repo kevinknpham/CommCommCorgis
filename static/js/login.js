@@ -174,6 +174,37 @@ function createCharacterFromList(list) {
   }
 }
 
+function handleLoginResult(data) {
+  if (data.status) {
+    if (data.status === 'success') {
+      revealCharacterSelection();
+      setUpCanvasBackground(data.roomInfo);
+    } else if (data.status === 'failure') {
+      toggleLoadingScreen(false);
+      alert(`${data.requested_name} is taken`);
+    } else {
+      console.log(data.status + ' invalid login result status');
+    }
+  }
+}
+
+function setUpCanvasBackground(data) {
+  canvas.setUpCanvasInfo(
+    data.backgroundUrl,
+    data.width,
+    data.height,
+    data.doors
+  );
+}
+
+function sentChangeRoomRequestToServer(username) {
+  let datum = {
+    name: username,
+    action: 'change_room'
+  };
+  ws.send(JSON.stringify(datum));
+}
+
 // swtich login page to main game page when the user logs in
 // switch main game page to log out page when the user logs out
 function switchScreen(page, backgroundColor) {
@@ -193,19 +224,6 @@ function switchScreen(page, backgroundColor) {
       document.getElementById('main-page').style.display = 'flex';
       document.getElementById('main-page').style.justifyContent = 'center';
       break;
-  }
-}
-
-function handleLoginResult(data) {
-  if (data.status) {
-    if (data.status === 'success') {
-      revealCharacterSelection();
-    } else if (data.status === 'failure') {
-      toggleLoadingScreen(false);
-      alert(`${data.requested_name} is taken`);
-    } else {
-      console.log(data.status + ' invalid login result status');
-    }
   }
 }
 

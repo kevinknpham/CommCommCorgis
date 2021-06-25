@@ -13,7 +13,7 @@ ws.onopen = (event) => {
 
 function handleMessageFromSever(msg) {
   console.log(msg);
-  data = JSON.parse(msg);
+  data = JSON.parse(msg, reviver);
   if (data.action) {
     const action = data.action.toLowerCase();
 
@@ -43,6 +43,15 @@ function handleMessageFromSever(msg) {
         console.log(action + ' is not a valid action');
     }
   }
+}
+
+function reviver(key, value) {
+  if (typeof value === 'object' && value !== null) {
+    if (value.dataType === 'Map') {
+      return new Map(value.value);
+    }
+  }
+  return value;
 }
 
 setUpCharacterSelection();

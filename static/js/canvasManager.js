@@ -1,10 +1,11 @@
 //background image is 740x468
-const CANVAS_BACKGROUND_IMAGE_URL = '../assets/ctc_main.png';
+const CANVAS_BACKGROUND_IMAGE_URL_DEFAULT = '../assets/ctc_main.png';
+const CANVAS_BACKGROUND_IMAGE_URL_DOOR_DEFAULT = [[[84, 425], 'hub_games']];
 
 const SCALE_FACTOR = 5;
 
-const CANVAS_WIDTH = 740 * SCALE_FACTOR;
-const CANVAS_HEIGHT = 468 * SCALE_FACTOR;
+const CANVAS_WIDTH_DEFAULT = 740 * SCALE_FACTOR;
+const CANVAS_HEIGHT_DEFAULT = 468 * SCALE_FACTOR;
 
 // Current corgi image is 1024x700
 const CHARACTER_WIDTH = 75 * SCALE_FACTOR;
@@ -53,18 +54,28 @@ class CanvasManager {
   ctx;
   characterManager;
 
+  backgroundUrl;
+  backgroundWidth;
+  backgroundHeight;
+  doors;
+
   constructor(canvas, characterManager) {
     this.canvas = canvas;
-    this.canvas.width = CANVAS_WIDTH;
-    this.canvas.height = CANVAS_HEIGHT;
+    this.canvas.width = CANVAS_WIDTH_DEFAULT;
+    this.canvas.height = CANVAS_HEIGHT_DEFAULT;
     this.ctx = canvas.getContext('2d');
     this.characterManager = characterManager;
+
+    this.backgroundWidth = CANVAS_WIDTH_DEFAULT;
+    this.backgroundHeight = CANVAS_HEIGHT_DEFAULT;
+    this.backgroundUrl = CANVAS_BACKGROUND_IMAGE_URL_DEFAULT;
+    this.doors = new Map(CANVAS_BACKGROUND_IMAGE_URL_DOOR_DEFAULT);
   }
 
   clearCanvas() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.drawImage(
-      placeImage(CANVAS_BACKGROUND_IMAGE_URL),
+      placeImage(CANVAS_BACKGROUND_IMAGE_URL_DEFAULT),
       0,
       0,
       this.canvas.width,
@@ -98,5 +109,12 @@ class CanvasManager {
       //console.log(name + ' is in characterList');
       //console.log(info.attributes.color + ' color');
     }
+  }
+
+  setUpCanvasInfo(backgroundUrl, width, height, doors) {
+    backgroundUrl = backgroundUrl;
+    backgroundWidth = width;
+    backgroundHeight = height;
+    doors = doors;
   }
 }
