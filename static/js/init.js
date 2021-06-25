@@ -27,6 +27,9 @@ function handleMessageFromSever(msg) {
       case 'list':
         handleList(data);
         break;
+      case 'change_room_result':
+        handleChangeRoomResult(data);
+        break;
       case 'login_result':
         handleLoginResult(data);
         break;

@@ -1,6 +1,5 @@
 //background image is 633x361
 const CANVAS_BACKGROUND_IMAGE_URL_DEFAULT = '../assets/ctc_main.png';
-const CANVAS_BACKGROUND_IMAGE_URL_DOOR_DEFAULT = [[[84, 425], 'hub_games']];
 
 const SCALE_FACTOR = 5;
 
@@ -54,13 +53,11 @@ class CanvasManager {
   backgroundUrl;
   backgroundWidth;
   backgroundHeight;
-  doors;
 
   constructor(canvas, characterManager) {
     this.backgroundUrl = CANVAS_BACKGROUND_IMAGE_URL_DEFAULT;
     this.backgroundWidth = 633;
     this.backgroundHeight = 361;
-    this.doors = new Map(CANVAS_BACKGROUND_IMAGE_URL_DOOR_DEFAULT);
 
     this.canvas = canvas;
     this.canvas.width = this.backgroundWidth * SCALE_FACTOR;
@@ -106,11 +103,10 @@ class CanvasManager {
     }
   }
 
-  setUpCanvasInfo(backgroundUrl, width, height, doors) {
+  setUpCanvasInfo(backgroundUrl, width, height) {
     this.backgroundUrl = backgroundUrl;
     this.backgroundWidth = width;
     this.backgroundHeight = height;
-    this.doors = doors;
 
     this.canvas.width = this.backgroundWidth * SCALE_FACTOR;
     this.canvas.height = this.backgroundHeight * SCALE_FACTOR;

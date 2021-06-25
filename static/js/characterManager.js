@@ -1,11 +1,19 @@
 const DISPLACEMENT_CONSTANT = 10;
-let isCloseToDoor = true;
+const CANVAS_BACKGROUND_IMAGE_URL_DOOR_DEFAULT = [[[73, 331], 'hub_games']];
 
 class CharacterManager {
   characters;
+  doors;
+  isCloseToDoor;
 
   constructor() {
     this.characters = new Map();
+    this.doors = new Map(CANVAS_BACKGROUND_IMAGE_URL_DOOR_DEFAULT);
+    this.isCloseToDoor = true;
+  }
+
+  setDoors(newDoors) {
+    this.doors = new Map(newDoors);
   }
 
   getCharacterInfo(name) {
@@ -55,15 +63,24 @@ class CharacterManager {
       }
     }
     const userCharacter = this.characters.get(username);
-
     if (
       userCharacter &&
       userCharacter.currentX === userCharacter.targetX &&
       userCharacter.currentY === userCharacter.targetY
     ) {
-      if (this.isNearDoor(userCharacter)) {
-        if (isCloseToDoor) {
-          this.changeRoom(userCharacter);
+      for (const [position, roomName] of this.doors) {
+        const distance =
+          (userCharacter.currentX - position[0]) *
+            (userCharacter.currentX - position[0]) +
+          (userCharacter.currentY - position[1]) *
+            (userCharacter.currentY - position[1]);
+        if (distance > 1000) {
+          this.isCloseToDoor = true;
+        }
+        if (distance < 1000) {
+          if (this.isCloseToDoor) {
+            this.sendChangeRoomRequestFromCharacter(roomName);
+          }
         }
       }
     }
@@ -77,22 +94,25 @@ class CharacterManager {
     return Array.from(this.characters.keys());
   }
 
-  changeRoom(name) {
+  sendChangeRoomRequestFromCharacter(name) {
     console.log('RoomChange!!!');
-    confirm('Would you like to move to this room?');
-    isCloseToDoor = false;
+    const confirmResult = confirm('Would you like to move to this room?');
+    this.isCloseToDoor = false;
+    if (confirmResult) {
+      toggleLoadingScreen(true, 'mainPage');
+      sendChangeRoomRequestToServer(name);
+    }
   }
 
   isNearDoor(name) {
-    const doorPositionX = 84;
-    const doorPositionY = 425;
-
-    const distance =
-      (name.currentX - doorPositionX) * (name.currentX - doorPositionX) +
-      (name.currentY - doorPositionY) * (name.currentY - doorPositionY);
-    if (distance > 1000) {
-      isCloseToDoor = true;
+    for (const [position, roomName] of this.doors) {
+      const distance =
+        (name.currentX - position[0]) * (name.currentX - position[0]) +
+        (name.currentY - position[1]) * (name.currentY - position[1]);
+      if (distance > 1000) {
+        this.isCloseToDoor = true;
+      }
+      return distance < 1000;
     }
-    return distance < 1000;
   }
 }

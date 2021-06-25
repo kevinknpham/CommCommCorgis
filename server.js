@@ -29,7 +29,7 @@ const DEFAULT_ROOM = 'ctc';
 const ROOM_INFO = [
   {
     name: 'ctc',
-    doors: [[[84, 425], 'hub_games']],
+    doors: [[[73, 331], 'hub_games']],
     bounds: [
       [-24, -17],
       [-24, 233],
@@ -141,7 +141,7 @@ function handleChangeRoom(ws, data) {
     removeCharBroadcast.action = 'remove_char';
     removeCharBroadcast.name = oldCharacterInfo.name;
     removeCharBroadcast.room = oldCharacterInfo.room;
-    broadcastToAll(JSON.stringify(result));
+    broadcastToAll(JSON.stringify(removeCharBroadcast));
 
     let newCharBroadcast = {};
     newCharBroadcast.action = 'new_char';

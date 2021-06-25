@@ -40,7 +40,7 @@ function login() {
 function submitUserName(username) {
   const userNamePattern = /[A-Za-z0-9]+/;
   if (userNamePattern.test(username)) {
-    toggleLoadingScreen(true);
+    toggleLoadingScreen(true, 'loginPage');
     sendUserDataToServer(username);
   } else {
     alert(`Username is not alpha-numberic`);
@@ -125,7 +125,7 @@ function sendUserDataToServer(username) {
 // click allow user to exit the game and go back to login page
 // remove character asset from user's game instance
 function logout() {
-  toggleLoadingScreen(false);
+  toggleLoadingScreen(false, 'loginPage');
   switchScreen('loginPage', '#d4dbf5');
   sendLeaveRequestToServer(username);
 }
@@ -180,7 +180,7 @@ function handleLoginResult(data) {
       revealCharacterSelection();
       setUpCanvasBackground(data.roomInfo);
     } else if (data.status === 'failure') {
-      toggleLoadingScreen(false);
+      toggleLoadingScreen(false, 'loginPage');
       alert(`${data.requested_name} is taken`);
     } else {
       console.log(data.status + ' invalid login result status');
@@ -188,18 +188,19 @@ function handleLoginResult(data) {
   }
 }
 
-function setUpCanvasBackground(data) {
-  canvas.setUpCanvasInfo(
-    data.backgroundUrl,
-    data.width,
-    data.height,
-    data.doors
-  );
+function handleChangeRoomResult(data) {
+  setUpCanvasBackground(data.roomInfo);
+  toggleLoadingScreen(false, 'mainPage');
 }
 
-function sentChangeRoomRequestToServer(username) {
+function setUpCanvasBackground(data) {
+  canvas.setUpCanvasInfo(data.backgroundUrl, data.width, data.height);
+  characters.setDoors(data.doors);
+}
+
+function sendChangeRoomRequestToServer(roomName) {
   let datum = {
-    name: username,
+    new_room: roomName,
     action: 'change_room'
   };
   ws.send(JSON.stringify(datum));
@@ -227,14 +228,23 @@ function switchScreen(page, backgroundColor) {
   }
 }
 
-function toggleLoadingScreen(showLoading) {
+function toggleLoadingScreen(showLoading, page) {
   document.getElementById('loading-screen').style.display = showLoading
     ? 'block'
     : 'none';
-
-  document.querySelector('.login-screen').style.display = showLoading
-    ? 'none'
-    : 'block';
+  switch (page) {
+    case 'loginPage':
+      document.getElementById('login-page').style.display = showLoading
+        ? 'none'
+        : 'block';
+      break;
+    case 'mainPage':
+      document.getElementById('main-page').style.display = showLoading
+        ? 'none'
+        : 'block';
+      break;
+  }
+  console.log('Loading Screen is toggled');
 }
 
 login();
