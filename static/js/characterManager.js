@@ -32,6 +32,7 @@ class CharacterManager {
     const characterinfo = this.characters.get(name);
     characterinfo.targetX = x;
     characterinfo.targetY = y;
+    // console.log('moveChar: ' + x + ' ' + y);
   }
 
   updateAllCharacterCurrentPositions() {

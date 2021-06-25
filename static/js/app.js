@@ -27,8 +27,13 @@ function animate() {
 // }
 
 canvasElement.addEventListener('click', (event) => {
-  let x = ((event.offsetX - 75 / 1.25) / 1344) * 740;
-  let y = ((event.offsetY - 75 / 1.25) / 850) * 468;
+  let x =
+    ((event.offsetX - 75 / 1.25) / 1344) *
+    canvas.getCanvasBackgroundImageWidth();
+  let y =
+    ((event.offsetY - 75 / 1.25) / 850) *
+    canvas.getCanvasBackgroundImageHeight();
+  console.log(username + ' ' + x + ' ' + y);
   sendMoveRequestToServer(username, x, y);
 });
 

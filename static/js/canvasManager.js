@@ -1,15 +1,12 @@
-//background image is 740x468
+//background image is 633x361
 const CANVAS_BACKGROUND_IMAGE_URL_DEFAULT = '../assets/ctc_main.png';
 const CANVAS_BACKGROUND_IMAGE_URL_DOOR_DEFAULT = [[[84, 425], 'hub_games']];
 
 const SCALE_FACTOR = 5;
 
-const CANVAS_WIDTH_DEFAULT = 740 * SCALE_FACTOR;
-const CANVAS_HEIGHT_DEFAULT = 468 * SCALE_FACTOR;
-
 // Current corgi image is 1024x700
-const CHARACTER_WIDTH = 75 * SCALE_FACTOR;
-const CHARACTER_LENGTH = 51 * SCALE_FACTOR;
+const CHARACTER_WIDTH = 67 * SCALE_FACTOR;
+const CHARACTER_LENGTH = 45 * SCALE_FACTOR;
 
 const NAME_VERTICAL_TEXT_OFFSET = 10;
 const NAME_HORIZONTAL_BUFFER = 5;
@@ -60,22 +57,22 @@ class CanvasManager {
   doors;
 
   constructor(canvas, characterManager) {
+    this.backgroundUrl = CANVAS_BACKGROUND_IMAGE_URL_DEFAULT;
+    this.backgroundWidth = 633;
+    this.backgroundHeight = 361;
+    this.doors = new Map(CANVAS_BACKGROUND_IMAGE_URL_DOOR_DEFAULT);
+
     this.canvas = canvas;
-    this.canvas.width = CANVAS_WIDTH_DEFAULT;
-    this.canvas.height = CANVAS_HEIGHT_DEFAULT;
+    this.canvas.width = this.backgroundWidth * SCALE_FACTOR;
+    this.canvas.height = this.backgroundHeight * SCALE_FACTOR;
     this.ctx = canvas.getContext('2d');
     this.characterManager = characterManager;
-
-    this.backgroundWidth = CANVAS_WIDTH_DEFAULT;
-    this.backgroundHeight = CANVAS_HEIGHT_DEFAULT;
-    this.backgroundUrl = CANVAS_BACKGROUND_IMAGE_URL_DEFAULT;
-    this.doors = new Map(CANVAS_BACKGROUND_IMAGE_URL_DOOR_DEFAULT);
   }
 
   clearCanvas() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.drawImage(
-      placeImage(CANVAS_BACKGROUND_IMAGE_URL_DEFAULT),
+      placeImage(this.backgroundUrl),
       0,
       0,
       this.canvas.width,
@@ -106,15 +103,24 @@ class CanvasManager {
         CHARACTER_WIDTH,
         CHARACTER_LENGTH
       );
-      //console.log(name + ' is in characterList');
-      //console.log(info.attributes.color + ' color');
     }
   }
 
   setUpCanvasInfo(backgroundUrl, width, height, doors) {
-    backgroundUrl = backgroundUrl;
-    backgroundWidth = width;
-    backgroundHeight = height;
-    doors = doors;
+    this.backgroundUrl = backgroundUrl;
+    this.backgroundWidth = width;
+    this.backgroundHeight = height;
+    this.doors = doors;
+
+    this.canvas.width = this.backgroundWidth * SCALE_FACTOR;
+    this.canvas.height = this.backgroundHeight * SCALE_FACTOR;
+  }
+
+  getCanvasBackgroundImageWidth() {
+    return this.backgroundWidth;
+  }
+
+  getCanvasBackgroundImageHeight() {
+    return this.backgroundHeight;
   }
 }

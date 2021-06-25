@@ -65,9 +65,9 @@ const ROOM_INFO = [
       [254, 148],
       [254, -17]
     ],
-    image: 'assets/ctc_main.png',
-    width: 633,
-    height: 361
+    image: 'assets/hub_games_main.png',
+    width: 637,
+    height: 365
   }
 ];
 
