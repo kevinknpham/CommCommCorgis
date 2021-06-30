@@ -29,7 +29,7 @@ const DEFAULT_ROOM = 'ctc';
 const ROOM_INFO = [
   {
     name: 'ctc',
-    doors: [[[73, 331], 'hub_games']],
+    doors: [[[69, 318], 'hub_games']],
     bounds: [
       [-24, -17],
       [-24, 233],
@@ -45,12 +45,12 @@ const ROOM_INFO = [
       [254, -17]
     ],
     image: 'assets/ctc_main.png',
-    width: 633,
-    height: 361
+    width: 630,
+    height: 359
   },
   {
     name: 'hub_games',
-    doors: [[[84, 425], 'ctc']],
+    doors: [[[84, 425], 'ctc']], // [[114, 293], 'ctc'], [[-2, 126], 'hub_pool'], [[582, 296], 'hub_bowling]
     bounds: [
       [-24, -17],
       [-24, 233],
@@ -66,8 +66,8 @@ const ROOM_INFO = [
       [254, -17]
     ],
     image: 'assets/hub_games_main.png',
-    width: 637,
-    height: 365
+    width: 636,
+    height: 362
   }
 ];
 
