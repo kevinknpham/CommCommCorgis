@@ -46,7 +46,9 @@ const ROOM_INFO = [
     ],
     image: 'assets/ctc_main.png',
     width: 630,
-    height: 359
+    height: 359,
+    defaultX: 69,
+    defaultY: 318
   },
   {
     name: 'hub_games',
@@ -61,7 +63,9 @@ const ROOM_INFO = [
     ],
     image: 'assets/hub_games_main.png',
     width: 636,
-    height: 362
+    height: 362,
+    defaultX: 114,
+    defaultY: 293
   }
 ];
 

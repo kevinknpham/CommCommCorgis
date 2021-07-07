@@ -26,7 +26,9 @@ class RoomManager {
           roomInfo.bounds,
           roomInfo.image,
           roomInfo.width,
-          roomInfo.height
+          roomInfo.height,
+          roomInfo.defaultX,
+          roomInfo.defaultY
         )
       );
     }
@@ -40,13 +42,17 @@ class RoomManager {
    * @param {Integer} x x position - defaults to 0
    * @param {Integer} y y position - defaults to 0
    */
-  addCharacter(room, id, name, x = 0, y = 0) {
+  addCharacter(room, id, name, x, y) {
     let roomData = this.#roomOccupants.get(room);
     if (!this.#idToRoomName.has(id) && roomData) {
       if (!this.#idToRoomName.has(id) && !this.#names.has(name)) {
         this.#idToRoomName.set(id, room);
         this.#names.add(name);
-        roomData.addCharacter(id, name, x, y);
+        if ((x || x === 0) && (y || y === 0)) {
+          roomData.addCharacter(id, name, x, y);
+        } else {
+          roomData.addCharacter(id, name);
+        }
       }
     }
   }
@@ -175,11 +181,22 @@ class Room {
   #url;
   #width;
   #height;
+  #defaultX;
+  #defaultY;
 
   /**
    * Construct empty room.
    */
-  constructor(name, doors, bounds, imageUrl, width, height) {
+  constructor(
+    name,
+    doors,
+    bounds,
+    imageUrl,
+    width,
+    height,
+    defaultX,
+    defaultY
+  ) {
     this.#name = name;
     this.#characters = new Map();
     this.#doors = new Map(doors);
@@ -187,6 +204,8 @@ class Room {
     this.#url = imageUrl;
     this.#width = width;
     this.#height = height;
+    this.#defaultX = defaultX;
+    this.#defaultY = defaultY;
   }
 
   /**
@@ -196,7 +215,7 @@ class Room {
    * @param {Integer} x x position - defaults to 0
    * @param {Integer} y y position - defaults to 0
    */
-  addCharacter(id, name, x = 0, y = 0) {
+  addCharacter(id, name, x = this.#defaultX, y = this.#defaultY) {
     if (!this.#characters.has(name)) {
       this.#characters.set(id, {
         name: name,
