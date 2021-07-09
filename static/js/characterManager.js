@@ -104,7 +104,7 @@ class CharacterManager {
   sendChangeRoomRequestFromCharacter(name) {
     console.log('RoomChange!!!');
     this.isCloseToDoor = false;
-    swal(`Would you like to move to this room: ${name}?`, {
+    swal(`Would you like to move to this room: ${this.formatRoomName(name)}?`, {
       buttons: {
         stay: "No, I'm happy here",
         move: 'Yes, change rooms'
@@ -115,6 +115,13 @@ class CharacterManager {
         sendChangeRoomRequestToServer(name);
       }
     });
+  }
+
+  formatRoomName(name) {
+    return name
+      .split(/_+/)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
   }
 
   isNearDoor(name) {
