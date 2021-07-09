@@ -31,35 +31,39 @@ const ROOM_INFO = [
     name: 'ctc',
     doors: [[[69, 318], 'hub_games']],
     bounds: [
-      [-22, -19],
-      [-22, 175],
-      [36, 175],
-      [36, 328],
-      [596, 328],
-      [596, -19],
-      [441, -19],
-      [441, 125],
-      [368, 125],
-      [368, 114],
-      [200, 114],
-      [200, -19]
+      [
+        [-22, -19],
+        [-22, 175],
+        [36, 175],
+        [36, 328],
+        [596, 328],
+        [596, -19],
+        [441, -19],
+        [441, 125],
+        [368, 125],
+        [368, 114],
+        [200, 114],
+        [200, -19]
+      ]
     ],
     image: 'assets/ctc_main.png',
     width: 630,
     height: 359,
     defaultX: 120,
-    defaultY: 318
+    defaultY: 300
   },
   {
     name: 'hub_games',
     doors: [[[114, 293], 'ctc']], // [[114, 293], 'ctc'], [[-2, 126], 'hub_pool'], [[582, 296], 'hub_bowling]
     bounds: [
-      [-22, 93],
-      [-22, 330],
-      [599, 330],
-      [599, -19],
-      [356, -19],
-      [356, 93]
+      [
+        [-22, 93],
+        [-22, 330],
+        [599, 330],
+        [599, -19],
+        [356, -19],
+        [356, 93]
+      ]
     ],
     image: 'assets/hub_games_main.png',
     width: 636,
@@ -73,13 +77,13 @@ const roomManager = new RoomManager(ROOM_INFO);
 
 let socketIdCounter = 0;
 
-wss.on('connection', (ws) => {
+wss.on('connection', ws => {
   debug('\u001b[32mClient connected\u001b[0m');
   ws.on('close', () => {
     handleLeave(ws);
     debug('\u001b[32mClient disconnected\u001b[0m');
   });
-  ws.on('message', (msg) => handleMessage(ws, msg));
+  ws.on('message', msg => handleMessage(ws, msg));
   ws.id = socketIdCounter++;
 });
 
@@ -301,8 +305,7 @@ function handleCreateChar(ws, data) {
       userResult.action = 'login_result';
       userResult.status = 'failure';
       userResult.reason = 'user_already_exists';
-      userResult.explanation =
-        'The requested username has been taken by another user.';
+      userResult.explanation = 'The requested username has been taken by another user.';
       userResult.requestedName = data.name;
       ws.send(JSON.stringify(userResult));
 
@@ -321,7 +324,7 @@ function handleCreateChar(ws, data) {
  * @param {String} msg - message to be broadcast
  */
 function broadcastToAll(msg) {
-  wss.clients.forEach((client) => {
+  wss.clients.forEach(client => {
     client.send(msg);
   });
 }
@@ -363,7 +366,7 @@ function printList() {
   const groupedPlayers = groupByRoom(listOfPlayers);
   for (const [room, players] of groupedPlayers) {
     debug(`  \u001b[33m${room}:\u001b[0m`);
-    players.forEach((person) =>
+    players.forEach(person =>
       debug(
         `    \u001b[1m(${person.id})${person.name}\u001b[0m is at (${person.x}, ${person.y}) with a color of ${person.attributes.color}`
       )
