@@ -1,5 +1,4 @@
 const COLORS = Object.freeze(['none', 'red', 'green', 'blue']);
-const pointInPolygon = require('point-in-polygon');
 
 /**
  * Object to hold rooms and their relationship to one another.
@@ -170,6 +169,8 @@ class RoomManager {
   }
 }
 
+const { Bounds } = require('./bounds');
+
 /**
  *
  */
@@ -187,20 +188,11 @@ class Room {
   /**
    * Construct empty room.
    */
-  constructor(
-    name,
-    doors,
-    bounds,
-    imageUrl,
-    width,
-    height,
-    defaultX,
-    defaultY
-  ) {
+  constructor(name, doors, bounds, imageUrl, width, height, defaultX, defaultY) {
     this.#name = name;
     this.#characters = new Map();
     this.#doors = new Map(doors);
-    this.#bounds = bounds;
+    this.#bounds = new Bounds(bounds);
     this.#url = imageUrl;
     this.#width = width;
     this.#height = height;
@@ -244,11 +236,10 @@ class Room {
    */
   updateCharacter(id, x, y) {
     if (this.#characters.has(id)) {
-      if (pointInPolygon([x, y], this.#bounds)) {
-        const target = this.#characters.get(id);
-        target.x = x;
-        target.y = y;
-      }
+      const target = this.#characters.get(id);
+      const destination = this.#bounds.findNearestCollisionPoint(target.x, target.y, x, y);
+      target.x = destination[0];
+      target.y = destination[1];
     }
   }
 
