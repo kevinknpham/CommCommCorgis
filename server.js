@@ -357,14 +357,36 @@ function error(ws, msg) {
  * If DEBUG is true, prints all the characters to the console.
  */
 function printList() {
-  debug('The list of players is as follows:');
+  debug('\u001b[32mThe list of players is as follows:\u001b[0m');
 
   const listOfPlayers = roomManager.listCharacters(true);
-  listOfPlayers.forEach((person) =>
-    debug(
-      `  \u001b[1m(${person.id})${person.name}\u001b[0m is at (${person.x}, ${person.y}) with a color of ${person.attributes.color}`
-    )
-  );
+  const groupedPlayers = groupByRoom(listOfPlayers);
+  for (const [room, players] of groupedPlayers) {
+    debug(`  \u001b[33m${room}:\u001b[0m`);
+    players.forEach((person) =>
+      debug(
+        `    \u001b[1m(${person.id})${person.name}\u001b[0m is at (${person.x}, ${person.y}) with a color of ${person.attributes.color}`
+      )
+    );
+  }
+}
+
+/**
+ * Groups array's elements by the room attribute of each element
+ * @param {Object[]} arr input where each element contains the `room` attribute
+ * @returns Map with roomname as key and list of elements as value
+ */
+function groupByRoom(arr) {
+  let res = new Map();
+  for (const el of arr) {
+    const value = res.get(el.room);
+    if (value) {
+      value.push(el);
+    } else {
+      res.set(el.room, [el]);
+    }
+  }
+  return res;
 }
 
 /**

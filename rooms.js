@@ -277,6 +277,7 @@ class Room {
     for (let [key, value] of this.#characters) {
       result.push({
         id: includeId ? key : null,
+        room: this.#name,
         name: value.name,
         x: value.x,
         y: value.y,
