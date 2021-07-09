@@ -13,19 +13,6 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-// function moveCharacter(name) {
-//   let x = 1;
-//   let y = 1;
-//   console.log('I am here?');
-//   canvasElement.addEventListener('click', (event) => {
-//     x = event.offsetX;
-//     y = event.offsetY;
-//   });
-//   console.log(x + ': location of x');
-//   console.log(y + ': location of y');
-//   sendMoveRequestToServer(name, x, y);
-// }
-
 canvasElement.addEventListener('click', (event) => {
   let x =
     ((event.offsetX - 75 / 1.25) / 1344) *
@@ -38,12 +25,14 @@ canvasElement.addEventListener('click', (event) => {
 });
 
 function handleMoveChar(data) {
-  if (data.name) {
-    characters.moveCharacter(data.name, data.x, data.y);
+  if (roomCheck(data.room)) {
+    if (data.name) {
+      characters.moveCharacter(data.name, data.x, data.y);
+    }
+    console.log(
+      data.name + ' is trying to move to (' + data.x + ', ' + data.y + ').'
+    );
   }
-  console.log(
-    data.name + ' is trying to move to (' + data.x + ', ' + data.y + ').'
-  );
 }
 
 function sendMoveRequestToServer(username, x, y) {

@@ -47,7 +47,7 @@ const ROOM_INFO = [
     image: 'assets/ctc_main.png',
     width: 630,
     height: 359,
-    defaultX: 69,
+    defaultX: 120,
     defaultY: 318
   },
   {
@@ -64,7 +64,7 @@ const ROOM_INFO = [
     image: 'assets/hub_games_main.png',
     width: 636,
     height: 362,
-    defaultX: 114,
+    defaultX: 150,
     defaultY: 293
   }
 ];

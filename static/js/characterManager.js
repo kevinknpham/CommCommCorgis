@@ -5,11 +5,13 @@ class CharacterManager {
   characters;
   doors;
   isCloseToDoor;
+  room;
 
   constructor() {
     this.characters = new Map();
     this.doors = new Map(CANVAS_BACKGROUND_IMAGE_URL_DOOR_DEFAULT);
     this.isCloseToDoor = true;
+    this.room = 'ctc';
   }
 
   setDoors(newDoors) {
@@ -94,6 +96,10 @@ class CharacterManager {
     return Array.from(this.characters.keys());
   }
 
+  clearCharacters() {
+    this.characters.clear();
+  }
+
   sendChangeRoomRequestFromCharacter(name) {
     console.log('RoomChange!!!');
     const confirmResult = confirm('Would you like to move to this room?');
@@ -114,5 +120,13 @@ class CharacterManager {
       }
       return distance < 1000;
     }
+  }
+
+  getRoomName() {
+    return this.room;
+  }
+
+  setRoomName(newRoom) {
+    this.room = newRoom;
   }
 }

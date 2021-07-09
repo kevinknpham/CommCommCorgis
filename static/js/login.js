@@ -100,16 +100,20 @@ function sendUserColorToServer(color) {
 }
 
 function handleModifyChar(data) {
-  if (data.name && data.attributes) {
-    characters.changeAttribute(data.name, data.attributes.color);
+  if (roomCheck(data.room)) {
+    if (data.name && data.attributes) {
+      characters.changeAttribute(data.name, data.attributes.color);
+    }
   }
 }
 
 // Create other user's character and adds to user's game instance
 // update that character to game server list
 function handleNewChar(data) {
-  if (data.name) {
-    characters.addCharacter(data.name);
+  if (roomCheck(data.room)) {
+    if (data.name) {
+      characters.addCharacter(data.name);
+    }
   }
 }
 
@@ -150,7 +154,10 @@ function sendLeaveRequestToServer(username) {
 // update character list to the server
 function handleList(data) {
   if (data.list) {
-    createCharacterFromList(data.list);
+    const newRoom = characters.getRoomName();
+    createCharacterFromList(
+      data.list.filter((element) => element.room === newRoom)
+    );
   }
 }
 
@@ -166,7 +173,7 @@ function createCharacterFromList(list) {
       console.log('hello1');
       handleNewChar(character);
       characters.changeAttribute(character.name, character.attributes.color);
-      //createCharacterAsset(character.name);
+      characters.moveCharacter(character.name, character.x, character.y);
     } else if (characters.getCharacterInfo(character.name)) {
       console.log('hello2');
       handleMoveChar(character);
@@ -179,6 +186,7 @@ function handleLoginResult(data) {
     if (data.status === 'success') {
       revealCharacterSelection();
       setUpCanvasBackground(data.roomInfo);
+      characters.setRoomName(data.roomInfo.name);
     } else if (data.status === 'failure') {
       toggleLoadingScreen(false, 'loginPage');
       alert(`${data.requested_name} is taken`);
@@ -191,6 +199,9 @@ function handleLoginResult(data) {
 function handleChangeRoomResult(data) {
   setUpCanvasBackground(data.roomInfo);
   toggleLoadingScreen(false, 'mainPage');
+  characters.clearCharacters();
+  characters.setRoomName(data.roomInfo.name);
+  ws.send(JSON.stringify({ action: 'list' }));
 }
 
 function setUpCanvasBackground(data) {
@@ -245,6 +256,10 @@ function toggleLoadingScreen(showLoading, page) {
       break;
   }
   console.log('Loading Screen is toggled');
+}
+
+function roomCheck(room) {
+  return characters.getRoomName() === room;
 }
 
 login();
