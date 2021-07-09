@@ -4,7 +4,7 @@
   "description": "## Setup To set up the server run `./venv/bin/activate` followed by `pip3 install -r requirements.txt`",
   "main": "server.js",
   "engines": {
-    "node": "12.9.1"
+    "node": "15.13.0"
   },
   "directories": {
     "test": "test"
