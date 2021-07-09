@@ -35,3 +35,23 @@ h2 {
   justify-content: center;
   width: 100vw;
 }
+
+.swal-text {
+  color: black;
+  font-weight: bold;
+}
+
+.swal-footer {
+  display: flex;
+  justify-content: center;
+}
+
+.swal-button--move {
+  background-color: #d4dbf5;
+  color: black;
+}
+
+.swal-button--stay {
+  background-color: #bfbfbf;
+  color: black;
+}
