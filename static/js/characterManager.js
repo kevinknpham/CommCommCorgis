@@ -82,6 +82,7 @@ class CharacterManager {
         if (distance < 1000) {
           if (this.isCloseToDoor) {
             this.sendChangeRoomRequestFromCharacter(roomName);
+            break;
           }
         }
       }
@@ -102,12 +103,18 @@ class CharacterManager {
 
   sendChangeRoomRequestFromCharacter(name) {
     console.log('RoomChange!!!');
-    const confirmResult = confirm('Would you like to move to this room?');
     this.isCloseToDoor = false;
-    if (confirmResult) {
-      toggleLoadingScreen(true, 'mainPage');
-      sendChangeRoomRequestToServer(name);
-    }
+    swal(`Would you like to move to this room: ${name}?`, {
+      buttons: {
+        stay: "No, I'm happy here",
+        move: 'Yes, change rooms'
+      }
+    }).then((value) => {
+      if (value === 'move') {
+        toggleLoadingScreen(true, 'mainPage');
+        sendChangeRoomRequestToServer(name);
+      }
+    });
   }
 
   isNearDoor(name) {
