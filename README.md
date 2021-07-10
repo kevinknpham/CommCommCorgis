@@ -5,7 +5,7 @@
 To set up the server run the following:
 
 - `npm install`
-- `node server.js` or `npm start`
+- `npm start`
 
 ## Client
 
