@@ -56,7 +56,7 @@ const ROOM_INFO = [
   {
     name: 'hub_games',
     exitDoors: [['ctc', [114, 293]]], // [[114, 293], 'ctc'], [[-2, 126], 'hub_pool'], [[582, 296], 'hub_bowling]
-    entranceLocations: [['ctc', [150, 293]]]
+    entranceLocations: [['ctc', [150, 293]]],
     bounds: [
       [
         [-22, 93],
