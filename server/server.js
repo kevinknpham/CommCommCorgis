@@ -26,6 +26,27 @@ const server = app
 const wss = new Server({ server });
 
 const DEFAULT_ROOM = 'ctc';
+
+/**
+ * Array of room information. Each element is an object that follows this schema:
+ * {
+ *  name: String with the name of the room
+ *  exitDoors: An array of doors. Each element is a length 2 array representing a single door.
+ *        The first element of this array is the door's destination, which must be another room.
+ *        The second is a point, also a length 2 array, with the position of the door in the room.
+ *  entranceLocations: An array of locations. The format is similar to the one specified above for
+ *        exitDoors, but the point is the starting location of the character when they come from the
+ *        named room instead of the position of the door. Each point should be inside the bounds.
+ *  bounds: An array of polygons representing the bounds of the room. Each polygon is an array of
+ *        points representing the vertices. The points are each represented by a length 2 array.
+ *  image: The url of the background image relative to the static folder.
+ *  width, height: The dimensions of the background. Used to render the game on the client side and
+ *        as a reference for player positions, but might not match exact pixel values due to client
+ *        side scaling.
+ *  defaultX, defaultY: The default position of a character inside this room. Should represent a point
+ *        inside the bounds.
+ * }
+ */
 const ROOM_INFO = [
   {
     name: 'ctc',
