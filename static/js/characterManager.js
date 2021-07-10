@@ -1,5 +1,5 @@
 const DISPLACEMENT_CONSTANT = 10;
-const CANVAS_BACKGROUND_IMAGE_URL_DOOR_DEFAULT = [[[73, 331], 'hub_games']];
+const CANVAS_BACKGROUND_IMAGE_URL_DOOR_DEFAULT = [['hub_games', [73, 331]]];
 
 class CharacterManager {
   characters;
@@ -70,12 +70,10 @@ class CharacterManager {
       userCharacter.currentX === userCharacter.targetX &&
       userCharacter.currentY === userCharacter.targetY
     ) {
-      for (const [position, roomName] of this.doors) {
+      for (const [roomName, position] of this.doors) {
         const distance =
-          (userCharacter.currentX - position[0]) *
-            (userCharacter.currentX - position[0]) +
-          (userCharacter.currentY - position[1]) *
-            (userCharacter.currentY - position[1]);
+          (userCharacter.currentX - position[0]) * (userCharacter.currentX - position[0]) +
+          (userCharacter.currentY - position[1]) * (userCharacter.currentY - position[1]);
         if (distance > 1000) {
           this.isCloseToDoor = true;
         }
@@ -109,7 +107,7 @@ class CharacterManager {
         stay: "No, I'm happy here",
         move: 'Yes, change rooms'
       }
-    }).then((value) => {
+    }).then(value => {
       if (value === 'move') {
         toggleLoadingScreen(true, 'mainPage');
         sendChangeRoomRequestToServer(name);
@@ -120,12 +118,12 @@ class CharacterManager {
   formatRoomName(name) {
     return name
       .split(/_+/)
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
   }
 
   isNearDoor(name) {
-    for (const [position, roomName] of this.doors) {
+    for (const [roomName, position] of this.doors) {
       const distance =
         (name.currentX - position[0]) * (name.currentX - position[0]) +
         (name.currentY - position[1]) * (name.currentY - position[1]);

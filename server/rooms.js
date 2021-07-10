@@ -21,7 +21,8 @@ class RoomManager {
         roomInfo.name,
         new Room(
           roomInfo.name,
-          roomInfo.doors,
+          roomInfo.exitDoors,
+          roomInfo.entranceLocations,
           roomInfo.bounds,
           roomInfo.image,
           roomInfo.width,
@@ -38,20 +39,15 @@ class RoomManager {
    * @param {String} room room to add character to
    * @param {Integer} id id of character
    * @param {String} name name of character
-   * @param {Integer} x x position - defaults to 0
-   * @param {Integer} y y position - defaults to 0
+   * @param {String} previousRoom name of previous room (to figure out position in new room)
    */
-  addCharacter(room, id, name, x, y) {
+  addCharacter(room, id, name, previousRoom) {
     let roomData = this.#roomOccupants.get(room);
     if (!this.#idToRoomName.has(id) && roomData) {
       if (!this.#idToRoomName.has(id) && !this.#names.has(name)) {
         this.#idToRoomName.set(id, room);
         this.#names.add(name);
-        if ((x || x === 0) && (y || y === 0)) {
-          roomData.addCharacter(id, name, x, y);
-        } else {
-          roomData.addCharacter(id, name);
-        }
+        roomData.addCharacter(id, name, previousRoom);
       }
     }
   }
@@ -178,6 +174,7 @@ class Room {
   #name;
   #characters;
   #doors;
+  #entrances;
   #bounds;
   #url;
   #width;
@@ -188,10 +185,11 @@ class Room {
   /**
    * Construct empty room.
    */
-  constructor(name, doors, bounds, imageUrl, width, height, defaultX, defaultY) {
+  constructor(name, doors, entrances, bounds, imageUrl, width, height, defaultX, defaultY) {
     this.#name = name;
     this.#characters = new Map();
     this.#doors = new Map(doors);
+    this.#entrances = new Map(entrances);
     this.#bounds = new Bounds(bounds);
     this.#url = imageUrl;
     this.#width = width;
@@ -204,10 +202,14 @@ class Room {
    * Adds character to room
    * @param {Integer} id id of character
    * @param {String} name name of character
-   * @param {Integer} x x position - defaults to 0
-   * @param {Integer} y y position - defaults to 0
+   * @param {String} previousRoom name of previous room
    */
-  addCharacter(id, name, x = this.#defaultX, y = this.#defaultY) {
+  addCharacter(id, name, previousRoom) {
+    let x = this.#defaultX;
+    let y = this.#defaultY;
+    if (previousRoom && this.#entrances.has(previousRoom)) {
+      [x, y] = this.#entrances.get(previousRoom);
+    }
     if (!this.#characters.has(name)) {
       this.#characters.set(id, {
         name: name,
