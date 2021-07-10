@@ -13,7 +13,7 @@ By: Jong, Miguel, and Derek
 
 ### Displaying game
 
-DOM manipulation is used to move characters around and to switch screens.
+The front end is displayed using a canvas for the game itself. The data on where characters are located is managed by the CharacterManager class. The CanvasManager is responsible for rendering that data in the canvas.
 
 ### Collar colors
 
@@ -21,14 +21,6 @@ DOM manipulation is used to move characters around and to switch screens.
 - red - #ff1700
 - green - #00b933
 - blue - #008eff
-
-### Controlling game
-
-Will use mouse clicks for user to walk around environment. Movements will be sent to server using WebSocket.
-
-### Updating game
-
-When server sends info, update position of other players.
 
 ## Server
 

@@ -56,7 +56,7 @@ const ROOM_INFO = [
   {
     name: 'hub_games',
     exitDoors: [['ctc', [114, 293]]], // [[114, 293], 'ctc'], [[-2, 126], 'hub_pool'], [[582, 296], 'hub_bowling]
-    entranceLocations: [['ctc', [150, 293]]],
+    entranceLocations: [['ctc', [41, 155]]],
     bounds: [
       [
         [-22, 93],
@@ -70,8 +70,8 @@ const ROOM_INFO = [
     image: 'assets/hub_games_main.png',
     width: 636,
     height: 362,
-    defaultX: 150,
-    defaultY: 293
+    defaultX: 41,
+    defaultY: 155
   }
 ];
 
@@ -379,7 +379,7 @@ function printList() {
 /**
  * Groups array's elements by the room attribute of each element
  * @param {Object[]} arr input where each element contains the `room` attribute
- * @returns Map with roomname as key and list of elements as value
+ * @returns Map with room name as key and list of elements as value
  */
 function groupByRoom(arr) {
   let res = new Map();
