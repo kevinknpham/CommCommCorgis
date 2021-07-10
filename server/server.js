@@ -10,11 +10,11 @@ const { Server } = require('ws');
 const { RoomManager } = require('./rooms');
 
 const PORT = process.env.PORT || 3456;
-const INDEX = './static/index.html';
+const INDEX = '../static/index.html';
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, 'static')));
+app.use(express.static(path.join(__dirname, '..', 'static')));
 
 const server = app
   .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
@@ -29,7 +29,8 @@ const DEFAULT_ROOM = 'ctc';
 const ROOM_INFO = [
   {
     name: 'ctc',
-    doors: [[[69, 318], 'hub_games']],
+    exitDoors: [['hub_games', [69, 318]]],
+    entranceLocations: [['hub_games', [120, 300]]],
     bounds: [
       [
         [-22, -19],
@@ -54,7 +55,8 @@ const ROOM_INFO = [
   },
   {
     name: 'hub_games',
-    doors: [[[114, 293], 'ctc']], // [[114, 293], 'ctc'], [[-2, 126], 'hub_pool'], [[582, 296], 'hub_bowling]
+    exitDoors: [['ctc', [114, 293]]], // [[114, 293], 'ctc'], [[-2, 126], 'hub_pool'], [[582, 296], 'hub_bowling]
+    entranceLocations: [['ctc', [150, 293]]]
     bounds: [
       [
         [-22, 93],
@@ -130,7 +132,7 @@ function handleChangeRoom(ws, data) {
   if (data.new_room && roomManager.containsRoom(data.new_room)) {
     const oldCharacterInfo = roomManager.getCharacterInfo(ws.id);
     roomManager.removeCharacter(ws.id);
-    roomManager.addCharacter(data.new_room, ws.id, oldCharacterInfo.name);
+    roomManager.addCharacter(data.new_room, ws.id, oldCharacterInfo.name, oldCharacterInfo.room);
 
     const newCharacterInfo = roomManager.getCharacterInfo(ws.id);
     let userResult = {};
