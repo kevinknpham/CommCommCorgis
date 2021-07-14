@@ -55,3 +55,8 @@ h2 {
   background-color: #bfbfbf;
   color: black;
 }
+
+.swal-button--ok {
+  background-color: #d4dbf5;
+  color: black;
+}

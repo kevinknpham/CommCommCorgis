@@ -52,9 +52,7 @@ function revealCharacterSelection() {
 }
 
 function setUpCharacterSelection() {
-  let characterSelectionContainer = document.querySelector(
-    '.character-selection'
-  );
+  let characterSelectionContainer = document.querySelector('.character-selection');
   for (let [color, url] of COLOR_TO_URL) {
     characterSelectionContainer.append(generateOption(url, color));
   }
@@ -155,9 +153,7 @@ function sendLeaveRequestToServer(username) {
 function handleList(data) {
   if (data.list) {
     const newRoom = characters.getRoomName();
-    createCharacterFromList(
-      data.list.filter((element) => element.room === newRoom)
-    );
+    createCharacterFromList(data.list.filter(element => element.room === newRoom));
   }
 }
 
@@ -166,10 +162,7 @@ function handleList(data) {
 // if not, then update that character position to the server
 function createCharacterFromList(list) {
   for (let character of list) {
-    if (
-      username !== character.name &&
-      !characters.getCharacterInfo(character.name)
-    ) {
+    if (username !== character.name && !characters.getCharacterInfo(character.name)) {
       console.log('hello1');
       handleNewChar(character);
       characters.changeAttribute(character.name, character.attributes.color);
@@ -189,7 +182,11 @@ function handleLoginResult(data) {
       characters.setRoomName(data.roomInfo.name);
     } else if (data.status === 'failure') {
       toggleLoadingScreen(false, 'loginPage');
-      alert(`${data.requested_name} is taken`);
+      swal(`${data.requested_name} is taken`, {
+        buttons: {
+          ok: 'OK'
+        }
+      });
     } else {
       console.log(data.status + ' invalid login result status');
     }
@@ -240,19 +237,13 @@ function switchScreen(page, backgroundColor) {
 }
 
 function toggleLoadingScreen(showLoading, page) {
-  document.getElementById('loading-screen').style.display = showLoading
-    ? 'block'
-    : 'none';
+  document.getElementById('loading-screen').style.display = showLoading ? 'block' : 'none';
   switch (page) {
     case 'loginPage':
-      document.getElementById('login-page').style.display = showLoading
-        ? 'none'
-        : 'block';
+      document.getElementById('login-page').style.display = showLoading ? 'none' : 'block';
       break;
     case 'mainPage':
-      document.getElementById('main-page').style.display = showLoading
-        ? 'none'
-        : 'block';
+      document.getElementById('main-page').style.display = showLoading ? 'none' : 'block';
       break;
   }
   console.log('Loading Screen is toggled');
