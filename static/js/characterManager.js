@@ -22,14 +22,14 @@ class CharacterManager {
     return this.characters.get(name);
   }
 
-  addCharacter(name, x = 0, y = 0) {
+  addCharacter(name, x, y, color = 'none') {
     this.characters.set(name, {
       currentX: x,
       currentY: y,
       targetX: x,
       targetY: y,
       attributes: {
-        color: 'none'
+        color: color
       }
     });
   }
