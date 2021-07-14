@@ -83,8 +83,8 @@ const ROOM_INFO = [
     ],
     entranceLocations: [
       ['ctc', [41, 155]],
-      ['hub_bowling', [552, 296]],
-      ['hub_pool', [23, 126]]
+      ['hub_bowling', [539, 307]],
+      ['hub_pool', [37, 144]]
     ],
     bounds: [
       [
@@ -104,16 +104,14 @@ const ROOM_INFO = [
   },
   {
     name: 'hub_bowling',
-    exitDoors: [['hub_games', [114, 293]]],
-    entranceLocations: [['hub_games', [41, 155]]],
+    exitDoors: [['hub_games', [0, 159]]],
+    entranceLocations: [['hub_games', [49, 185]]],
     bounds: [
       [
-        [-22, 93],
-        [-22, 330],
-        [599, 330],
-        [599, -19],
-        [356, -19],
-        [356, 93]
+        [-16, 329],
+        [597, 329],
+        [597, -12],
+        [-16, -12]
       ]
     ],
     image: 'assets/hub_bowl.png',
@@ -129,8 +127,8 @@ const ROOM_INFO = [
       ['hub_esports', [0, 76]]
     ],
     entranceLocations: [
-      ['hub_games', [41, 155]],
-      ['hub_esports', [114, 293]]
+      ['hub_games', [535, 148]],
+      ['hub_esports', [41, 102]]
     ],
     bounds: [
       [
@@ -148,16 +146,14 @@ const ROOM_INFO = [
   },
   {
     name: 'hub_esports',
-    exitDoors: [['hub_pool', [114, 293]]],
-    entranceLocations: [['hub_pool', [41, 155]]],
+    exitDoors: [['hub_pool', [533, 299]]],
+    entranceLocations: [['hub_pool', [496, 270]]],
     bounds: [
       [
-        [-22, 93],
-        [-22, 330],
-        [599, 330],
-        [599, -19],
-        [356, -19],
-        [356, 93]
+        [-20, 320],
+        [584, 320],
+        [584, -17],
+        [-20, -17]
       ]
     ],
     image: 'assets/hub_esports.png',
