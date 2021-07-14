@@ -4,18 +4,23 @@ const CANVAS_BACKGROUND_IMAGE_URL_DOOR_DEFAULT = [['hub_games', [73, 331]]];
 class CharacterManager {
   characters;
   doors;
-  isCloseToDoor;
+  promptToLeaveRoom;
   room;
 
   constructor() {
     this.characters = new Map();
     this.doors = new Map(CANVAS_BACKGROUND_IMAGE_URL_DOOR_DEFAULT);
-    this.isCloseToDoor = true;
+    this.promptToLeaveRoom = new Map(
+      Array.from(this.doors.keys()).map(roomName => [roomName, true])
+    );
     this.room = 'ctc';
   }
 
   setDoors(newDoors) {
     this.doors = new Map(newDoors);
+    this.promptToLeaveRoom = new Map(
+      Array.from(this.doors.keys()).map(roomName => [roomName, true])
+    );
   }
 
   getCharacterInfo(name) {
@@ -75,10 +80,10 @@ class CharacterManager {
           (userCharacter.currentX - position[0]) * (userCharacter.currentX - position[0]) +
           (userCharacter.currentY - position[1]) * (userCharacter.currentY - position[1]);
         if (distance > 1000) {
-          this.isCloseToDoor = true;
+          this.promptToLeaveRoom.set(roomName, true);
         }
         if (distance < 1000) {
-          if (this.isCloseToDoor) {
+          if (this.promptToLeaveRoom.get(roomName)) {
             this.sendChangeRoomRequestFromCharacter(roomName);
             break;
           }
@@ -99,10 +104,10 @@ class CharacterManager {
     this.characters.clear();
   }
 
-  sendChangeRoomRequestFromCharacter(name) {
+  sendChangeRoomRequestFromCharacter(newRoom) {
     console.log('RoomChange!!!');
-    this.isCloseToDoor = false;
-    swal(`Would you like to move to this room: ${this.formatRoomName(name)}?`, {
+    this.promptToLeaveRoom.set(newRoom, false);
+    swal(`Would you like to move to this room: ${this.formatRoomName(newRoom)}?`, {
       buttons: {
         stay: "No, I'm happy here",
         move: 'Yes, change rooms'
@@ -110,7 +115,7 @@ class CharacterManager {
     }).then(value => {
       if (value === 'move') {
         toggleLoadingScreen(true, 'mainPage');
-        sendChangeRoomRequestToServer(name);
+        sendChangeRoomRequestToServer(newRoom);
       }
     });
   }
@@ -120,18 +125,6 @@ class CharacterManager {
       .split(/_+/)
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
-  }
-
-  isNearDoor(name) {
-    for (const [roomName, position] of this.doors) {
-      const distance =
-        (name.currentX - position[0]) * (name.currentX - position[0]) +
-        (name.currentY - position[1]) * (name.currentY - position[1]);
-      if (distance > 1000) {
-        this.isCloseToDoor = true;
-      }
-      return distance < 1000;
-    }
   }
 
   getRoomName() {
