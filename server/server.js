@@ -401,7 +401,7 @@ function handleCreateChar(ws, data) {
       userResult.status = 'failure';
       userResult.reason = 'user_already_exists';
       userResult.explanation = 'The requested username has been taken by another user.';
-      userResult.requestedName = data.name;
+      userResult.requested_name = data.name;
       ws.send(JSON.stringify(userResult));
 
       debuggingDescription(
@@ -461,11 +461,12 @@ function printList() {
   const groupedPlayers = groupByRoom(listOfPlayers);
   for (const [room, players] of groupedPlayers) {
     debug(`  \u001b[33m${room}:\u001b[0m`);
-    players.forEach(person =>
-      debug(
-        `    \u001b[1m(${person.id})${person.name}\u001b[0m is at (${person.x}, ${person.y}) with a color of ${person.attributes.color}`
-      )
-    );
+    debug(players, console.table);
+    // players.forEach(person =>
+    //   debug(
+    //     `    \u001b[1m(${person.id})${person.name}\u001b[0m is at (${person.x}, ${person.y}) with a color of ${person.attributes.color}`
+    //   )
+    // );
   }
 }
 

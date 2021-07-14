@@ -110,7 +110,8 @@ function handleModifyChar(data) {
 function handleNewChar(data) {
   if (roomCheck(data.room)) {
     if (data.name) {
-      characters.addCharacter(data.name);
+      characters.addCharacter(data.name, data.x, data.y, data.attributes.color);
+      sendUserColorToServer(data.attributes.color);
     }
   }
 }
