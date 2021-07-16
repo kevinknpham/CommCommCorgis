@@ -427,7 +427,7 @@ function broadcastToAll(msg) {
  */
 function handleChat(ws, data) {
   if (data.user && data.text) {
-    result = { action: 'chat' };
+    let result = { action: 'chat' };
     result.user = data.user;
     result.text = data.text;
     result.room = roomManager.getRoomInfoFromId(ws.id).name;
