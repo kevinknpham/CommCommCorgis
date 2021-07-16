@@ -31,9 +31,35 @@ h2 {
 }
 
 .contents {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-areas:
+    '. canvas chat .'
+    '. footer footer .';
   width: 100vw;
+}
+
+.credits {
+  grid-area: footer;
+}
+
+.link-formatter {
+  font-size: 16px;
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+}
+
+.link-formatter:hover {
+  color: #55557d;
+}
+
+.link-formatter:visited {
+  color: #a433c7;
+}
+
+.footer-formatter {
+  text-align: center;
 }
 
 .swal-text {

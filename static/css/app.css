@@ -18,6 +18,7 @@
 }
 
 .background-formatter {
+  grid-area: canvas;
   width: 1344px;
   height: 850px;
   /* background-image: url('../assets/ctc_main.png');

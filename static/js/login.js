@@ -231,8 +231,8 @@ function switchScreen(page, backgroundColor) {
       document.getElementById('character-page').style.display = 'block';
       break;
     case 'mainPage':
-      document.getElementById('main-page').style.display = 'flex';
-      document.getElementById('main-page').style.justifyContent = 'center';
+      document.getElementById('main-page').style.display = 'grid';
+      // document.getElementById('main-page').style.justifyContent = 'center';
       break;
   }
 }

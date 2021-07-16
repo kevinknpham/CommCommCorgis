@@ -1,4 +1,5 @@
 .chat {
+  grid-area: chat;
   background-color: #d4dbf5;
   width: 576px;
   height: 850px;
