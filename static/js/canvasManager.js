@@ -1,6 +1,3 @@
-//background image is 633x361
-const CANVAS_BACKGROUND_IMAGE_URL_DEFAULT = '../assets/ctc_main.png';
-
 const SCALE_FACTOR = 5;
 
 // Current corgi image is 1024x700
@@ -14,12 +11,21 @@ const NAME_FONT_SIZE_PX = 50;
 const NAME_FONT_FAMILY = 'monospace';
 const NAME_FONT = `${NAME_FONT_SIZE_PX}px ${NAME_FONT_FAMILY}`;
 
-const COLOR_TO_URL = Object.freeze(
+function getImageFromURL(url) {
+  const image = new Image();
+  image.src = url;
+  return image;
+}
+
+//background image is 633x361
+const CANVAS_BACKGROUND_DEFAULT_URL = '../assets/ctc_main.png';
+
+const COLOR_TO_IMAGE = Object.freeze(
   new Map([
-    ['none', 'assets/corgi-slide-none.png'],
-    ['red', 'assets/corgi-slide-red.png'],
-    ['green', 'assets/corgi-slide-green.png'],
-    ['blue', 'assets/corgi-slide-blue.png']
+    ['none', getImageFromURL('assets/corgi-slide-none.png')],
+    ['red', getImageFromURL('assets/corgi-slide-red.png')],
+    ['green', getImageFromURL('assets/corgi-slide-green.png')],
+    ['blue', getImageFromURL('assets/corgi-slide-blue.png')]
   ])
 );
 
@@ -39,12 +45,6 @@ function drawNameOnImage(ctx, text, x, y) {
   ctx.fillText(text, textX, textY, NAME_TEXT_MAX_WIDTH);
 }
 
-function placeImage(url) {
-  const image = new Image();
-  image.src = url;
-  return image;
-}
-
 class CanvasManager {
   canvas;
   ctx;
@@ -54,10 +54,13 @@ class CanvasManager {
   backgroundWidth;
   backgroundHeight;
 
+  backgroundImageMap;
+
   constructor(canvas, characterManager) {
-    this.backgroundUrl = CANVAS_BACKGROUND_IMAGE_URL_DEFAULT;
+    this.backgroundUrl = CANVAS_BACKGROUND_DEFAULT_URL;
     this.backgroundWidth = 633;
     this.backgroundHeight = 361;
+    this.backgroundImageMap = new Map();
 
     this.canvas = canvas;
     this.canvas.width = this.backgroundWidth * SCALE_FACTOR;
@@ -66,10 +69,21 @@ class CanvasManager {
     this.characterManager = characterManager;
   }
 
+  getBackgroundImage(url) {
+    const image = this.backgroundImageMap.get(url);
+    if (image) {
+      return image;
+    } else {
+      const newImage = getImageFromURL(url);
+      this.backgroundImageMap.set(url, newImage);
+      return newImage;
+    }
+  }
+
   clearCanvas() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.drawImage(
-      placeImage(this.backgroundUrl),
+      this.getBackgroundImage(this.backgroundUrl),
       0,
       0,
       this.canvas.width,
@@ -87,14 +101,9 @@ class CanvasManager {
     for (let i = 0; i < characterList.length; i++) {
       const name = characterList[i];
       const info = this.characterManager.getCharacterInfo(name);
-      drawNameOnImage(
-        this.ctx,
-        name,
-        info.currentX * SCALE_FACTOR,
-        info.currentY * SCALE_FACTOR
-      );
+      drawNameOnImage(this.ctx, name, info.currentX * SCALE_FACTOR, info.currentY * SCALE_FACTOR);
       this.ctx.drawImage(
-        placeImage(COLOR_TO_URL.get(info.attributes.color)),
+        COLOR_TO_IMAGE.get(info.attributes.color),
         info.currentX * SCALE_FACTOR,
         info.currentY * SCALE_FACTOR,
         CHARACTER_WIDTH,
