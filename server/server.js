@@ -222,6 +222,7 @@ function handleChangeRoom(ws, data) {
     const oldCharacterInfo = roomManager.getCharacterInfo(ws.id);
     roomManager.removeCharacter(ws.id);
     roomManager.addCharacter(data.new_room, ws.id, oldCharacterInfo.name, oldCharacterInfo.room);
+    roomManager.changeAttribute(ws.id, oldCharacterInfo.attributes);
 
     const newCharacterInfo = roomManager.getCharacterInfo(ws.id);
     // let userResult = {};
