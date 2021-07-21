@@ -265,8 +265,8 @@ function handleChangeRoom(ws, data) {
       JSON.stringify({
         action: 'new_char',
         name: oldCharacterInfo.name,
-        x: oldCharacterInfo.x,
-        y: oldCharacterInfo.y,
+        x: newCharacterInfo.x,
+        y: newCharacterInfo.y,
         attributes: oldCharacterInfo.attributes,
         room: newCharacterInfo.room
       })
