@@ -224,26 +224,52 @@ function handleChangeRoom(ws, data) {
     roomManager.addCharacter(data.new_room, ws.id, oldCharacterInfo.name, oldCharacterInfo.room);
 
     const newCharacterInfo = roomManager.getCharacterInfo(ws.id);
-    let userResult = {};
-    userResult.action = 'change_room_result';
-    userResult.roomInfo = roomManager.getRoomInfoFromId(ws.id);
+    // let userResult = {};
+    // userResult.action = 'change_room_result';
+    // userResult.roomInfo = roomManager.getRoomInfoFromId(ws.id);
 
-    ws.send(JSON.stringify(userResult, replacer));
+    // ws.send(JSON.stringify(userResult, replacer));
+    ws.send(
+      JSON.stringify(
+        {
+          action: 'change_room_result',
+          roomInfo: roomManager.getRoomInfoFromId(ws.id)
+        },
+        replacer
+      )
+    );
 
-    let removeCharBroadcast = {};
-    removeCharBroadcast.action = 'remove_char';
-    removeCharBroadcast.name = oldCharacterInfo.name;
-    removeCharBroadcast.room = oldCharacterInfo.room;
-    broadcastToAll(JSON.stringify(removeCharBroadcast));
+    // let removeCharBroadcast = {};
+    // removeCharBroadcast.action = 'remove_char';
+    // removeCharBroadcast.name = oldCharacterInfo.name;
+    // removeCharBroadcast.room = oldCharacterInfo.room;
+    // broadcastToAll(JSON.stringify(removeCharBroadcast));
+    broadcastToAll(
+      JSON.stringify({
+        action: 'remove_char',
+        name: oldCharacterInfo.name,
+        room: oldCharacterInfo.room
+      })
+    );
 
-    let newCharBroadcast = {};
-    newCharBroadcast.action = 'new_char';
-    newCharBroadcast.name = oldCharacterInfo.name;
-    newCharBroadcast.x = oldCharacterInfo.x;
-    newCharBroadcast.y = oldCharacterInfo.y;
-    newCharBroadcast.attributes = oldCharacterInfo.attributes;
-    newCharBroadcast.room = newCharacterInfo.room;
-    broadcastToAll(JSON.stringify(newCharBroadcast));
+    // let newCharBroadcast = {};
+    // newCharBroadcast.action = 'new_char';
+    // newCharBroadcast.name = oldCharacterInfo.name;
+    // newCharBroadcast.x = oldCharacterInfo.x;
+    // newCharBroadcast.y = oldCharacterInfo.y;
+    // newCharBroadcast.attributes = oldCharacterInfo.attributes;
+    // newCharBroadcast.room = newCharacterInfo.room;
+    // broadcastToAll(JSON.stringify(newCharBroadcast));
+    broadcastToAll(
+      JSON.stringify({
+        action: 'new_char',
+        name: oldCharacterInfo.name,
+        x: oldCharacterInfo.x,
+        y: oldCharacterInfo.y,
+        attributes: oldCharacterInfo.attributes,
+        room: newCharacterInfo.room
+      })
+    );
 
     debuggingDescription(
       '\u001b[34mChange room has been called:\u001b[0m',
@@ -264,13 +290,21 @@ function handleChangeAttribute(ws, data) {
     roomManager.changeAttribute(ws.id, data.attributes);
     const characterInfo = roomManager.getCharacterInfo(ws.id);
 
-    let result = {};
-    result.action = 'modify_char';
-    result.name = characterInfo.name;
-    result.attributes = characterInfo.attributes;
-    result.room = characterInfo.room;
+    // let result = {};
+    // result.action = 'modify_char';
+    // result.name = characterInfo.name;
+    // result.attributes = characterInfo.attributes;
+    // result.room = characterInfo.room;
 
-    broadcastToAll(JSON.stringify(result));
+    // broadcastToAll(JSON.stringify(result));
+    broadcastToAll(
+      JSON.stringify({
+        action: 'modify_char',
+        name: characterInfo.name,
+        attributes: characterInfo.attributes,
+        room: characterInfo.room
+      })
+    );
 
     debuggingDescription(
       '\u001b[34mChange attribute has been called:\u001b[0m',
@@ -291,11 +325,18 @@ function handleLeave(ws) {
 
     roomManager.removeCharacter(ws.id);
 
-    let result = {};
-    result.action = 'remove_char';
-    result.name = characterInfo.name;
-    result.room = characterInfo.room;
-    broadcastToAll(JSON.stringify(result));
+    // let result = {};
+    // result.action = 'remove_char';
+    // result.name = characterInfo.name;
+    // result.room = characterInfo.room;
+    // broadcastToAll(JSON.stringify(result));
+    broadcastToAll(
+      JSON.stringify({
+        action: 'remove_char',
+        name: characterInfo.name,
+        room: characterInfo.room
+      })
+    );
 
     debuggingDescription(
       '\u001b[34mLeave has been called:\u001b[0m',
@@ -330,13 +371,22 @@ function handleUpdateChar(ws, data) {
       roomManager.updateCharacter(ws.id, data.x, data.y);
       const characterInfo = roomManager.getCharacterInfo(ws.id);
 
-      let result = {};
-      result.action = 'move_char';
-      result.name = characterInfo.name;
-      result.x = characterInfo.x;
-      result.y = characterInfo.y;
-      result.room = characterInfo.room;
-      broadcastToAll(JSON.stringify(result));
+      // let result = {};
+      // result.action = 'move_char';
+      // result.name = characterInfo.name;
+      // result.x = characterInfo.x;
+      // result.y = characterInfo.y;
+      // result.room = characterInfo.room;
+      // broadcastToAll(JSON.stringify(result));
+      broadcastToAll(
+        JSON.stringify({
+          action: 'move_char',
+          name: characterInfo.name,
+          x: characterInfo.x,
+          y: characterInfo.y,
+          room: characterInfo.room
+        })
+      );
 
       debuggingDescription(
         '\u001b[34mUpdate has been called:\u001b[0m',
@@ -370,35 +420,65 @@ function handleCreateChar(ws, data) {
 
     if (roomManager.containsId(ws.id)) {
       const characterInfo = roomManager.getCharacterInfo(ws.id);
-      let userResult = {};
-      userResult.action = 'login_result';
-      userResult.status = 'success';
-      userResult.name = characterInfo.name;
-      userResult.roomInfo = roomManager.getRoomInfoFromId(ws.id);
+      // let userResult = {};
+      // userResult.action = 'login_result';
+      // userResult.status = 'success';
+      // userResult.name = characterInfo.name;
+      // userResult.roomInfo = roomManager.getRoomInfoFromId(ws.id);
 
-      ws.send(JSON.stringify(userResult, replacer));
+      // ws.send(JSON.stringify(userResult, replacer));
+      ws.send(
+        JSON.stringify(
+          {
+            action: 'login_result',
+            status: 'success',
+            name: characterInfo.name,
+            roomInfo: roomManager.getRoomInfoFromId(ws.id)
+          },
+          replacer
+        )
+      );
 
-      let broadcastResult = {};
-      broadcastResult.action = 'new_char';
-      broadcastResult.name = characterInfo.name;
-      broadcastResult.x = characterInfo.x;
-      broadcastResult.y = characterInfo.y;
-      broadcastResult.attributes = characterInfo.attributes;
-      broadcastResult.room = characterInfo.room;
-      broadcastToAll(JSON.stringify(broadcastResult));
+      // let broadcastResult = {};
+      // broadcastResult.action = 'new_char';
+      // broadcastResult.name = characterInfo.name;
+      // broadcastResult.x = characterInfo.x;
+      // broadcastResult.y = characterInfo.y;
+      // broadcastResult.attributes = characterInfo.attributes;
+      // broadcastResult.room = characterInfo.room;
+      // broadcastToAll(JSON.stringify(broadcastResult));
+      broadcastToAll(
+        JSON.stringify({
+          action: 'new_char',
+          name: characterInfo.name,
+          x: characterInfo.x,
+          y: characterInfo.y,
+          attributes: characterInfo.attributes,
+          room: characterInfo.room
+        })
+      );
 
       debuggingDescription(
         '\u001b[34mCreate has been called:\u001b[0m',
         `${characterInfo.name} has joined the game.`
       );
     } else {
-      let userResult = {};
-      userResult.action = 'login_result';
-      userResult.status = 'failure';
-      userResult.reason = 'user_already_exists';
-      userResult.explanation = 'The requested username has been taken by another user.';
-      userResult.requested_name = data.name;
-      ws.send(JSON.stringify(userResult));
+      // let userResult = {};
+      // userResult.action = 'login_result';
+      // userResult.status = 'failure';
+      // userResult.reason = 'user_already_exists';
+      // userResult.explanation = 'The requested username has been taken by another user.';
+      // userResult.requested_name = data.name;
+      // ws.send(JSON.stringify(userResult));
+      ws.send(
+        JSON.stringify({
+          action: 'login_result',
+          status: 'failure',
+          reason: 'user_already_exists',
+          explanation: 'The requested username has been taken by another user.',
+          requested_name: data.name
+        })
+      );
 
       debuggingDescription(
         '\u001b[34mCreate has been called:\u001b[0m',
