@@ -34,7 +34,8 @@ class CharacterManager {
       targetX: x,
       targetY: y,
       attributes: {
-        color: color
+        color: color,
+        direction: 'left'
       }
     });
   }
@@ -47,6 +48,9 @@ class CharacterManager {
     const characterinfo = this.characters.get(name);
     characterinfo.targetX = x;
     characterinfo.targetY = y;
+
+    characterinfo.attributes.direction =
+      characterinfo.targetX > characterinfo.currentX ? 'right' : 'left';
     // console.log('moveChar: ' + x + ' ' + y);
   }
 

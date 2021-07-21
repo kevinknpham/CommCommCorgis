@@ -11,6 +11,9 @@ const NAME_FONT_SIZE_PX = 50;
 const NAME_FONT_FAMILY = 'monospace';
 const NAME_FONT = `${NAME_FONT_SIZE_PX}px ${NAME_FONT_FAMILY}`;
 
+const CORGI_IMAGE_WIDTH = 2048;
+const CORGI_IMAGE_HEIGHT = 700;
+
 function getImageFromURL(url) {
   const image = new Image();
   image.src = url;
@@ -102,13 +105,34 @@ class CanvasManager {
       const name = characterList[i];
       const info = this.characterManager.getCharacterInfo(name);
       drawNameOnImage(this.ctx, name, info.currentX * SCALE_FACTOR, info.currentY * SCALE_FACTOR);
+      const { sx, sy, sWidth, sHeight } = this.getCharacterImageOrientation(
+        info.attributes.direction
+      );
       this.ctx.drawImage(
         COLOR_TO_IMAGE.get(info.attributes.color),
+        sx,
+        sy,
+        sWidth,
+        sHeight,
         info.currentX * SCALE_FACTOR,
         info.currentY * SCALE_FACTOR,
         CHARACTER_WIDTH,
         CHARACTER_LENGTH
       );
+    }
+  }
+
+  getCharacterImageOrientation(direction) {
+    switch (direction) {
+      case 'right':
+        return {
+          sx: CORGI_IMAGE_WIDTH / 2,
+          sy: 0,
+          sWidth: CORGI_IMAGE_WIDTH / 2,
+          sHeight: CORGI_IMAGE_HEIGHT
+        };
+      default:
+        return { sx: 0, sy: 0, sWidth: CORGI_IMAGE_WIDTH / 2, sHeight: CORGI_IMAGE_HEIGHT };
     }
   }
 
