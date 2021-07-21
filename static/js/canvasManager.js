@@ -32,6 +32,15 @@ const COLOR_TO_IMAGE = Object.freeze(
   ])
 );
 
+const COLOR_TO_IMAGE_DEFAULT = Object.freeze(
+  new Map([
+    ['none', 'assets/corgi-slide-none-default.png'],
+    ['red', 'assets/corgi-slide-red-default.png'],
+    ['green', 'assets/corgi-slide-green-default.png'],
+    ['blue', 'assets/corgi-slide-blue-default.png']
+  ])
+);
+
 function drawNameOnImage(ctx, text, x, y) {
   textX = x + CHARACTER_WIDTH * 0.5;
   textY = y - NAME_VERTICAL_TEXT_OFFSET;

@@ -53,8 +53,8 @@ function revealCharacterSelection() {
 
 function setUpCharacterSelection() {
   let characterSelectionContainer = document.querySelector('.character-selection');
-  for (let [color, image] of COLOR_TO_IMAGE) {
-    characterSelectionContainer.append(generateOption(image.src, color));
+  for (let [color, image] of COLOR_TO_IMAGE_DEFAULT) {
+    characterSelectionContainer.append(generateOption(image, color));
   }
 }
 
