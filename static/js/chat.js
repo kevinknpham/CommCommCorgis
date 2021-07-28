@@ -36,7 +36,8 @@ function sendChatRequestToServer() {
 function createPost(info) {
   let postContainer = document.createElement('div');
 
-  const urlRegex = /((http|https|ftp):\/\/[\w?=&.\/-;#~%-]+(?![\w\s?&.\/;#~%"=-]*>))/g;
+  const urlRegex =
+    /(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))/;
   info.text = info.text.replace(urlRegex, `<a href='$1' target='_blank'>$1</a>`);
 
   postContainer.innerHTML =
