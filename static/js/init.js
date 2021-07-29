@@ -1,9 +1,9 @@
 let HOST = location.origin.replace(/^http/, 'ws');
 let ws = new WebSocket(HOST);
 
-ws.onopen = (event) => {
-  ws.onmessage = (msg) => handleMessageFromSever(msg.data);
-  ws.onclose = (event) => {
+ws.onopen = event => {
+  ws.onmessage = msg => handleMessageFromSever(msg.data);
+  ws.onclose = event => {
     console.log('ws closed');
     alert('You are disconnected due to inactivity.');
     window.location.reload();
@@ -36,7 +36,7 @@ function handleMessageFromSever(msg) {
       case 'new_char': // create new character
         handleNewChar(data);
         break;
-      case 'modify_char': //modify charater appearance
+      case 'modify_char': //modify character appearance
         handleModifyChar(data);
         break;
       case 'remove_char': // remove character from game
