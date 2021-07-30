@@ -68,6 +68,17 @@ const ROOM_INFO = [
         [200, -19]
       ]
     ],
+    activities: [
+      {
+        name: 'name of activity',
+        location: [/*x*/ 0, /*y*/ 0],
+        type: 'redirect', // redirect | modal
+        // if redirect:
+        link: 'https://coolmathgames.com',
+        // if modal:
+        activity: 'chess' // name of game or whatever
+      }
+    ],
     image: 'assets/ctc_main.png',
     width: 630,
     height: 359,
