@@ -22,4 +22,6 @@ function showModal(titleHtml, contentHtml, runGame) {
   runGame();
 }
 
-showModal('Chess', '<div id="chessboard"></div>', playChess);
+showModal('chess', `<div id="myBoard" style="width: 400px"></div>`, playChess);
+
+playing();
