@@ -9,16 +9,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-sizing: border-box;
   padding: var(--gap);
   background: rgba(0, 0, 0, 0.5);
-  font-family: sans-serif;
 }
 
 .modal__inner {
   background: #ffffff;
   width: 100%;
-  max-width: 800px;
+  max-width: 600px;
   overflow: hidden;
   border-radius: 4px;
 }
@@ -48,29 +46,4 @@
 .modal__content {
   padding: 0 var(--gap);
   line-height: 1.5;
-}
-
-.modal__bottom {
-  text-align: right;
-  padding: 0 var(--gap) var(--gap) var(--gap);
-}
-
-.modal__button {
-  display: inline-block;
-  padding: 6px 12px;
-  background: #009578;
-  border: none;
-  outline: none;
-  border-radius: 3px;
-  color: #ffffff;
-  cursor: pointer;
-  font-size: 18px;
-}
-
-.modal__button:not(:last-child) {
-  margin-right: var(--gap);
-}
-
-.modal__button:hover {
-  background: #008066;
 }

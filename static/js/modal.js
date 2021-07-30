@@ -1,4 +1,4 @@
-function showModal(titleHtml, contentHtml, buttons) {
+function showModal(titleHtml, contentHtml, runGame) {
   const modal = document.createElement('div');
 
   modal.classList.add('modal');
@@ -11,47 +11,15 @@ function showModal(titleHtml, contentHtml, buttons) {
                 </button>
             </div>
             <div class="modal__content">${contentHtml}</div>
-            <div class="modal__bottom"></div>
         </div>
     `;
-
-  for (const button of buttons) {
-    const element = document.createElement('button');
-
-    element.setAttribute('type', 'button');
-    element.classList.add('modal__button');
-    element.textContent = button.label;
-    element.addEventListener('click', () => {
-      if (button.triggerClose) {
-        document.body.removeChild(modal);
-      }
-
-      button.onClick(modal);
-    });
-
-    modal.querySelector('.modal__bottom').appendChild(element);
-  }
 
   modal.querySelector('.modal__close').addEventListener('click', () => {
     document.body.removeChild(modal);
   });
 
   document.body.appendChild(modal);
+  runGame();
 }
 
-showModal('Sample Modal Title', '<p>I am the content of this modal</p>', [
-  {
-    label: 'Got it!',
-    onClick: modal => {
-      console.log('The button was clicked!');
-    },
-    triggerClose: false
-  },
-  {
-    label: 'Decline',
-    onClick: modal => {
-      console.log('DECLINED.');
-    },
-    triggerClose: false
-  }
-]);
+showModal('Chess', '<div id="chessboard"></div>', playChess);
