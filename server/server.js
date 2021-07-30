@@ -107,6 +107,17 @@ const ROOM_INFO = [
         [356, 93]
       ]
     ],
+    activities: [
+      {
+        name: 'name of activity',
+        location: [/*x*/ 0, /*y*/ 0],
+        type: 'redirect', // redirect | modal
+        // if redirect:
+        link: 'https://coolmathgames.com',
+        // if modal:
+        activity: 'chess' // name of game or whatever
+      }
+    ],
     image: 'assets/hub_games_main.png',
     width: 636,
     height: 362,
@@ -124,6 +135,17 @@ const ROOM_INFO = [
         [597, -12],
         [-16, -12]
       ]
+    ],
+    activities: [
+      {
+        name: 'name of activity',
+        location: [/*x*/ 0, /*y*/ 0],
+        type: 'redirect', // redirect | modal
+        // if redirect:
+        link: 'https://coolmathgames.com',
+        // if modal:
+        activity: 'chess' // name of game or whatever
+      }
     ],
     image: 'assets/hub_bowl.png',
     width: 634,
@@ -149,6 +171,17 @@ const ROOM_INFO = [
         [-21, -19]
       ]
     ],
+    activities: [
+      {
+        name: 'name of activity',
+        location: [/*x*/ 0, /*y*/ 0],
+        type: 'redirect', // redirect | modal
+        // if redirect:
+        link: 'https://coolmathgames.com',
+        // if modal:
+        activity: 'chess' // name of game or whatever
+      }
+    ],
     image: 'assets/hub_pool.png',
     width: 633,
     height: 361,
@@ -166,6 +199,17 @@ const ROOM_INFO = [
         [584, -17],
         [-20, -17]
       ]
+    ],
+    activities: [
+      {
+        name: 'name of activity',
+        location: [/*x*/ 0, /*y*/ 0],
+        type: 'redirect', // redirect | modal
+        // if redirect:
+        link: 'https://coolmathgames.com',
+        // if modal:
+        activity: 'chess' // name of game or whatever
+      }
     ],
     image: 'assets/hub_esports.png',
     width: 617,
