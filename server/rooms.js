@@ -24,6 +24,7 @@ class RoomManager {
           roomInfo.exitDoors,
           roomInfo.entranceLocations,
           roomInfo.bounds,
+          roomInfo.activities,
           roomInfo.image,
           roomInfo.width,
           roomInfo.height,
@@ -181,16 +182,29 @@ class Room {
   #height;
   #defaultX;
   #defaultY;
+  #activities;
 
   /**
    * Construct empty room.
    */
-  constructor(name, doors, entrances, bounds, imageUrl, width, height, defaultX, defaultY) {
+  constructor(
+    name,
+    doors,
+    entrances,
+    bounds,
+    activities,
+    imageUrl,
+    width,
+    height,
+    defaultX,
+    defaultY
+  ) {
     this.#name = name;
     this.#characters = new Map();
     this.#doors = new Map(doors);
     this.#entrances = new Map(entrances);
     this.#bounds = new Bounds(bounds);
+    this.#activities = new Map(activities);
     this.#url = imageUrl;
     this.#width = width;
     this.#height = height;
@@ -300,7 +314,8 @@ class Room {
       backgroundUrl: this.#url,
       width: this.#width,
       height: this.#height,
-      doors: this.#doors
+      doors: this.#doors,
+      activities: this.#activities
     };
   }
 }
