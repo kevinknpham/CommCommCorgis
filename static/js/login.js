@@ -29,7 +29,6 @@ function login() {
   input.addEventListener('keyup', function (e) {
     if (e.key === 'Enter') {
       submitUserName(input.value);
-      // revealCharacterSelection();
     }
   });
   loginBtn.addEventListener('click', () => {
@@ -43,7 +42,11 @@ function submitUserName(username) {
     toggleLoadingScreen(true, 'loginPage');
     sendUserDataToServer(username);
   } else {
-    alert(`Username is not alpha-numberic`);
+    swal(`Username is not alpha-numberic`, {
+      buttons: {
+        ok: 'OK'
+      }
+    });
   }
 }
 
@@ -80,9 +83,8 @@ function selectCharacter(color) {
 // only allow if user types something in login page
 function initiateUserCharacter() {
   username = document.getElementById('login-input').value;
-  console.log(username + ' is initiated');
+  // console.log(username + ' is initiated');
   if (username && username.length > 0) {
-    // moveCharacter(username);
     ws.send(JSON.stringify({ action: 'list' }));
   }
 }
@@ -111,7 +113,6 @@ function handleNewChar(data) {
   if (roomCheck(data.room)) {
     if (data.name) {
       characters.addCharacter(data.name, data.x, data.y, data.attributes.color);
-      //sendUserColorToServer(data.attributes.color);
     }
   }
 }
@@ -164,12 +165,10 @@ function handleList(data) {
 function createCharacterFromList(list) {
   for (let character of list) {
     if (username !== character.name && !characters.getCharacterInfo(character.name)) {
-      console.log('hello1');
       handleNewChar(character);
       characters.changeAttribute(character.name, character.attributes.color);
       characters.moveCharacter(character.name, character.x, character.y);
     } else if (characters.getCharacterInfo(character.name)) {
-      console.log('hello2');
       handleMoveChar(character);
     }
   }
@@ -232,7 +231,6 @@ function switchScreen(page, backgroundColor) {
       break;
     case 'mainPage':
       document.getElementById('main-page').style.display = 'grid';
-      // document.getElementById('main-page').style.justifyContent = 'center';
       break;
   }
 }
@@ -247,7 +245,6 @@ function toggleLoadingScreen(showLoading, page) {
       document.getElementById('main-page').style.display = showLoading ? 'none' : 'block';
       break;
   }
-  console.log('Loading Screen is toggled');
 }
 
 function roomCheck(room) {

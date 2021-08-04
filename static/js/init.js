@@ -4,8 +4,12 @@ let ws = new WebSocket(HOST);
 ws.onopen = event => {
   ws.onmessage = msg => handleMessageFromSever(msg.data);
   ws.onclose = event => {
-    console.log('ws closed');
-    alert('You are disconnected due to inactivity.');
+    // console.log('ws closed');
+    swal('You are disconnected due to inactivity.', {
+      buttons: {
+        ok: 'OK'
+      }
+    });
     window.location.reload();
   };
   setChat();
