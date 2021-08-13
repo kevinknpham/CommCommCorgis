@@ -46,12 +46,22 @@ const DEFAULT_ROOM = 'ctc';
  *  defaultX, defaultY: The default position of a character inside this room. Should represent a point
  *        inside the bounds.
  * }
+ *
+ *
  */
 const ROOM_INFO = [
   {
     name: 'ctc',
-    exitDoors: [['hub_games', [69, 318]]],
-    entranceLocations: [['hub_games', [120, 300]]],
+    exitDoors: [
+      ['hub_games', [69, 318]],
+      ['hub_patio', [562, 0]],
+      ['changing_room', [-3, 141]]
+    ],
+    entranceLocations: [
+      ['hub_games', [120, 300]],
+      ['hub_patio', [559, 51]],
+      ['changing_room', [37, 140]]
+    ],
     bounds: [
       [
         [-22, -19],
@@ -86,16 +96,91 @@ const ROOM_INFO = [
     defaultY: 300
   },
   {
+    name: 'changing_room',
+    exitDoors: [['ctc', [149, 228]]],
+    entranceLocations: [['ctc', [149, 181]]],
+    bounds: [
+      [
+        [109, 49],
+        [108, 252],
+        [521, 252],
+        [521, 49]
+      ]
+    ],
+    activities: [
+      {
+        name: 'change collar',
+        location: [272, 77],
+        type: 'color',
+        color: 'none'
+      },
+      {
+        name: 'change collar',
+        location: [317, 77],
+        type: 'color',
+        color: 'red'
+      },
+      {
+        name: 'change collar',
+        location: [367, 77],
+        type: 'color',
+        color: 'green'
+      },
+      {
+        name: 'change collar',
+        location: [420, 77],
+        type: 'color',
+        color: 'blue'
+      }
+    ],
+    image: 'assets/changing_room.png',
+    width: 693,
+    height: 356,
+    defaultX: 149,
+    defaultY: 181
+  },
+  {
+    name: 'hub_patio',
+    exitDoors: [['ctc', [4, 286]]],
+    entranceLocations: [['ctc', [53, 287]]],
+    bounds: [
+      [
+        [-21, -23],
+        [346, -22],
+        [269, 307],
+        [-21, 307]
+      ]
+    ],
+    activities: [
+      {
+        name: 'name of activity',
+        location: [/*x*/ 0, /*y*/ 0],
+        type: 'redirect', // redirect | modal
+        // if redirect:
+        link: 'https://coolmathgames.com',
+        // if modal:
+        activity: 'chess' // name of game or whatever
+      }
+    ],
+    image: 'assets/hub_patio.png',
+    width: 684,
+    height: 332,
+    defaultX: 53,
+    defaultY: 287
+  },
+  {
     name: 'hub_games',
     exitDoors: [
       ['ctc', [114, 293]],
       ['hub_bowling', [582, 296]],
-      ['hub_pool', [-2, 126]]
+      ['hub_pool', [-2, 126]],
+      ['drumheller', [580, 21]]
     ],
     entranceLocations: [
       ['ctc', [41, 155]],
       ['hub_bowling', [539, 307]],
-      ['hub_pool', [37, 144]]
+      ['hub_pool', [37, 144]],
+      ['drumheller', [492, 22]]
     ],
     bounds: [
       [
@@ -185,6 +270,35 @@ const ROOM_INFO = [
     image: 'assets/hub_pool.png',
     width: 633,
     height: 361,
+    defaultX: 41,
+    defaultY: 155
+  },
+  {
+    name: 'drumheller',
+    exitDoors: [['hub_games', [615, 5]]],
+    entranceLocations: [['hub_games', [543, 6]]],
+    bounds: [
+      [
+        [-29, -23],
+        [-28, 312],
+        [645, 312],
+        [646, -22]
+      ]
+    ],
+    activities: [
+      {
+        name: 'name of activity',
+        location: [/*x*/ 0, /*y*/ 0],
+        type: 'redirect', // redirect | modal
+        // if redirect:
+        link: 'https://coolmathgames.com',
+        // if modal:
+        activity: 'chess' // name of game or whatever
+      }
+    ],
+    image: 'assets/drumheller.png',
+    width: 678,
+    height: 338,
     defaultX: 41,
     defaultY: 155
   },
