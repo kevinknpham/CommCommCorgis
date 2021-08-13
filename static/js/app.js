@@ -12,7 +12,6 @@ function animate() {
 canvasElement.addEventListener('click', event => {
   let x = ((event.offsetX - 75 / 1.25) / 1344) * canvas.getCanvasBackgroundImageWidth();
   let y = ((event.offsetY - 75 / 1.25) / 850) * canvas.getCanvasBackgroundImageHeight();
-  // console.log(username + ' ' + x + ' ' + y);
   sendMoveRequestToServer(username, x, y);
 });
 
@@ -21,9 +20,6 @@ function handleMoveChar(data) {
     if (data.name) {
       characters.moveCharacter(data.name, data.x, data.y);
     }
-    // console.log(
-    //   data.name + ' is trying to move to (' + data.x + ', ' + data.y + ').'
-    // );
   }
 }
 

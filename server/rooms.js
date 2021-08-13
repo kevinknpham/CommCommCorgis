@@ -204,7 +204,7 @@ class Room {
     this.#doors = new Map(doors);
     this.#entrances = new Map(entrances);
     this.#bounds = new Bounds(bounds);
-    this.#activities = new Map(activities);
+    this.#activities = activities;
     this.#url = imageUrl;
     this.#width = width;
     this.#height = height;

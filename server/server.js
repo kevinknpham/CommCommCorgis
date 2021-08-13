@@ -109,25 +109,25 @@ const ROOM_INFO = [
     ],
     activities: [
       {
-        name: 'change collar',
+        name: 'change collar none ',
         location: [272, 77],
         type: 'color',
         color: 'none'
       },
       {
-        name: 'change collar',
+        name: 'change collar red ',
         location: [317, 77],
         type: 'color',
         color: 'red'
       },
       {
-        name: 'change collar',
+        name: 'change collar green',
         location: [367, 77],
         type: 'color',
         color: 'green'
       },
       {
-        name: 'change collar',
+        name: 'change collar blue',
         location: [420, 77],
         type: 'color',
         color: 'blue'

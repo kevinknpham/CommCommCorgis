@@ -83,7 +83,6 @@ function selectCharacter(color) {
 // only allow if user types something in login page
 function initiateUserCharacter() {
   username = document.getElementById('login-input').value;
-  // console.log(username + ' is initiated');
   if (username && username.length > 0) {
     ws.send(JSON.stringify({ action: 'list' }));
   }
@@ -204,6 +203,8 @@ function handleChangeRoomResult(data) {
 function setUpCanvasBackground(data) {
   canvas.setUpCanvasInfo(data.backgroundUrl, data.width, data.height);
   characters.setDoors(data.doors);
+  console.log(data.room.activities + ' activites');
+  characters.setActivities(data.roomInfo.activities);
 }
 
 function sendChangeRoomRequestToServer(roomName) {

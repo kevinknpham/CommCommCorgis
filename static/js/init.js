@@ -4,7 +4,6 @@ let ws = new WebSocket(HOST);
 ws.onopen = event => {
   ws.onmessage = msg => handleMessageFromSever(msg.data);
   ws.onclose = event => {
-    // console.log('ws closed');
     swal('You are disconnected due to inactivity.').then(value => {
       window.location.reload();
     });

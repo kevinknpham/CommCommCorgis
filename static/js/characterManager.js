@@ -1,11 +1,14 @@
 const DISPLACEMENT_CONSTANT = 10;
 const CANVAS_BACKGROUND_IMAGE_URL_DOOR_DEFAULT = [['hub_games', [73, 331]]];
+const DEFAULT_ACTIVITIES = [];
 
 class CharacterManager {
   characters;
   doors;
   promptToLeaveRoom;
   room;
+  activities;
+  promptToDoActivity;
 
   constructor() {
     this.characters = new Map();
@@ -13,6 +16,9 @@ class CharacterManager {
     this.promptToLeaveRoom = new Map(
       Array.from(this.doors.keys()).map(roomName => [roomName, true])
     );
+    this.activities = DEFAULT_ACTIVITIES;
+    console.log(this.activities);
+    this.promptToDoActivity = new Map(this.activities.map(activity => [activity.name, true]));
     this.room = 'ctc';
   }
 
@@ -21,6 +27,11 @@ class CharacterManager {
     this.promptToLeaveRoom = new Map(
       Array.from(this.doors.keys()).map(roomName => [roomName, true])
     );
+  }
+
+  setActivities(newActivites) {
+    this.activites = newActivites;
+    this.promptToDoActivity = new Map(this.activities.map(activity => [activity.name, true]));
   }
 
   getCharacterInfo(name) {
@@ -51,7 +62,6 @@ class CharacterManager {
 
     characterinfo.attributes.direction =
       characterinfo.targetX > characterinfo.currentX ? 'right' : 'left';
-    // console.log('moveChar: ' + x + ' ' + y);
   }
 
   updateAllCharacterCurrentPositions() {
@@ -93,6 +103,22 @@ class CharacterManager {
           }
         }
       }
+      for (const activity of this.activities) {
+        console.log('in loop??');
+        const { name, location } = activity;
+        const distance =
+          (userCharacter.currentX - location[0]) * (userCharacter.currentX - location[0]) +
+          (userCharacter.currentY - location[1]) * (userCharacter.currentY - location[1]);
+        if (distance > 400) {
+          this.promptToDoActivity.set(name);
+          console.log('too far??');
+        }
+        if (distance < 400) {
+          console.log('activity');
+          this.promptForActivity(activity);
+          break;
+        }
+      }
     }
   }
 
@@ -106,6 +132,31 @@ class CharacterManager {
 
   clearCharacters() {
     this.characters.clear();
+  }
+
+  promptForActivity(activity) {
+    switch (activity.type) {
+      case 'color':
+        sendChangeCollarRequestFromCharacter(activity);
+        break;
+      default:
+        console.log('my default for acivities');
+    }
+  }
+
+  sendChangeCollarRequestFromCharacter(activity) {
+    console.log('Collar Change!!!!!');
+    swal(`Would you like to change your collar color to: ${activity.color}`, {
+      buttons: {
+        no: 'No, I like my collar color',
+        yes: 'Yes, I want that color'
+      }
+    }).then(value => {
+      if (value === 'yes') {
+        // toggleLoadingScreen(true, 'mainPage');
+        this.changeAttribute(username, color);
+      }
+    });
   }
 
   sendChangeRoomRequestFromCharacter(newRoom) {
