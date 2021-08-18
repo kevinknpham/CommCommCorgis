@@ -27,11 +27,15 @@ class CharacterManager {
     this.promptToLeaveRoom = new Map(
       Array.from(this.doors.keys()).map(roomName => [roomName, true])
     );
+    console.log('promptToLeaveRoom');
+    console.log(this.promptToLeaveRoom);
   }
 
   setActivities(newActivites) {
     this.activites = newActivites;
     this.promptToDoActivity = new Map(this.activities.map(activity => [activity.name, true]));
+    console.log('promptToDoActivity ');
+    console.log(this.promptToDoActivity);
   }
 
   getCharacterInfo(name) {

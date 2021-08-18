@@ -203,8 +203,10 @@ function handleChangeRoomResult(data) {
 function setUpCanvasBackground(data) {
   canvas.setUpCanvasInfo(data.backgroundUrl, data.width, data.height);
   characters.setDoors(data.doors);
-  console.log(data.room.activities + ' activites');
-  characters.setActivities(data.roomInfo.activities);
+  console.log('data + activites');
+  console.log(data);
+  console.log(data.activities);
+  characters.setActivities(data.activities);
 }
 
 function sendChangeRoomRequestToServer(roomName) {
