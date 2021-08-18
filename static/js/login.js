@@ -203,9 +203,6 @@ function handleChangeRoomResult(data) {
 function setUpCanvasBackground(data) {
   canvas.setUpCanvasInfo(data.backgroundUrl, data.width, data.height);
   characters.setDoors(data.doors);
-  console.log('data + activites');
-  console.log(data);
-  console.log(data.activities);
   characters.setActivities(data.activities);
 }
 

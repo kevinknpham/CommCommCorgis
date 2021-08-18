@@ -17,7 +17,6 @@ class CharacterManager {
       Array.from(this.doors.keys()).map(roomName => [roomName, true])
     );
     this.activities = DEFAULT_ACTIVITIES;
-    console.log(this.activities);
     this.promptToDoActivity = new Map(this.activities.map(activity => [activity.name, true]));
     this.room = 'ctc';
   }
@@ -27,15 +26,11 @@ class CharacterManager {
     this.promptToLeaveRoom = new Map(
       Array.from(this.doors.keys()).map(roomName => [roomName, true])
     );
-    console.log('promptToLeaveRoom');
-    console.log(this.promptToLeaveRoom);
   }
 
   setActivities(newActivites) {
-    this.activites = newActivites;
+    this.activities = newActivites;
     this.promptToDoActivity = new Map(this.activities.map(activity => [activity.name, true]));
-    console.log('promptToDoActivity ');
-    console.log(this.promptToDoActivity);
   }
 
   getCharacterInfo(name) {
@@ -108,19 +103,19 @@ class CharacterManager {
         }
       }
       for (const activity of this.activities) {
-        console.log('in loop??');
-        const { name, location } = activity;
         const distance =
-          (userCharacter.currentX - location[0]) * (userCharacter.currentX - location[0]) +
-          (userCharacter.currentY - location[1]) * (userCharacter.currentY - location[1]);
+          (userCharacter.currentX - activity.location[0]) *
+            (userCharacter.currentX - activity.location[0]) +
+          (userCharacter.currentY - activity.location[1]) *
+            (userCharacter.currentY - activity.location[1]);
         if (distance > 400) {
-          this.promptToDoActivity.set(name);
-          console.log('too far??');
+          this.promptToDoActivity.set(activity.name, true);
         }
         if (distance < 400) {
-          console.log('activity');
-          this.promptForActivity(activity);
-          break;
+          if (this.promptToDoActivity.get(activity.name)) {
+            this.promptForActivity(activity);
+            break;
+          }
         }
       }
     }
@@ -141,7 +136,7 @@ class CharacterManager {
   promptForActivity(activity) {
     switch (activity.type) {
       case 'color':
-        sendChangeCollarRequestFromCharacter(activity);
+        this.sendChangeCollarRequestFromCharacter(activity);
         break;
       default:
         console.log('my default for acivities');
@@ -150,6 +145,7 @@ class CharacterManager {
 
   sendChangeCollarRequestFromCharacter(activity) {
     console.log('Collar Change!!!!!');
+    this.promptToDoActivity.set(activity.name, false);
     swal(`Would you like to change your collar color to: ${activity.color}`, {
       buttons: {
         no: 'No, I like my collar color',
@@ -157,8 +153,9 @@ class CharacterManager {
       }
     }).then(value => {
       if (value === 'yes') {
-        // toggleLoadingScreen(true, 'mainPage');
-        this.changeAttribute(username, color);
+        toggleLoadingScreen(true, 'mainPage');
+        // this.changeAttribute(username, activity.color);
+        sendUserColorToServer(activity.color);
       }
     });
   }
