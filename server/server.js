@@ -352,37 +352,42 @@ wss.on('connection', ws => {
  * @param {String} msg - JSON formatted request
  */
 function handleMessage(ws, msg) {
-  data = JSON.parse(msg);
-  if (data.action) {
-    const action = data.action.toLowerCase();
+  try {
+    data = JSON.parse(msg);
 
-    switch (action) {
-      case 'chat': // chat messages
-        handleChat(ws, data);
-        break;
-      case 'update': // update character position
-        handleUpdateChar(ws, data);
-        break;
-      case 'create': // create new character
-        handleCreateChar(ws, data);
-        break;
-      case 'leave': // remove character from game
-        handleLeave(ws);
-        break;
-      case 'change_room':
-        handleChangeRoom(ws, data);
-        break;
-      case 'list': // list characters
-        handleList(ws, data);
-        break;
-      case 'change_attribute':
-        handleChangeAttribute(ws, data);
-        break;
-      default:
-        error(ws, msg + ' is not a valid action');
+    if (data.action) {
+      const action = data.action.toLowerCase();
+
+      switch (action) {
+        case 'chat': // chat messages
+          handleChat(ws, data);
+          break;
+        case 'update': // update character position
+          handleUpdateChar(ws, data);
+          break;
+        case 'create': // create new character
+          handleCreateChar(ws, data);
+          break;
+        case 'leave': // remove character from game
+          handleLeave(ws);
+          break;
+        case 'change_room':
+          handleChangeRoom(ws, data);
+          break;
+        case 'list': // list characters
+          handleList(ws, data);
+          break;
+        case 'change_attribute':
+          handleChangeAttribute(ws, data);
+          break;
+        default:
+          error(ws, msg + ' is not a valid action');
+      }
+    } else {
+      error(ws, 'Please specify an action (chat, create, leave, update)');
     }
-  } else {
-    error(ws, 'Please specify an action (chat, create, leave, update)');
+  } catch (e) {
+    error(ws, 'Your request was not JSON formatted.');
   }
 }
 
