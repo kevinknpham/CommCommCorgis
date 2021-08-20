@@ -10,6 +10,9 @@ class CharacterManager {
   activities;
   promptToDoActivity;
 
+  /**
+   * Creates a CharacterManager instance.
+   */
   constructor() {
     this.characters = new Map();
     this.doors = new Map(CANVAS_BACKGROUND_IMAGE_URL_DOOR_DEFAULT);
@@ -21,6 +24,10 @@ class CharacterManager {
     this.room = 'ctc';
   }
 
+  /**
+   * Keeps track of the doors in the current room.
+   * @param {*} newDoors
+   */
   setDoors(newDoors) {
     this.doors = new Map(newDoors);
     this.promptToLeaveRoom = new Map(
@@ -28,15 +35,32 @@ class CharacterManager {
     );
   }
 
+  /**
+   * Keeps track of the available activities in the room.
+   */
   setActivities(newActivites) {
     this.activities = newActivites;
     this.promptToDoActivity = new Map(this.activities.map(activity => [activity.name, true]));
   }
 
+  /**
+   *
+   * @param {String} name
+   * @returns object with information associated with the character that has
+   *          the given name.
+   */
   getCharacterInfo(name) {
     return this.characters.get(name);
   }
 
+  /**
+   * Stores the given name, x, y, and color associated with a character inside
+   * the current characterManager instance.
+   * @param {String} name
+   * @param {Double} x
+   * @param {Double} y
+   * @param {String} color
+   */
   addCharacter(name, x, y, color = 'none') {
     this.characters.set(name, {
       currentX: x,
@@ -50,10 +74,22 @@ class CharacterManager {
     });
   }
 
+  /**
+   * Deletes the information associated with
+   * the character that has the given name.
+   * @param {String} name
+   */
   removeCharacter(name) {
     this.characters.delete(name);
   }
 
+  /**
+   * Stores the given x and y of the location
+   * that the character with the given name has moved to.
+   * @param {String} name
+   * @param {Double} x
+   * @param {Double} y
+   */
   moveCharacter(name, x, y) {
     const characterinfo = this.characters.get(name);
     characterinfo.targetX = x;
@@ -63,6 +99,10 @@ class CharacterManager {
       characterinfo.targetX > characterinfo.currentX ? 'right' : 'left';
   }
 
+  /**
+   * Updates each character's positions
+   * and notifies the user if his character is at a door.
+   */
   updateAllCharacterCurrentPositions() {
     for (let [character, info] of this.characters) {
       const displacementX = info.targetX - info.currentX;
@@ -121,28 +161,52 @@ class CharacterManager {
     }
   }
 
+  /**
+   * Stores the given color with the character that has the given name.
+   * @param {String} name
+   * @param {String} color
+   */
   changeAttribute(name, color) {
     this.characters.get(name).attributes.color = color;
   }
 
+  /**
+   * Retrieves the names of all the characters in the website
+   * @returns all the characters' names in the current instance.
+   */
   listCharacters() {
     return Array.from(this.characters.keys());
   }
 
+  /**
+   * Removes all the characters' information stored inside
+   * current instance.
+   */
   clearCharacters() {
     this.characters.clear();
   }
 
+  /**
+   * If the given activity is a color type, sends request
+   * to change the character's color.
+   * Otherwise, it logs the following default text "my default for activities".
+   * @param {*} activity
+   */
   promptForActivity(activity) {
     switch (activity.type) {
       case 'color':
         this.sendChangeCollarRequestFromCharacter(activity);
         break;
       default:
-        console.log('my default for acivities');
+        console.log('my default for activities');
     }
   }
 
+  /**
+   * Notifies user if they want to change into the color stored in the given
+   * activity. Allows user to cancel or to proceed with color change.
+   * @param {*} activity
+   */
   sendChangeCollarRequestFromCharacter(activity) {
     console.log('Collar Change!!!!!');
     this.promptToDoActivity.set(activity.name, false);
@@ -160,6 +224,13 @@ class CharacterManager {
     });
   }
 
+  /**
+   * Sends a notification for the user to make sure that the
+   * they want to move to the give newRoom. Allow user to choose
+   * to move into newRoom or stay in current room.
+   * @param {String} newRoom
+   *
+   */
   sendChangeRoomRequestFromCharacter(newRoom) {
     console.log('RoomChange!!!');
     this.promptToLeaveRoom.set(newRoom, false);
@@ -176,6 +247,12 @@ class CharacterManager {
     });
   }
 
+  /**
+   * Formats the given name with appropriate capitalization and spaces.
+   * @param {String} name
+   * @returns the character's name with the first letter capitalized and
+   *          spaces in between each word.
+   */
   formatRoomName(name) {
     return name
       .split(/_+/)
@@ -183,10 +260,19 @@ class CharacterManager {
       .join(' ');
   }
 
+  /**
+   * Retrieves the current room that the character is in.
+   * @returns the room that the current character is in
+   */
   getRoomName() {
     return this.room;
   }
 
+  /**
+   * Stores the given newRoom as the current room
+   * inside the current characterManager.
+   * @param {String} newRoom
+   */
   setRoomName(newRoom) {
     this.room = newRoom;
   }

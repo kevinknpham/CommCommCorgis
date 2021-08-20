@@ -41,6 +41,13 @@ const COLOR_TO_IMAGE_DEFAULT = Object.freeze(
   ])
 );
 
+/**
+ * Inserts black text above the character image
+ * @param {*} ctx
+ * @param {String} text
+ * @param {Integer} x
+ * @param {Integer} y
+ */
 function drawNameOnImage(ctx, text, x, y) {
   textX = x + CHARACTER_WIDTH * 0.5;
   textY = y - NAME_VERTICAL_TEXT_OFFSET;
@@ -68,6 +75,13 @@ class CanvasManager {
 
   backgroundImageMap;
 
+  /**
+   * Creates CanvasManager instance.
+   * Initializes all fields, two of which are initialized to the
+   * given canvas and characterManager.
+   * @param {canvas} canvas
+   * @param {characterManager} characterManager
+   */
   constructor(canvas, characterManager) {
     this.backgroundUrl = CANVAS_BACKGROUND_DEFAULT_URL;
     this.backgroundWidth = 633;
@@ -81,6 +95,12 @@ class CanvasManager {
     this.characterManager = characterManager;
   }
 
+  /**
+   * Find the image associated with the url. If it is the desired image,
+   * uses image as background.
+   * @param {String} url
+   * @returns image associated with the given url.
+   */
   getBackgroundImage(url) {
     const image = this.backgroundImageMap.get(url);
     if (image) {
@@ -92,6 +112,9 @@ class CanvasManager {
     }
   }
 
+  /**
+   * Clears the current canvas
+   */
   clearCanvas() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.drawImage(
@@ -104,10 +127,16 @@ class CanvasManager {
     this.ctx.save();
   }
 
+  /**
+   * Saves the position of all the characters on the canvas.
+   */
   saveCanvasState() {
     this.characterManager.updateAllCharacterCurrentPositions();
   }
 
+  /**
+   * Draws each character on the canvas.
+   */
   drawOnCanvas() {
     const characterList = this.characterManager.listCharacters();
     for (let i = 0; i < characterList.length; i++) {
@@ -131,6 +160,12 @@ class CanvasManager {
     }
   }
 
+  /**
+   * Creates an object based on the given direction to modify the character's image
+   * to face in the given direction.
+   * @param {String} direction
+   * @returns an object containing information on how to orient the image.
+   */
   getCharacterImageOrientation(direction) {
     switch (direction) {
       case 'right':
@@ -145,6 +180,12 @@ class CanvasManager {
     }
   }
 
+  /**
+   * Stores the given backgroundUrl, width, height into the current instance.
+   * @param {String} backgroundUrl
+   * @param {Double} width
+   * @param {Double} height
+   */
   setUpCanvasInfo(backgroundUrl, width, height) {
     this.backgroundUrl = backgroundUrl;
     this.backgroundWidth = width;
@@ -154,10 +195,18 @@ class CanvasManager {
     this.canvas.height = this.backgroundHeight * SCALE_FACTOR;
   }
 
+  /**
+   * Retrieves the width of the background image
+   * @returns background image width
+   */
   getCanvasBackgroundImageWidth() {
     return this.backgroundWidth;
   }
 
+  /**
+   * Retrieves the width of the background image height
+   * @returns background image height
+   */
   getCanvasBackgroundImageHeight() {
     return this.backgroundHeight;
   }

@@ -1,7 +1,16 @@
+/**
+ * Sends and handles requests for moving the characters.
+ */
+
 const characters = new CharacterManager();
 const canvas = new CanvasManager(document.getElementById('myCanvas'), characters);
 const canvasElement = document.getElementById('myCanvas');
 
+/**
+ * Animation for canvas
+ * No parameters
+ * Returns nothing
+ */
 function animate() {
   canvas.clearCanvas();
   canvas.saveCanvasState();
@@ -9,12 +18,17 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
+// Listens for click from the user and sends information to server.
 canvasElement.addEventListener('click', event => {
   let x = ((event.offsetX - 75 / 1.25) / 1344) * canvas.getCanvasBackgroundImageWidth();
   let y = ((event.offsetY - 75 / 1.25) / 850) * canvas.getCanvasBackgroundImageHeight();
   sendMoveRequestToServer(username, x, y);
 });
 
+/**
+ * Moves all character in given data appropriately.
+ * @param {*} data
+ */
 function handleMoveChar(data) {
   if (roomCheck(data.room)) {
     if (data.name) {
@@ -23,6 +37,13 @@ function handleMoveChar(data) {
   }
 }
 
+/**
+ * Sends a request to server to move character with the
+ * given username to the given x and y.
+ * @param {String} username
+ * @param {Integer} x
+ * @param {Integer} y
+ */
 function sendMoveRequestToServer(username, x, y) {
   let datum = {
     name: username,

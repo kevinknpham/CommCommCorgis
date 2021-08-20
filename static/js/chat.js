@@ -1,3 +1,14 @@
+/**
+ * Implements the chat functionality in the website.
+ * Sends and handles requests to server involved with the chat.
+ * Also updates the UI to display the messages from each user in the chat box.
+ */
+
+/**
+ * Modifies the UI to display the latest chat message
+ *  in the data with the associated user
+ * @param {*} data
+ */
 function handleChat(data) {
   if (roomCheck(data.room)) {
     console.log(data);
@@ -8,6 +19,12 @@ function handleChat(data) {
   }
 }
 
+/**
+ * Sends the text typed by the user into the chat box
+ *  when the user submits (by keyboard or button).
+ * Takes in no parameters
+ * Returns nothing
+ */
 function setChat() {
   let input = document.querySelector('.post-input input');
   const postBtn = document.getElementById('post-button');
@@ -22,6 +39,11 @@ function setChat() {
   postBtn.addEventListener('click', sendChatRequestToServer);
 }
 
+/**
+ * Sends request to server to display chat message
+ * Takes in no parameters
+ * Returns nothing
+ */
 function sendChatRequestToServer() {
   let input = document.querySelector('.post-input input');
   let datum = {
@@ -33,6 +55,11 @@ function sendChatRequestToServer() {
   document.querySelector('.post-input input').value = '';
 }
 
+/**
+ * Creates post in the chat with the text in the given info.
+ * @param {*} info
+ * @returns
+ */
 function createPost(info) {
   let postContainer = document.createElement('div');
 
