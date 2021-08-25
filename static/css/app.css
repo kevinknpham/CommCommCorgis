@@ -19,8 +19,9 @@
 
 .background-formatter {
   grid-area: canvas;
-  /* max-width: 1344px;
-  max-height: 850px; */
+  max-width: 1344px;
+  max-height: 850px;
   width: 100%;
   height: 100%;
+  justify-self: end;
 }

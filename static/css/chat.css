@@ -1,10 +1,11 @@
 .chat {
   grid-area: chat;
   background-color: #d4dbf5;
-  /* max-width: 576px;
-  max-height: 850px; */
+  max-width: 576px;
+  max-height: 850px;
   width: 100%;
   height: 100%;
+  justify-self: start;
   margin-left: 16px;
   border: 1px solid black;
   border-radius: 8px;
