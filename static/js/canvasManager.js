@@ -89,8 +89,8 @@ class CanvasManager {
     this.backgroundImageMap = new Map();
 
     this.canvas = canvas;
-    this.canvas.width = this.backgroundWidth * SCALE_FACTOR;
-    this.canvas.height = this.backgroundHeight * SCALE_FACTOR;
+    this.canvas.style.width = this.backgroundWidth * SCALE_FACTOR;
+    this.canvas.style.height = this.backgroundHeight * SCALE_FACTOR;
     this.ctx = canvas.getContext('2d');
     this.characterManager = characterManager;
   }
