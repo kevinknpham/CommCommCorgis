@@ -324,10 +324,10 @@ function toggleLoadingScreen(showLoading, page) {
   document.getElementById('loading-screen').style.display = showLoading ? 'block' : 'none';
   switch (page) {
     case 'loginPage':
-      document.getElementById('login-page').style.display = showLoading ? 'none' : 'block';
+      document.getElementById('login-page').style.display = showLoading ? 'block' : 'block';
       break;
     case 'mainPage':
-      document.getElementById('main-page').style.display = showLoading ? 'none' : 'block';
+      document.getElementById('main-page').style.display = showLoading ? 'block' : 'block';
       break;
   }
 }
