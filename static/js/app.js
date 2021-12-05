@@ -5,6 +5,7 @@
 const characters = new CharacterManager();
 const canvas = new CanvasManager(document.getElementById('myCanvas'), characters);
 const canvasElement = document.getElementById('myCanvas');
+const zoomFactor = window.devicePixelRatio;
 
 /**
  * Animation for canvas
@@ -20,8 +21,8 @@ function animate() {
 
 // Listens for click from the user and sends information to server.
 canvasElement.addEventListener('click', event => {
-  let x = ((event.offsetX - 75 / 1.25) / 1344) * canvas.getCanvasBackgroundImageWidth();
-  let y = ((event.offsetY - 75 / 1.25) / 850) * canvas.getCanvasBackgroundImageHeight();
+  let x = ((event.offsetX - 67 / (zoomFactor)) / 1344) * canvas.getCanvasBackgroundImageWidth() * zoomFactor;
+  let y = ((event.offsetY - 45 / (zoomFactor)) / 850) * canvas.getCanvasBackgroundImageHeight() * zoomFactor;
   sendMoveRequestToServer(username, x, y);
 });
 

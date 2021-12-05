@@ -39,6 +39,12 @@ npm i && npm start
 
 A live demo is currently being hosted on [Heroku](https://comm-comm-corgis.herokuapp.com/).
 
+### To be fixed:
+
+There is issue with PC resolution scale. Works best with 100% and 125%. 
+
+We recommend users to have 16:9 monitor. 
+
 ## Features
 
 Comm Comm Corgis was created as a proof of concept. In this demo, we have the following features:
